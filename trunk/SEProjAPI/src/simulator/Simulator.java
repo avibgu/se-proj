@@ -2,11 +2,12 @@ package simulator;
 
 public class Simulator {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+	public Simulator() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void start() {
 		// TODO Auto-generated method stub
-
+		
 	}
 }
