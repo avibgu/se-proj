@@ -1,6 +1,8 @@
 
 package algorithm;
 
+
+import java.util.PriorityQueue;
 import java.util.Vector;
 
 import actor.Activity;
@@ -9,7 +11,7 @@ public class ActivityMonitor implements Runnable {
 
 	protected boolean _dontStop;
 
-	public ActivityMonitor(Vector<Activity> _activities) {
+	public ActivityMonitor(PriorityQueue<Activity> _activities) {
 		_dontStop = true;
 	}
 
