@@ -7,6 +7,7 @@ import java.util.Vector;
 import type.AgentType;
 import type.ItemType;
 
+import State.ActivityState;
 import State.ItemState;
 import algorithm.ActivityMonitor;
 
@@ -19,7 +20,72 @@ public class Agent implements Runnable{
 	protected boolean			dontStop;
 	protected Vector<Item> 		items; // The list of known locations of the items.
 	protected Vector<Item>		myItems; // The items the agent has.
+	protected Activity currentActivity;
 	
+	public ActivityMonitor getActivityMonitor() {
+		return activityMonitor;
+	}
+
+	public void setActivityMonitor(ActivityMonitor activityMonitor) {
+		this.activityMonitor = activityMonitor;
+	}
+
+	public PriorityQueue<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(PriorityQueue<Activity> activities) {
+		this.activities = activities;
+	}
+
+	public AgentType getType() {
+		return type;
+	}
+
+	public void setType(AgentType type) {
+		this.type = type;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public boolean isDontStop() {
+		return dontStop;
+	}
+
+	public void setDontStop(boolean dontStop) {
+		this.dontStop = dontStop;
+	}
+
+	public Vector<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(Vector<Item> items) {
+		this.items = items;
+	}
+
+	public Vector<Item> getMyItems() {
+		return myItems;
+	}
+
+	public void setMyItems(Vector<Item> myItems) {
+		this.myItems = myItems;
+	}
+
+	public Activity getCurrentActivity() {
+		return currentActivity;
+	}
+
+	public void setCurrentActivity(Activity currentActivity) {
+		this.currentActivity = currentActivity;
+	}
+
 	public Agent(AgentType type) {
 
 		activities = new PriorityQueue<Activity>(11,new Comparator<Activity>() {
@@ -46,6 +112,8 @@ public class Agent implements Runnable{
 		while (dontStop){
 			
 			Activity activity = findNextActivity();
+			
+			currentActivity = activity;
 			
 			performActivity(activity);
 		}
@@ -86,7 +154,13 @@ public class Agent implements Runnable{
 	}
 
 	protected void performActivity(Activity activity) {
-		 // TODO Auto-generated method stub
+		 activity.setState(ActivityState.IN_PROGRESS);
+	}
+	
+	protected void completeCurrentActivity(){
+		releaseMyItems();
+		currentActivity.setState(ActivityState.COMPLETED);
+		currentActivity = null;
 	}
 	
 	public void stop() {
