@@ -3,7 +3,7 @@ package actor;
 import State.ItemState;
 import type.ItemType;
 
-public class Item {
+public class Item extends Entity{
 	protected ItemType type;
 	protected ItemState state;
 

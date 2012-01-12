@@ -11,12 +11,11 @@ import State.ActivityState;
 import State.ItemState;
 import algorithm.ActivityMonitor;
 
-public class Agent implements Runnable{
+public class Agent extends Entity implements Runnable {
 
 	protected ActivityMonitor	activityMonitor;
 	protected PriorityQueue<Activity>	activities;
 	protected AgentType			type;
-	protected String			id;
 	protected boolean			dontStop;
 	protected Vector<Item> 		items; // The list of known locations of the items.
 	protected Vector<Item>		myItems; // The items the agent has.
@@ -44,14 +43,6 @@ public class Agent implements Runnable{
 
 	public void setType(AgentType type) {
 		this.type = type;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public boolean isDontStop() {
