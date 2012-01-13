@@ -38,6 +38,7 @@ public class Activity {
 	}
 	
 	public boolean isSatisfiedPreCond(){
+
 		return true;
 	}
 	

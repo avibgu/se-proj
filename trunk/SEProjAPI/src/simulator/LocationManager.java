@@ -13,21 +13,21 @@ public class LocationManager {
 	}
 	
 	/**
-	 * 
 	 * @param entity the entity to return its location
 	 * @return the last known location of the entity
 	 */
 	public Location getLastKnownLocation(Entity entity){
 		return _domain.getLocationById(entity.getId());
 	}
-	
+
 	/**
-	 * 
-	 * @param entities the agents and items to initialize their locations
-	 * @param scenario the scenario to simulate
+	 * @return returns all the entities(e.g. agents, items and sensors) 
+	 * after initializing them and placing them in the domain
 	 */
-	public void initializeLocations(Vector<Vector<Entity>> entities, Scenario scenario) {
-		// TODO Auto-generated method stub
-		
+	public Vector<Vector<Entity>> initializeLocations() {
+		return _domain.initializeLocations();
 	}
+
+
+	
 }
