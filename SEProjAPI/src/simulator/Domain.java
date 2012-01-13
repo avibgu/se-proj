@@ -16,8 +16,7 @@ import actor.SensorAgent;
 
 public class Domain {
 
-	private Vector<Location> _grid;
-	private HashMap<String, Location> _matrix;
+	private HashMap<String, Location> _grid;
 	private int DOMAIN_SIZE;
 	private int _nAgents;
 	private int _nItems;
@@ -25,12 +24,11 @@ public class Domain {
 	
 	public Domain(){
 		loadParameters();
-		_grid = new Vector<Location>(DOMAIN_SIZE * DOMAIN_SIZE);
-		_matrix = new HashMap<String, Location>();
+		_grid = new HashMap<String, Location>();
 	}
 	
 	public Location getLocationById(String id) {
-		return _matrix.get(id);
+		return _grid.get(id);
 	}
 	
 	public Vector<Vector<Entity>> initializeLocations() {
@@ -38,7 +36,6 @@ public class Domain {
 		Vector<Integer> locations = new Vector<Integer>(DOMAIN_SIZE * DOMAIN_SIZE);
 		for(int i = 0 ; i < locations.capacity(); i++){
 			locations.add(i);
-			_grid.add(new Location(i / DOMAIN_SIZE, i % DOMAIN_SIZE));
 		}
 		Vector<Vector<Entity>> entities = new Vector<Vector<Entity>>();
 		Vector<Entity> agents = new Vector<Entity>();
@@ -47,10 +44,9 @@ public class Domain {
 			agents.add(agent);
 			int location = r.nextInt(locations.size());
 			location = locations.remove(location);
-			_grid.elementAt(location).placeEntity(agent);
 			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
 			l.placeEntity(agent);
-			_matrix.put(agent.getId(), l);
+			_grid.put(agent.getId(), l);
 		}
 		entities.add(agents);
 
@@ -60,10 +56,9 @@ public class Domain {
 			items.add(item);
 			int location = r.nextInt(locations.size());
 			location = locations.remove(location);
-			_grid.elementAt(location).placeEntity(item);
 			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
 			l.placeEntity(item);
-			_matrix.put(item.getId(), l);
+			_grid.put(item.getId(), l);
 		}
 		entities.add(items);
 		Vector<Entity> sensorAgents = new Vector<Entity>();
@@ -72,10 +67,9 @@ public class Domain {
 			sensorAgents.add(sensor);
 			int location = r.nextInt(locations.size());
 			location = locations.remove(location);
-			_grid.elementAt(location).placeEntity(sensor);
 			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
 			l.placeEntity(sensor);
-			_matrix.put(sensor.getId(), l);
+			_grid.put(sensor.getId(), l);
 		}
 		entities.add(sensorAgents);
 		return entities;
