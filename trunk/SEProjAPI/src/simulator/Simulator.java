@@ -1,9 +1,7 @@
 package simulator;
 
 import java.util.Vector;
-
 import type.ItemType;
-
 import State.ActivityState;
 import actor.Activity;
 import actor.Agent;
