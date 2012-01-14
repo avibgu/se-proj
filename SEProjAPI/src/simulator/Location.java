@@ -1,16 +1,21 @@
 package simulator;
 
-import actor.Entity;
+import java.util.HashMap;
 
-public class Location {
+import type.ItemType;
+
+import actor.Entity;
+import actor.Item;
+
+public class Location implements Cloneable{
 	private int _latitude;
 	private int _longitude;
-	private Entity _entity;
+	private HashMap<String, Entity> _entities;
 	
 	public Location(int latitude, int longitude){
 		_latitude = latitude;
 		_longitude = longitude;
-		_entity = null;
+		_entities = new HashMap<String, Entity>();
 	}
 	
 	public int getLatitude(){
@@ -30,16 +35,29 @@ public class Location {
 	}
 	
 	public void placeEntity(Entity entity){
-		_entity = entity;
+		_entities.put(entity.getId(), entity);
 	}
 	
-	public void removeEntity(){
-		//TODO change method signature so it can return Entity
-		//In order to do that, clone methods should be implemented
-		_entity = null;
+	public Entity removeEntity(Entity entity){
+		return _entities.remove(entity.getId());
 	}
 	
-	public Entity getEntity(){
-		return _entity;
+	/**
+	 * @param itemType the type of item to get
+	 * @return the first item that corresponds to the item type
+	 */
+	public Entity getEntity(ItemType itemType){
+		for (Entity entity : _entities.values()) {
+			if(entity instanceof Item)
+				return entity;
+		}
+		return null;
+	}
+	
+	public Location clone(){
+		int latitude = _latitude;
+		int longitude = _longitude;
+		Location loc = new Location(latitude, longitude);		
+		return loc;
 	}
 }

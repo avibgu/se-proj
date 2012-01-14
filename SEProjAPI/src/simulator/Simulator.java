@@ -15,7 +15,6 @@ public class Simulator {
 	private Vector<Activity> _activities;
 	private Vector<Entity> _items;
 	private Vector<Entity> _sensorAgents;
-	
 	private Vector<Vector<Entity>> _entities;
 	
 	private LocationManager _locationManager;
