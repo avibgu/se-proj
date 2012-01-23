@@ -1,9 +1,8 @@
 package simulator;
 
+import java.util.Collection;
 import java.util.HashMap;
-
 import type.ItemType;
-
 import actor.Entity;
 import actor.Item;
 
@@ -52,6 +51,20 @@ public class Location implements Cloneable{
 				return entity;
 		}
 		return null;
+	}
+	/**
+	 * @param id the id to look for in the location
+	 * @return the relevant entity
+	 */
+	public Entity getEntityById(String id){
+		return _entities.get(id);
+	}
+	
+	/**
+	 * @return the entities in the location
+	 */
+	public Collection<Entity> getEntities(){
+		return _entities.values();
 	}
 	
 	public Location clone(){

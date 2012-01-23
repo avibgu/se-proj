@@ -72,8 +72,8 @@ public class Domain {
 			l.placeEntity(item);
 			item.setLocation(l);
 			_grid.put(item.getId(), l);
-			Runnable lm = new LocationMonitor(item);
-			new Thread(lm).start();
+//			Runnable lm = new LocationMonitor(item);
+//			new Thread(lm).start();
 		}
 		entities.add(items);
 		Vector<Entity> sensorAgents = new Vector<Entity>();
@@ -88,6 +88,8 @@ public class Domain {
 			_grid.put(sensor.getId(), l);
 			Runnable lm = new LocationMonitor(sensor);
 			new Thread(lm).start();
+			Runnable is = new ItemScanner(sensor, this);
+			new Thread(is).start();
 		}
 		entities.add(sensorAgents);
 		return entities;
@@ -125,12 +127,14 @@ public class Domain {
 		Location entityLocation = getLocationById(entity.getId());
 		Location closestItem = new Location(-1, -1);
 		double closestLocation = Double.MAX_VALUE;
-		for (Location location : _grid.values()) {
-			if(location.getEntity(item) instanceof Item){
-				double distance = calcDistance(entityLocation, location);
-				if(distance < closestLocation){
-					closestLocation = distance;
-					closestItem = location;
+		synchronized (_grid) {
+			for (Location location : _grid.values()) {
+				if(location.getEntity(item) instanceof Item){
+					double distance = calcDistance(entityLocation, location);
+					if(distance < closestLocation){
+						closestLocation = distance;
+						closestItem = location;
+					}
 				}
 			}
 		}
@@ -144,4 +148,18 @@ public class Domain {
 		return Math.sqrt(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff);
 	}
 	
+	public Vector<Entity> scanForItems(Location entityLocation, double distance){
+		Vector<Entity> items = new Vector<Entity>();
+		
+		synchronized (_grid) {
+			for (Location location : _grid.values()) {
+				double dist = calcDistance(entityLocation, location);
+				if(dist <= distance){
+					items.addAll(location.getEntities());
+				}
+			}
+		}
+		
+		return items;
+	}
 }
