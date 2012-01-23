@@ -12,14 +12,19 @@ public class LocationMonitor implements Runnable{
 	
 	public LocationMonitor(Entity entity){
 		_entity = entity;
-		_lastKnownLocation = _entity.getLocation().clone();
+		synchronized (_entity.getLocation()) {
+			_lastKnownLocation = _entity.getLocation().clone();
+		}
 		_dontStop = true;
 	}
 	@Override
 	public void run() {
 		while (_dontStop){
-			Location entityLocation = _entity.getLocation();
-			if(_lastKnownLocation.getLatitude() != entityLocation.getLatitude() || _lastKnownLocation.getLongitude() != entityLocation.getLongitude()){
+			Location entityLocation = null;
+			synchronized (_entity.getLocation()) {
+				entityLocation = _entity.getLocation();
+			}
+			if(entityLocation != null &&(_lastKnownLocation.getLatitude() != entityLocation.getLatitude() || _lastKnownLocation.getLongitude() != entityLocation.getLongitude())){
 					//TODO send to relevant agents in the current activity
 					//((Agent)entity).getCurrentActivity(); 
 			}
@@ -29,7 +34,9 @@ public class LocationMonitor implements Runnable{
 			} catch (InterruptedException e) {
 				stop();
 			}
-			_lastKnownLocation = _entity.getLocation().clone();
+			synchronized (_entity.getLocation()) {
+				_lastKnownLocation = _entity.getLocation().clone();
+			}
 		}
 	}
 	
