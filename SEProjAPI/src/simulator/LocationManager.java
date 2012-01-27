@@ -19,4 +19,8 @@ public class LocationManager {
 	public Vector<Vector<Entity>> initializeLocations() {
 		return _domain.initializeLocations();
 	}
+
+	public boolean checkNewLocation(Location newLocation) {
+		return _domain.checkNewLocation(newLocation);
+	}
 }
