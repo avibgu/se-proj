@@ -1,7 +1,6 @@
 package actor;
 
 import java.util.Vector;
-
 import type.AgentType;
 
 public class SensorAgent extends Agent {
@@ -13,11 +12,16 @@ public class SensorAgent extends Agent {
 		_visibleItems = new Vector<Entity>();
 	}
 
-	public void setVisibleItems(Vector<Entity> items){
+	public synchronized void setVisibleItems(Vector<Entity> items){
 		_visibleItems = items;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Vector<Entity> getVisibleItems(){
-		return _visibleItems;
+		Vector<Entity> visibleItems = new Vector<Entity>();
+		synchronized (_visibleItems) {
+			visibleItems = (Vector<Entity>) _visibleItems.clone();
+		}
+		return visibleItems;
 	}
 }
