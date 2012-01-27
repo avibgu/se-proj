@@ -145,4 +145,12 @@ public class Domain {
     public synchronized HashMap<String, Location> getGrid(){
     	return _grid;
     }
+
+	public boolean checkNewLocation(Location newLocation) {
+		int latitude = newLocation.getLatitude();
+		int longitude = newLocation.getLongitude();
+		if(latitude >= DOMAIN_SIZE || longitude >= DOMAIN_SIZE || latitude < 0 || longitude < 0)
+			return false;
+		return true;
+	}
 }
