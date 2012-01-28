@@ -28,4 +28,8 @@ public class Controller {
     public Domain getDomain(){
         return _domain;
     }
+
+	public void stop() {
+		_domain.stop();
+	}
 }

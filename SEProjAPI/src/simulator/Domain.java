@@ -22,6 +22,8 @@ public class Domain {
 	private int _nSensors;
 	private Vector<Vector<Entity>> _entities;
 	private Vector<Observer> _observers;
+	private Vector<Runnable> _locationMonitors;
+	private Vector<Runnable> _itemScanners;
 	
 	public Domain(int domainSize, int nAgents, int nItems, int nSensors){
 		DOMAIN_SIZE = domainSize;
@@ -31,6 +33,8 @@ public class Domain {
 		_grid = new HashMap<String, Location>();
 		_entities = new Vector<Vector<Entity>>();
 		_observers = new Vector<Observer>();
+		_locationMonitors = new Vector<Runnable>();
+		_itemScanners = new Vector<Runnable>();
 	}
 
 	public Vector<Observer> getObservers() {
@@ -65,6 +69,7 @@ public class Domain {
 			_grid.put(agent.getId(), l);
 			
 			Runnable lm = new LocationMonitor(agent, _observers);
+			_locationMonitors.add(lm);
 			new Thread(lm).start();
 		}
 		_entities.add(agents);
@@ -102,8 +107,10 @@ public class Domain {
 			_grid.put(sensor.getId(), l);
 			
 			Runnable lm = new LocationMonitor(sensor, _observers);
+			_locationMonitors.add(lm);
 			new Thread(lm).start();
 			Runnable is = new ItemScanner(sensor, this, _observers);
+			_itemScanners.add(is);
 			new Thread(is).start();
 		}
 		_entities.add(sensorAgents);
@@ -152,5 +159,15 @@ public class Domain {
 		if(latitude >= DOMAIN_SIZE || longitude >= DOMAIN_SIZE || latitude < 0 || longitude < 0)
 			return false;
 		return true;
+	}
+
+	public void stop() {
+		for (Runnable listener : _locationMonitors) {
+			((LocationMonitor)listener).stop();
+		}
+		
+		for (Runnable listener : _itemScanners) {
+			((ItemScanner)listener).stop();
+		}
 	}
 }
