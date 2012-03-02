@@ -9,9 +9,9 @@ public class Entity extends Observable{
 	protected String id;
 	protected Location location;
 	protected Location oldLocation;
-	private Location lastRepesentedLocation;
-    private String representation;
-    private boolean updated;
+	private transient Location lastRepesentedLocation;
+    private transient String representation;
+    private transient boolean updated;
 	
 	public Entity(){
 		id = UUID.randomUUID().toString();
