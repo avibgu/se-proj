@@ -1,0 +1,76 @@
+package item;
+
+import java.util.Vector;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import simulator.Location;
+import type.ItemType;
+import utilities.MovaJson;
+
+import State.ItemState;
+import actor.Item;
+
+@Path("/items")
+public class ItemResource {
+	
+	@GET
+	@Path("/findItem")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public String findItem(@DefaultValue("") @QueryParam("type") String type, 
+							@DefaultValue("1") @QueryParam("quantity") int quantity,
+							@QueryParam("location") String location){
+		
+		//Vector<Item> items = findItem(ItemType.valueOf(type), quantity, location);
+		Item i = new Item();
+		i.setLocation(new Location(1,1));
+		i.setLocation(new Location(2,2));
+		i.setState(ItemState.AVAILABLE);
+		i.setType(ItemType.CHAIR);
+		
+		Vector<Item> items = new Vector<Item>();
+		items.add(i);
+		
+		MovaJson mj = new MovaJson();
+		
+		return mj.itemsToJson(items);
+	}
+	@PUT
+	@Path("/distributeItemLocation")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void distributeItemLocation(String jsonObject){
+		
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String id = j.get("id").getAsString(); 
+		String jsonLocation = j.get("location").getAsString();
+		
+		MovaJson mj = new MovaJson();
+		Location location = mj.jsonToLocation(jsonLocation);
+		
+		//add c2dm code here
+	}
+	
+	@PUT
+	@Path("/distributeItemState")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void distributeItemState(String jsonObject){
+		
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String id = j.get("id").getAsString(); 
+		ItemState state = ItemState.valueOf(j.get("state").getAsString());
+
+		//add c2dm code here
+	}
+}
