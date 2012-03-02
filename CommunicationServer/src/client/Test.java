@@ -1,41 +1,46 @@
 package client;
 
 import java.io.IOException;
-import java.net.URI;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import java.util.Vector;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import simulator.Location;
+import type.AgentType;
+import type.ItemType;
+import utilities.MovaJson;
 
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
+import State.ActivityState;
+import actor.Activity;
+import actor.Agent;
+import actor.Item;
+
 
 public class Test {
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
-		ClientConfig config = new DefaultClientConfig();
-		Client client = Client.create(config);
-		WebResource service = client.resource(getBaseURI());
-
-		//System.out.println(service.path("sim").path("location").accept(
-				//MediaType.APPLICATION_JSON).get(String.class));
+		MovaClient mc = new MovaClient();
 		
-		String obj = service.path("sim").path("location").accept(
-				MediaType.APPLICATION_JSON).get(String.class);
+		Vector<Item> items = mc.findItem(ItemType.BOARD, 3, new Location(3, 3));
 		
-		ObjectMapper mapper = new ObjectMapper();
-		Location l = mapper.readValue(obj, Location.class);
-	}
+		//mc.distributeItemLocation("ad", new Location(2, 2));
 
-	private static URI getBaseURI() {
-		return UriBuilder.fromUri(
-				"http://localhost:8080/CommunicationServer").build();
+		//mc.distributeItemState("as", ItemState.AVAILABLE);
+		
+		
+		
+		MovaJson mj = new MovaJson();
+		
+		Vector<String> ac = new Vector<String>();
+		Agent a1 = new Agent(AgentType.Coordinator);
+		Agent a2 = new Agent(AgentType.RFID);
+		
+		ac.add(a1.getId());
+		ac.add(a2.getId());
+		
+		//mc.sendActivity(new Activity(), ac);
+		
+		mc.changeActivityStatus(new Activity().getId(), ActivityState.COMPLETED);
 	}
 }
