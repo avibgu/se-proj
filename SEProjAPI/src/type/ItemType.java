@@ -1,15 +1,15 @@
 package type;
 
 public enum ItemType {
-	Projector,
-	Laptop,
-	Mouse,
-	Cable,
-	Chair,
-	Speaker,
-	Stand,
-	Board,
-	Lazer_Cursor,
-	Board_Pen,
-	Eraser,
+	PROJECTOR,
+	LAPTOP,
+	MOUSE,
+	CABLE,
+	CHAIR,
+	SPEAKER,
+	STAND,
+	BOARD,
+	LAZER_CURSOR,
+	BOARD_PEN,
+	ERASER,
 }

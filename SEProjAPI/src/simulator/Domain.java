@@ -77,7 +77,7 @@ public class Domain {
 		Vector<Entity> items = new Vector<Entity>();
 		for(int i = 0; i < _nItems; i++){
 			Item item = new Item();
-                        item.setType(ItemType.Mouse);
+                        item.setType(ItemType.MOUSE);
 			items.add(item);
 			
                         item.setRepresentation(item.getType().toString() + (i+1));

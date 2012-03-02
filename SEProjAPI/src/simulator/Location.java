@@ -1,30 +1,32 @@
 package simulator;
 
-import java.util.Observable;
-
 public class Location implements Cloneable{
-	private int _latitude;
-	private int _longitude;
+	private int latitude;
+	private int longitude;
 	
-	public Location(int latitude, int longitude){
-		_latitude = latitude;
-		_longitude = longitude;
+	public Location(){
+		
+	}
+	
+	public Location(int lat, int lon){
+		latitude = lat;
+		longitude = lon;
 	}
 	
 	public synchronized int getLatitude(){
-		return _latitude;
+		return latitude;
 	}
 	
 	public synchronized int getLongitude(){
-		return _longitude;
+		return longitude;
 	}
 	
-	public synchronized void setLatitude(int latitude){
-		_latitude = latitude;
+	public synchronized void setLatitude(int lat){
+		latitude = lat;
 	}
 	
 	public synchronized void setLongitude(int longitude){
-		_latitude = longitude;
+		latitude = longitude;
 	}
 	
 //	public void placeEntity(Entity entity){
@@ -62,16 +64,16 @@ public class Location implements Cloneable{
 //	}
 	
 	public Location clone(){
-		int latitude = _latitude;
-		int longitude = _longitude;
-		Location loc = new Location(latitude, longitude);		
+		int lat = latitude;
+		int lon = longitude;
+		Location loc = new Location(lat, lon);		
 		return loc;
 	}
 	
 	public boolean equals(Object l){
 		Location loc = (Location)l;
 		if(loc != null){
-			if(loc.getLatitude() != _latitude || loc.getLongitude() != _longitude)
+			if(loc.getLatitude() != latitude || loc.getLongitude() != longitude)
 				return false;
 			else
 				return true;

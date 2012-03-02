@@ -1,5 +1,6 @@
 package actor;
 
+import java.util.UUID;
 import java.util.Vector;
 
 import type.ItemType;
@@ -7,12 +8,17 @@ import type.ItemType;
 import State.ActivityState;
 
 public class Activity {
+	
+	protected String id;
 	protected int priority;
 	protected ActivityState state;
 	protected Vector<ItemType> requiredItems;
-		
 	
-
+	public Activity(){
+		id = UUID.randomUUID().toString();
+		requiredItems = new Vector<ItemType>();
+	}
+	
 	public Vector<ItemType> getRequiredItems() {
 		return requiredItems;
 	}
@@ -42,4 +48,7 @@ public class Activity {
 		return true;
 	}
 	
+	public String getId(){
+		return id;
+	}
 }

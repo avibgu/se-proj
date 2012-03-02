@@ -76,7 +76,10 @@ public class World extends javax.swing.JFrame implements Observer{
         }
         String[] names = new String[]{"0", "1", "2", "3", "4", "5", "6"};
         DefaultTableModel model = new DefaultTableModel(locations, names){
-            @Override
+            
+			private static final long serialVersionUID = 1053948808197331657L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 //all cells false
                 return false;
