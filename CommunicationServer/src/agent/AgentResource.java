@@ -1,5 +1,7 @@
 package agent;
 
+import java.util.Vector;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -10,6 +12,8 @@ import utilities.MovaJson;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import db.DBHandler;
 
 @Path("/agents")
 public class AgentResource {

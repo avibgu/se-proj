@@ -22,7 +22,7 @@ public class Test {
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
 		MovaClient mc = new MovaClient();
 		
-		Vector<Item> items = mc.findItem(ItemType.BOARD, 3, new Location(3, 3));
+		//Vector<Item> items = mc.findItem(ItemType.BOARD, 3, new Location(3, 3));
 		
 		//mc.distributeItemLocation("ad", new Location(2, 2));
 
@@ -40,6 +40,8 @@ public class Test {
 		ac.add(a2.getId());
 		
 		//mc.sendActivity(new Activity(), ac);
+		
+		mc.changeAgentLocation("213", new Location(1,1));
 		
 		mc.changeActivityStatus(new Activity().getId(), ActivityState.COMPLETED);
 	}

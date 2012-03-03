@@ -1,0 +1,10 @@
+1. צירפתי לפרוייקט את ה - plugin של derby בשני הקבצים:
+	א. derby_core_plugin_10.8.2.zip
+	ב. derby_ui_doc_plugin_1.1.3.zip
+2. תיכנסו לכאן http://www.eclipse.org/articles/article.php?file=Article-EclipseDbWebapps/index.html
+	ותקראו ותפעלו ע"פ ההוראות עד לחלק שכתוב "Creating a Derby Database" (אין צורך ליצור אחד כי יצרתי),
+	וכמובן אין צורך שתצרו java project חדש.
+	שימו לב שהתמונות לא תואמות ב - 100% את התמונות באתר אבל אפשר להבין מה צריך לעשות.
+3. יצרתי טבלה אחת פשוטה עם השדות (id, type, status, ip, registration id), כמובן שנוכל לשנות בהמשך.
+4. יצרתי מחלקה DBHandler שהינה Singleton שמטפלת בגישה ל - database. הסיבה שהיא singleton היא כי היא מחזיקה במנעולים שונים.
+5. די בטוח שזה יעשה לכם בעיות מכל מיני סיבות. דברו איתי ונסדר את זה.
