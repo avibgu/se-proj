@@ -18,7 +18,7 @@ public class Simulator {
 	
 	public Simulator(Domain domain) {
 		_locationManager = new LocationManager(domain);
-		_entities = _locationManager.initializeLocations();
+		_entities = _locationManager.manuallyInitializeLocations();
 		_agents = _entities.elementAt(0);
 		_items = _entities.elementAt(1);
 		_sensorAgents = _entities.elementAt(2);

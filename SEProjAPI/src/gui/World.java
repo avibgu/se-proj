@@ -61,6 +61,9 @@ public class World extends javax.swing.JFrame implements Observer{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        domainTable.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        domainTable.setRowHeight(domainTable.getRowHeight() * 2);
+        domainTable.setDefaultRenderer(String.class, new MultiLineCellRenderer(_domain));
         String [][] locations = new String[_domain.getDomainSize()][_domain.getDomainSize()];
         for(int i = 0; i < locations.length; i++){
             for(int j = 0; j < locations.length; j++){
@@ -76,13 +79,14 @@ public class World extends javax.swing.JFrame implements Observer{
         }
         String[] names = new String[]{"0", "1", "2", "3", "4", "5", "6"};
         DefaultTableModel model = new DefaultTableModel(locations, names){
-            
-			private static final long serialVersionUID = 1053948808197331657L;
-
-			@Override
+            @Override
             public boolean isCellEditable(int row, int column) {
                 //all cells false
                 return false;
+            }
+
+            public Class getColumnClass(int columnIndex) {
+                return String.class;
             }
         };
         domainTable.setModel(model
@@ -110,7 +114,7 @@ public class World extends javax.swing.JFrame implements Observer{
 
         messageArea.setColumns(20);
         messageArea.setEditable(false);
-        messageArea.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        messageArea.setFont(new java.awt.Font("Calibri", 0, 14));
         messageArea.setRows(5);
         messageArea.setText("Messages\n");
         jScrollPane2.setViewportView(messageArea);
@@ -122,11 +126,11 @@ public class World extends javax.swing.JFrame implements Observer{
             }
         });
 
-        stopLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        stopLabel.setFont(new java.awt.Font("Tahoma", 1, 12));
         stopLabel.setText("System Stopped");
         stopLabel.setVisible(false);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12));
         jLabel1.setText("Items are shown as if they are moved only if they are close to one of the sensors(length <= 2)");
 
         jMenu1.setText("File");
@@ -143,8 +147,7 @@ public class World extends javax.swing.JFrame implements Observer{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(65, 65, 65)
@@ -153,20 +156,23 @@ public class World extends javax.swing.JFrame implements Observer{
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(RestartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                                .addComponent(RestartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 753, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 869, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stopLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,11 +295,11 @@ public class World extends javax.swing.JFrame implements Observer{
         if(newLocationRep.equals(""))
     		domainTable.getModel().setValueAt(entity.toString(), newLocation.getLatitude(), newLocation.getLongitude());
     	else{
-    		newLocationRep = newLocationRep.concat("+" + entity.toString());
+    		newLocationRep = newLocationRep.concat("\n" + entity.toString());
     		domainTable.getModel().setValueAt(newLocationRep, newLocation.getLatitude(), newLocation.getLongitude());
     	}
     	if(oldLocation != null){
-	    	String[] entitiesRep = oldLocationRep.split("\\+");
+	    	String[] entitiesRep = oldLocationRep.split("\n");
 	    	if(entitiesRep.length == 1){
 	    		domainTable.getModel().setValueAt("", oldLocation.getLatitude(), oldLocation.getLongitude());
 	    	}
@@ -301,7 +307,7 @@ public class World extends javax.swing.JFrame implements Observer{
 	    		String newRep = "";
 	    		for (int i = 0; i < entitiesRep.length - 1; i++) {
 					if(!entitiesRep[i].equals(entity.toString()))
-						newRep = newRep.concat(entitiesRep[i] + "+");
+						newRep = newRep.concat(entitiesRep[i] + "\n");
 				}
 	    		if(!entitiesRep[entitiesRep.length - 1].equals(entity.toString()))
 	    			newRep = newRep.concat(entitiesRep[entitiesRep.length - 1]);

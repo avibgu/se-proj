@@ -15,6 +15,7 @@ public class ConfigurationManager {
 	 */
 	public Domain loadParameters() {
 		int nAgents, nItems, nSensors, domainSize;
+		double nScanDistance;
 		Properties prop = new Properties();
 		try {
 			InputStream in = getClass().getResourceAsStream("config.properties");
@@ -28,9 +29,10 @@ public class ConfigurationManager {
 		nAgents = Integer.parseInt(prop.getProperty("nAgents"));
 		nItems = Integer.parseInt(prop.getProperty("nItems"));
 		nSensors = Integer.parseInt(prop.getProperty("nSensors"));
+		nScanDistance = Double.parseDouble(prop.getProperty("nScanDistance"));
 		
 		domainSize = (nAgents + nItems + nSensors) / 2;
-		Domain domain = new Domain(domainSize, nAgents, nItems, nSensors);
+		Domain domain = new Domain(domainSize, nAgents, nItems, nSensors, nScanDistance);
 		return domain;
 	}
 }
