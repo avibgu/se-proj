@@ -33,7 +33,7 @@ public class Test {
 		MovaJson mj = new MovaJson();
 		
 		Vector<String> ac = new Vector<String>();
-		Agent a1 = new Agent(AgentType.Coordinator);
+		Agent a1 = new Agent(AgentType.COORDINATOR);
 		Agent a2 = new Agent(AgentType.RFID);
 		
 		ac.add(a1.getId());
