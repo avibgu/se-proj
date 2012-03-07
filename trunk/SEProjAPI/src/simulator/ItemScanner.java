@@ -13,17 +13,18 @@ public class ItemScanner implements Runnable {
 	protected SensorAgent _sensorAgent;
 	protected Location _sensorLocation;
 	protected final long _refreshRate = 3;
-	protected final double _scanDistance = 2;
+	protected final double _scanDistance;
 	protected Vector<Entity> _visibleItems;
 	protected Vector<Observer> _observers;
 	
-	public ItemScanner(Entity entity, Domain domain, Vector<Observer> observers){
+	public ItemScanner(Entity entity, Domain domain, Vector<Observer> observers, double scanDistance){
 		_domain = domain;
 		_sensorAgent = (SensorAgent)entity;
 		_sensorLocation = _sensorAgent.getLocation();
 		_dontStop = true;
 		_visibleItems = new Vector<Entity>();
 		_observers = observers;
+		_scanDistance = scanDistance;
 	}
 	
 	@Override

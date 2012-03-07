@@ -7,6 +7,12 @@ public class Item extends Entity{
 	protected ItemType type;
 	protected ItemState state;
 
+	public Item(){}
+	
+	public Item(ItemType itemType){
+		type = itemType;
+	}
+	
 	public ItemState getState() {
 		return state;
 	}
