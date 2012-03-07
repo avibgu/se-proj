@@ -23,11 +23,23 @@ import simulator.Location;
 import type.ItemType;
 import utilities.MovaJson;
 
+/**
+ * 
+ * This class uses the jersey client to access
+ * the application server's web services. 
+ * It converts MOVA objects into JSON Objects and uses REST API to 
+ * POST, GET, PUT and DELETE Resources
+ *
+ */
 public class MovaClient {
 	
 	private MovaJson _mj;
 	private WebResource _service;
 	
+	/**
+	 * Creates a new MOVA client containing a MOVA to JSON Serializer
+	 * and a Jersey Client to access server web services
+	 */
 	public MovaClient(){
 		_mj = new MovaJson();
 		ClientConfig config = new DefaultClientConfig();
@@ -39,7 +51,14 @@ public class MovaClient {
 	private URI getBaseURI() {
 		return UriBuilder.fromUri("http://localhost:8080/CommunicationServer").build();
 	}
-	
+	/**
+	 * @param type the type of item to find
+	 * @param quantity the number of items to find
+	 * @param location the location of the agent
+	 * @return a vector of items of type <type> closest to the agent's location
+	 * if the number of items are more than <quantity>, only the first <quantity> items
+	 * are returned. If less, only those items are returned
+	 */
 	public Vector<Item> findItem(ItemType type, int quantity, Location location){
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", type.toString());
@@ -52,6 +71,10 @@ public class MovaClient {
 		return _mj.jsonToItems(response);
 	}
 	
+	/**
+	 * @param itemId the id of the item
+	 * @param location the item's current location
+	 */
 	public void distributeItemLocation(String itemId, Location location){
 		JsonObject j = new JsonObject();
 		j.addProperty("id", itemId);
@@ -61,6 +84,10 @@ public class MovaClient {
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
+	/**
+	 * @param itemId the id of the item
+	 * @param state the item's current state
+	 */
 	public void distributeItemState(String itemId, ItemState state){
 		JsonObject j = new JsonObject();
 		j.addProperty("id", itemId);
@@ -70,6 +97,10 @@ public class MovaClient {
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
+	/**
+	 * @param activity the activity to send
+	 * @param agentIds a vector of agent ID's to send to
+	 */
 	public void sendActivity(Activity activity, Vector<String> agentIds){
 		JsonObject j = new JsonObject();
 		j.addProperty("activity", _mj.activityToJson(activity));
@@ -79,6 +110,10 @@ public class MovaClient {
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
+	/**
+	 * @param id the id of the activity
+	 * @param state the new state of the activity
+	 */
 	public void changeActivityStatus(String id, ActivityState state){
 		JsonObject j = new JsonObject();
 		j.addProperty("activityId", id);
@@ -88,6 +123,10 @@ public class MovaClient {
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
+	/**
+	 * @param id the id of the activity
+	 * @param newLocation the new location of the agent
+	 */
 	public void changeAgentLocation(String id, Location newLocation){
 		JsonObject j = new JsonObject();
 		j.addProperty("id", id);

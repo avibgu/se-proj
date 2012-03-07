@@ -8,13 +8,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 public class LocationDeserializer implements JsonDeserializer<Location> {
 
 	@Override
 	public Location deserialize(JsonElement jsonLocation, Type locationType,
-			JsonDeserializationContext context) throws JsonParseException {
+			JsonDeserializationContext context) {
 		
 		JsonObject jobject = (JsonObject) jsonLocation;
 		
