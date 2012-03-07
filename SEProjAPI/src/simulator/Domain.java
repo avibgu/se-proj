@@ -116,7 +116,78 @@ public class Domain {
 		_entities.add(sensorAgents);
 		return _entities;
 	}
-
+	
+	/**
+	 * Initializes the agents, items and sensors and places them randomly inside the domain
+	 * @return a vector of vectors of the entities where agents are the first vector,
+	 * items are the second vector and sensors are the third vector
+	 */
+//	public Vector<Vector<Entity>> initializeLocations(Scenario scenario) {
+//
+//		Vector<Entity> agents = new Vector<Entity>();
+//		for(int i = 0; i < _nAgents; i++){
+//			Agent agent = new Agent(AgentType.Coordinator);
+//			agents.add(agent);
+//			
+//            agent.setRepresentation(agent.getType().toString() + (i+1));
+//                        
+//			int location = r.nextInt(locations.size());
+//			location = locations.remove(location);
+//			
+//			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
+//			agent.setRepLocation(l);
+//			
+//			_grid.put(agent.getId(), l);
+//			
+//			Runnable lm = new LocationMonitor(agent, _observers);
+//			_locationMonitors.add(lm);
+//			new Thread(lm).start();
+//		}
+//		_entities.add(agents);
+//
+//		Vector<Entity> items = new Vector<Entity>();
+//		for(int i = 0; i < _nItems; i++){
+//			Item item = new Item();
+//                        item.setType(ItemType.MOUSE);
+//			items.add(item);
+//			
+//                        item.setRepresentation(item.getType().toString() + (i+1));
+//                        
+//			int location = r.nextInt(locations.size());
+//			location = locations.remove(location);
+//			
+//			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
+//			item.setRepLocation(l);
+//			
+//			_grid.put(item.getId(), l);
+//		}
+//		_entities.add(items);
+//		Vector<Entity> sensorAgents = new Vector<Entity>();
+//		for(int i = 0; i < _nSensors; i++){
+//			SensorAgent sensor = new SensorAgent(AgentType.RFID);
+//			sensorAgents.add(sensor);
+//			
+//                        sensor.setRepresentation("Sensor" + (i+1));
+//                        
+//			int location = r.nextInt(locations.size());
+//			location = locations.remove(location);
+//			
+//			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
+//			sensor.setRepLocation(l);
+//			
+//			_grid.put(sensor.getId(), l);
+//			
+//			Runnable lm = new LocationMonitor(sensor, _observers);
+//			_locationMonitors.add(lm);
+//			new Thread(lm).start();
+//			Runnable is = new ItemScanner(sensor, this, _observers);
+//			_itemScanners.add(is);
+//			new Thread(is).start();
+//		}
+//		_entities.add(sensorAgents);
+//		return _entities;
+//	}
+	
 	public Vector<Entity> scanForItems(Location entityLocation, double distance){
 		Vector<Entity> items = new Vector<Entity>();
 		synchronized (_entities) {
