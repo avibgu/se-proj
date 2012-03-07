@@ -12,13 +12,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 public class ItemDeserializer implements JsonDeserializer<Item> {
-
+	
 	@Override
 	public Item deserialize(JsonElement jsonItem, Type itemType, 
-			JsonDeserializationContext context) throws JsonParseException {
+			JsonDeserializationContext context) {
 		
 		JsonObject jobject = (JsonObject) jsonItem;
 		

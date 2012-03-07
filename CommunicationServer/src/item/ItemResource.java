@@ -15,7 +15,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import simulator.Location;
-import type.ItemType;
 import utilities.MovaJson;
 
 import State.ItemState;
@@ -31,15 +30,10 @@ public class ItemResource {
 							@DefaultValue("1") @QueryParam("quantity") int quantity,
 							@QueryParam("location") String location){
 		
-		//Vector<Item> items = findItem(ItemType.valueOf(type), quantity, location);
-		Item i = new Item();
-		i.setLocation(new Location(1,1));
-		i.setLocation(new Location(2,2));
-		i.setState(ItemState.AVAILABLE);
-		i.setType(ItemType.CHAIR);
+		//add c2dm code here
+		//query the agents for the wanted items
 		
 		Vector<Item> items = new Vector<Item>();
-		items.add(i);
 		
 		MovaJson mj = new MovaJson();
 		
@@ -57,8 +51,9 @@ public class ItemResource {
 		
 		MovaJson mj = new MovaJson();
 		Location location = mj.jsonToLocation(jsonLocation);
-		
-		//add c2dm code here
+		if(location != null){
+			//add c2dm code here
+		}
 	}
 	
 	@PUT
