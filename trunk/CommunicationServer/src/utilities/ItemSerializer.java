@@ -17,8 +17,10 @@ public class ItemSerializer implements JsonSerializer<Item> {
 		jsonItem.addProperty("id", item.getId());
 		jsonItem.add("location", context.serialize(item.getLocation()));
 		jsonItem.add("old location", context.serialize(item.getOldLocation()));
-		jsonItem.addProperty("state", item.getState().toString());
-		jsonItem.addProperty("type", item.getType().toString());
+		if(item.getState() != null)
+			jsonItem.addProperty("state", item.getState().toString());
+		if(item.getType() != null)
+			jsonItem.addProperty("type", item.getType().toString());
 		
 		return jsonItem;
 	}

@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import type.AgentType;
 
 public class DBHandler {
 	
@@ -43,7 +46,7 @@ public class DBHandler {
         }
     }
     
-    public void insertAgent(String agentId, String type, Boolean loggedIn, String ip, String registrationId){
+    public void insertAgent(String agentId, AgentType type, Boolean loggedIn, String ip, String registrationId){
     	write.lock();
     	createConnection();
         try{
@@ -54,8 +57,11 @@ public class DBHandler {
 			else
 				logged = 'f';
             stmt.execute("insert into " + tableName + " values (" +
-                     "'"+agentId+"'" + "," + "'"+type+"'" + "," + "'"+logged+"'" + "," + "'"+ip+"'" + "," + "'"+registrationId+"'" + ")");
+                     "'"+agentId+"'" + "," + "'"+type.toString()+"'" + "," + "'"+logged+"'" + "," + "'"+ip+"'" + "," + "'"+registrationId+"'" + ")");
             stmt.close();
+        }
+        catch(SQLIntegrityConstraintViolationException e){
+        	System.out.println(e.getMessage());
         }
         catch (SQLException sqlExcept){
             sqlExcept.printStackTrace();
@@ -73,7 +79,7 @@ public class DBHandler {
             stmt.close();
         }
         catch (SQLException sqlExcept){
-            sqlExcept.printStackTrace();
+        	System.out.println("database access error");
         }
     	shutdown();
     	write.unlock();
@@ -95,7 +101,7 @@ public class DBHandler {
             stmt.close();
         }
         catch (SQLException sqlExcept){
-            sqlExcept.printStackTrace();
+        	System.out.println("database access error or no agents in database" );
         }
         shutdown();
         read.unlock();
@@ -116,11 +122,39 @@ public class DBHandler {
             stmt.close();
         }
         catch (SQLException sqlExcept){
-            sqlExcept.printStackTrace();
+        	System.out.println("database access error or no ip matches the agent id: " + agentId);
         }
     	shutdown();
     	read.unlock();
         return ip;
+    }
+    
+    public boolean getAgentStatus(String agentId){
+    	read.lock();
+    	createConnection();
+    	String status = "";
+    	boolean stat = false;
+    	try{
+            stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery("select AGENT_STATUS from " + tableName + " WHERE AGENT_ID = " + "'"+agentId+"'");
+            results.next();
+            status = results.getString(1);
+            
+            if(status.equals("t"))
+            	stat = true;
+            
+            if(status.equals("f"))
+            	stat = false;
+            
+            results.close();
+            stmt.close();
+        }
+        catch (SQLException sqlExcept){
+        	System.out.println("database access error or no ip matches the agent id: " + agentId);
+        }
+    	shutdown();
+    	read.unlock();
+        return stat;
     }
     
     public String getAgentRegistrationId(String agentId){
@@ -137,7 +171,7 @@ public class DBHandler {
             stmt.close();
         }
         catch (SQLException sqlExcept){
-            sqlExcept.printStackTrace();
+        	System.out.println("database access error or no registrationId matches the agent id: " + agentId);
         }
     	shutdown();
     	read.unlock();
@@ -185,6 +219,21 @@ public class DBHandler {
         try{
             stmt = conn.createStatement();
             stmt.execute("update " + tableName + " set REGISTRATION_ID = " + "'"+registrationID+"'" + " WHERE AGENT_ID = " + "'"+agentId+"'");
+            stmt.close();
+        }
+        catch (SQLException sqlExcept){
+            sqlExcept.printStackTrace();
+        }
+    	shutdown();
+    	write.unlock();
+    }
+    
+    public void deleteAllAgents(){
+    	write.lock();
+    	createConnection();
+        try{
+            stmt = conn.createStatement();
+            stmt.execute("delete from " + tableName);
             stmt.close();
         }
         catch (SQLException sqlExcept){
