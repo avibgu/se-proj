@@ -24,8 +24,12 @@ public class ItemDeserializer implements JsonDeserializer<Item> {
 		String id = jobject.get("id").getAsString();
 		Location location = context.deserialize(jobject.get("location"), Location.class);
 		Location oldLocation = context.deserialize(jobject.get("old location"), Location.class);
-		ItemState state = ItemState.valueOf(jobject.get("state").getAsString().toUpperCase());
-		ItemType type = ItemType.valueOf(jobject.get("type").getAsString().toUpperCase());
+		ItemState state = null;
+		ItemType type = null;
+		if(jobject.get("state") != null)
+			state = ItemState.valueOf(jobject.get("state").getAsString().toUpperCase());
+		if(jobject.get("type") != null)
+			type = ItemType.valueOf(jobject.get("type").getAsString().toUpperCase());
 		
 		Item i = new Item();
 		i.setId(id);

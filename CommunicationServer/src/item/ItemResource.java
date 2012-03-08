@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import simulator.Location;
+import type.ItemType;
 import utilities.MovaJson;
 
 import State.ItemState;
@@ -33,8 +34,15 @@ public class ItemResource {
 		//add c2dm code here
 		//query the agents for the wanted items
 		
-		Vector<Item> items = new Vector<Item>();
 		
+		Vector<Item> items = new Vector<Item>();
+		Item i1 = new Item(ItemType.BOARD);
+		Item i2 = new Item(ItemType.CABLE);
+		if(ItemType.valueOf(type).equals(i1.getType()))
+			items.add(i1);
+		
+		if(ItemType.valueOf(type).equals(i2.getType()))
+			items.add(i2);
 		MovaJson mj = new MovaJson();
 		
 		return mj.itemsToJson(items);
