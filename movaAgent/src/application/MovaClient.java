@@ -49,8 +49,7 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://localhost:8080/CommunicationServer").build();
-	}
+		return UriBuilder.fromUri("http://10.0.2.2:8080/CommunicationServer").build();	}
 	/**
 	 * @param type the type of item to find
 	 * @param quantity the number of items to find
@@ -144,13 +143,13 @@ public class MovaClient {
 	 * if the number of items are more than <quantity>, only the first <quantity> items
 	 * are returned. If less, only those items are returned
 	 */
-	public String saveRegistrationId(){
+	public String saveRegistrationId(String registraionId){
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 	//	queryParams.add("type", type.toString());
 		//queryParams.add("quantity", Integer.toString(quantity));
 		//queryParams.add("location", _mj.locationToJson(location));
 		
-		String response = _service.queryParams(queryParams).path("agents").path("saveRegistrationId").accept(
+		String response = _service.path("c2dm").path("saveRegistrationId/"+registraionId).accept(
 				MediaType.APPLICATION_JSON).get(String.class);
 		
 		return "AAAA";
