@@ -3,6 +3,7 @@
 	<name>mova-server</name>
 	<comment></comment>
 	<projects>
+		<project>mova-core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

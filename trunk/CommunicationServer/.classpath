@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry combineaccessrules="false" kind="src" path="/mova-core"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
@@ -24,6 +25,5 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/mova-core"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
