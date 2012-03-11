@@ -7,9 +7,13 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.ws.rs.GET;
+import javax.ws.rs.PathParam;
 
 
 public class C2dmController {
@@ -146,6 +150,13 @@ public class C2dmController {
 	            return null;
 	        }
 	}
+	
+	 @GET
+	 @Path("/saveRegistrationId/{id}")
+	 @Consumes(MediaType.TEXT_PLAIN)
+	 public void saveRegistrationId(@PathParam("id") String id){
+	  System.out.println("HERE");
+	 }
 	
 	public static void main(String[] args) {
 		String auth = getAutoToken();

@@ -5,8 +5,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
-import State.ActivityState;
-import State.ItemState;
+import state.ActivityState;
+import state.ItemState;
+
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

@@ -15,10 +15,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import simulator.Location;
+import state.ItemState;
 import type.ItemType;
 import utilities.MovaJson;
 
-import State.ItemState;
 import actor.Item;
 
 @Path("/items")

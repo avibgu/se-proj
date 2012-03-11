@@ -14,12 +14,13 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import State.ActivityState;
-import State.ItemState;
 import actor.Activity;
+import actor.Agent;
 import actor.Item;
 
 import simulator.Location;
+import state.ActivityState;
+import state.ItemState;
 import type.ItemType;
 import utilities.MovaJson;
 
@@ -55,7 +56,7 @@ public class MovaClient {
 	 * @param type the type of item to find
 	 * @param quantity the number of items to find
 	 * @param location the location of the agent
-	 * @return a vector of items of type <type> closest to the agent's location
+	 * @return a vector of items of type <type> closest to the agent's location.
 	 * if the number of items are more than <quantity>, only the first <quantity> items
 	 * are returned. If less, only those items are returned
 	 */
@@ -134,5 +135,16 @@ public class MovaClient {
 		
 		_service.path("agents").path("changeAgentLocation")
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
+	}
+	
+	public void registerAgent(Agent agent){
+		JsonObject j = new JsonObject();
+		j.addProperty("id", agent.getId());
+		j.addProperty("type", agent.getType().toString());
+		j.addProperty("loggedIn", agent.isLoggedIn());
+		j.addProperty("registrationId", agent.getRegistrationId());
+		
+		_service.path("agents").path("registerAgent")
+		.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 }
