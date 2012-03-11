@@ -5,11 +5,11 @@ import java.util.PriorityQueue;
 import java.util.Vector;
 
 import simulator.Location;
+import state.ActivityState;
+import state.ItemState;
 import type.AgentType;
 import type.ItemType;
 
-import State.ActivityState;
-import State.ItemState;
 import algorithm.ActivityMonitor;
 
 public class Agent extends Entity implements Runnable {
@@ -21,6 +21,7 @@ public class Agent extends Entity implements Runnable {
 	protected Vector<Item> 		items; // The list of known locations of the items.
 	protected Vector<Item>		myItems; // The items the agent has.
 	protected Activity currentActivity;
+	protected String registrationId;
 	
 	public ActivityMonitor getActivityMonitor() {
 		return activityMonitor;
@@ -94,6 +95,7 @@ public class Agent extends Entity implements Runnable {
 		this.activityMonitor = new ActivityMonitor(activities);
 		this.type = type;
 		this.dontStop = true;
+		this.registrationId = "";
 	}
 
 	@Override
@@ -164,6 +166,14 @@ public class Agent extends Entity implements Runnable {
 		activities.add(newActivity);
 	}
 	
+	public void setRegistrationId(String registrationId){
+		this.registrationId = registrationId;
+	}
+	
+	public String getRegistrationId(){
+		return this.registrationId;
+	}
+	
 	/**
 	 * @param item the item type to find
 	 * @return the closest item to the entity, 
@@ -189,7 +199,7 @@ public class Agent extends Entity implements Runnable {
 		return null;
 	}
 	
-	protected double calcDistance(Location entityLocation, Location location) {
+	private double calcDistance(Location entityLocation, Location location) {
 		if(entityLocation != null && location != null){
 			double latitudeDiff = entityLocation.getLatitude() - location.getLatitude();
 			double longitudeDiff = entityLocation.getLongitude() - location.getLongitude();

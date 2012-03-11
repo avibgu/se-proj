@@ -9,6 +9,7 @@ public class Entity extends Observable{
 	protected String id;
 	protected Location location;
 	protected Location oldLocation;
+	protected boolean loggedIn;
 	private transient Location lastRepesentedLocation;
     private transient String representation;
     private transient boolean updated;
@@ -17,6 +18,7 @@ public class Entity extends Observable{
 		id = UUID.randomUUID().toString();
 		location = null;
 		oldLocation = null;
+		loggedIn = false;
 		lastRepesentedLocation = null;
         representation = "";
         updated = true;
@@ -68,5 +70,17 @@ public class Entity extends Observable{
     }
     public synchronized boolean updated(){
     	return updated;
+    }
+    
+    public void logIn(){
+    	loggedIn = true;
+    }
+    
+    public void logOff(){
+    	loggedIn = false;
+    }
+    
+    public boolean isLoggedIn(){
+    	return loggedIn;
     }
 }

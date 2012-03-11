@@ -1,6 +1,6 @@
 package actor;
 
-import State.ItemState;
+import state.ItemState;
 import type.ItemType;
 
 public class Item extends Entity{
