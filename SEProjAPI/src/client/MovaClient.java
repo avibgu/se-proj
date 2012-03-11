@@ -50,7 +50,7 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://localhost:8080/CommunicationServer").build();
+		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	/**
 	 * @param type the type of item to find
