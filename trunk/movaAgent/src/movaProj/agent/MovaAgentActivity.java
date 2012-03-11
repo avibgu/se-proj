@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import application.MovaClient;
+
 
 public class MovaAgentActivity extends Activity {
     /** Called when the activity is first created. */
