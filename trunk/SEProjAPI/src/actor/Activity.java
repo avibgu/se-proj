@@ -3,9 +3,9 @@ package actor;
 import java.util.UUID;
 import java.util.Vector;
 
+import state.ActivityState;
 import type.ItemType;
 
-import State.ActivityState;
 
 public class Activity {
 	

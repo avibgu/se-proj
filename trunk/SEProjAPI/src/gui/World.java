@@ -79,13 +79,16 @@ public class World extends javax.swing.JFrame implements Observer{
         }
         String[] names = new String[]{"0", "1", "2", "3", "4", "5", "6"};
         DefaultTableModel model = new DefaultTableModel(locations, names){
-            @Override
+			private static final long serialVersionUID = 1297866531965024542L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 //all cells false
                 return false;
             }
 
-            public Class getColumnClass(int columnIndex) {
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+			public Class getColumnClass(int columnIndex) {
                 return String.class;
             }
         };

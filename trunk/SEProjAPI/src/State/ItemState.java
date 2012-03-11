@@ -1,4 +1,4 @@
-package State;
+package state;
 
 public enum ItemState {
 	AVAILABLE,
