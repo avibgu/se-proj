@@ -8,16 +8,20 @@ import java.util.Vector;
 
 public class CBJ {
 
-	protected SortedSet<Integer> mFullDomain = null;
-	protected SortedSet<Integer> mCurrentDomain = null;
+	protected SortedSet<Constreint> mFullDomain = null;
+	protected SortedSet<Constreint> mCurrentDomain = null;
+	
 	protected SortedSet<Integer> mConfSet = null;
 	protected Vector<Integer> mAssignedVariables = null;
 	protected Vector<Integer> mAllVariables = null;
+	
 	protected int mID = -1;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CBJ(SortedSet<Integer> pFullDomain, int pID) {
 
+		//TODO: init mAllVariables..
+		
 		mID = pID;
 
 		mCurrentDomain = new TreeSet(pFullDomain);
@@ -37,10 +41,6 @@ public class CBJ {
 			int nextAgent = getNextAgent();
 
 			sendLabel(cpa, mAssignedVariables, nextAgent);
-
-			print(mID + " assigned the value "
-					+ getFirstElementInCurrentDomain()
-					+ " and sent LABEL to next agent");
 		}
 	}
 
@@ -51,20 +51,19 @@ public class CBJ {
 	}
 
 	private boolean isFirstAgent() {
-		// TODO Auto-generated method stub
-		return false;
+		return mAllVariables.get(0) == mID;
 	}
 
 	private int getNextAgent() {
 
 		for (int i = 0; i < mAllVariables.size(); i++)
-			if (!mAssignedVariables.contains(i) && i < mID)
+			if (!mAssignedVariables.contains(i) && mID < i)
 				return i;
 
 		return -1;
 	}
 
-	protected int getFirstElementInCurrentDomain() {
+	protected Constreint getFirstElementInCurrentDomain() {
 
 		return mCurrentDomain.first();
 	}
@@ -103,19 +102,15 @@ public class CBJ {
 	}
 
 	private boolean amIConsistentWithThisVar(Assignment pCPA, int pVar) {
-		// TODO  
-//		getProblem().isConsistent(getId(),
-//				pCPA.getAssignment(getId()), mAssignedVariables.get(h),
-//				pCPA.getAssignment(mAssignedVariables.get(h)));
-
-		return false;
+		
+		return !pCPA.getAssignment(mID).isOverlap(pCPA.getAssignment(pVar));
 	}
 
-	protected void desicion(boolean consistent, Assignment cpa, int toWho) {
+	protected void desicion(boolean consistent, Assignment pCPA, int toWho) {
 
-		if ((cpa.getNumberOfAssignedVariables() == getNumberOfVariables())
+		if ((pCPA.getNumberOfAssignedVariables() == mAssignedVariables.size())
 				&& consistent)
-			finish(cpa);
+			finish(pCPA);
 
 		else if ((mAssignedVariables.size() == 0 && mCurrentDomain.isEmpty()))
 			finishWithNoSolution();
@@ -124,10 +119,10 @@ public class CBJ {
 
 			Vector<Integer> tAV = new Vector<Integer>(mAssignedVariables);
 
-			if (!tAV.contains(getId()) && toWho != getId())
-				tAV.add(getId());
+			if (!tAV.contains(mID) && toWho != mID)
+				tAV.add(mID);
 
-			send("LABEL", cpa, tAV).to(toWho);
+			sendLabel(pCPA, tAV, toWho);
 		}
 
 		else if (!consistent) {
@@ -141,10 +136,26 @@ public class CBJ {
 
 			mConfSet.remove(new Integer(h));
 
-			cpa.unassign(getId());
+			pCPA.unassign(mID);
 
-			send("UNLABEL", cpa, mConfSet).to(h);
+			sendUnlabel(pCPA, mConfSet, toWho);
 		}
+	}
+
+	private void sendUnlabel(Assignment pCPA, SortedSet<Integer> mConfSet2,
+			int toWho) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void finishWithNoSolution() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void finish(Assignment cpa) {
+		// TODO Auto-generated method stub
+		// maybe to notify all agent that a solution has found..
 	}
 
 	private int getH() {
@@ -161,17 +172,14 @@ public class CBJ {
 	@WhenReceived("UNLABEL")
 	public void handleUNLABEL(Assignment cpa, SortedSet<Integer> confSetOfI) {
 
-		print(getId() + " got UNLABEL from " + getCurrentMessage().getSender()
-				+ " with cpa: " + cpa + " and confSet: " + confSetOfI);
-
 		mConfSet.addAll(confSetOfI);
 
-		mCurrentDomain.remove(cpa.getAssignment(getId()));
+		mCurrentDomain.remove(cpa.getAssignment(mID));
 
 		// TODO
 		clearAndRestore(cpa);
 
-		desicion(!mCurrentDomain.isEmpty(), cpa, getId());
+		desicion(!mCurrentDomain.isEmpty(), cpa, mID);
 	}
 
 	protected void clearAndRestore(Assignment cpa) {
@@ -180,36 +188,32 @@ public class CBJ {
 
 		for (Integer var : mAssignedVariables) {
 
-			if (getId() == var)
+			if (mID == var)
 				break;
 
 			dontSend.add(var);
 		}
 
-		for (int i = 0; i < getNumberOfVariables(); i++) {
+		for (int i = 0; i < mAllVariables.size(); i++) {
 
-			if (!dontSend.contains(i) && getId() != i) {
+			if (!dontSend.contains(i) && mID != i) {
 
 				cpa.unassign(i);
-				send("CLEAR_AND_RESTORE").to(i);
+				sendClearAndRestore(i);
 			}
 		}
+	}
+
+	private void sendClearAndRestore(int i) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@WhenReceived("CLEAR_AND_RESTORE")
 	public void handleCLEARANDRESTORE() {
-
-		print(getId() + " got CLEAR_AND_RESTORE from "
-				+ getCurrentMessage().getSender());
-
+		
 		mConfSet.clear();
-		mCurrentDomain = new TreeSet(getDomain());
+		mCurrentDomain = new TreeSet(mFullDomain);
 	}
-
-	private void print(String string) {
-		System.err.println(string);
-		System.err.flush();
-	}
-
 }
