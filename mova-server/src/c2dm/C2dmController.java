@@ -15,6 +15,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -28,23 +29,17 @@ public class C2dmController {
 	
 	@PUT
 	@Path("/saveRegistrationId")
-	//@Consumes(MediaType.APPLICATION_JSON)
 	public void saveRegistrationId(String jsonObject){
 		System.out.println("HERE");
 		JsonParser jp = new JsonParser();
-		//JsonObject j = (JsonObject) jp.parse(jsonObject);
-		//String agentId = j.get("id").getAsString();
-		registration.add("123");
-		sendMessageToDevice("a", "123", "Hi Shiran");
-		//return "MMMMMMM";
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String agentId = j.get("id").getAsString();
+		sendMessageToDevice("a",agentId , "Hi Shiran");
 	}
 	
 	public static void sendMessageToDevice(String collapseKey, String registrationId, String message){
 		String authToken = getAutoToken();
-		
-		// _log.info("sending message...");
-	        
-        //HttpsURLConnection.setDefaultHostnameVerifier(new FakeHostnameVerifier()); 
+
         URL url;
 		try {
 			url = new URL("https://android.apis.google.com/c2dm/send");
@@ -101,14 +96,8 @@ public class C2dmController {
 	}
 
 	private static String getAutoToken() {
-		String authToken=null;
-		/*  String authToken = _dao.getAuthToken();
-	        if (authToken != null) {
-	            _log.info("retrieved auth token from db: " + authToken);
-	            return authToken;
-	        }*/
-	        
-	       System.out.println("asking C2DM server for auth token...");
+			String authToken=null;
+		    System.out.println("asking C2DM server for auth token...");
 	        
 	        StringBuilder buf = new StringBuilder();
 	        
