@@ -50,7 +50,7 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
 	}
 	/**
 	 * @param type the type of item to find
@@ -155,7 +155,7 @@ public class MovaClient {
 		//queryParams.add("location", _mj.locationToJson(location));
 		
 		String response = _service.path("c2dm").path("saveRegistrationId/"+registraionId).accept(
-				MediaType.APPLICATION_JSON).get(String.class);
+				MediaType.TEXT_PLAIN).get(String.class);
 		
 		return "AAAA";
 	}
