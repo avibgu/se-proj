@@ -1,25 +1,30 @@
 package algorithm;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Assignment {
 
+	protected Map<Integer,Constreint> map = null;
+	
+	public Assignment() {
+		map = new HashMap<Integer, Constreint>();
+	}
+	
+	
 	public void assign(int var, Constreint val) {
-		// TODO Auto-generated method stub
-		
+		map.put(var, val);
 	}
 
-	public Constreint getAssignment(int mID) {
-		// TODO Auto-generated method stub
-		return null;
+	public Constreint getAssignment(int var) {
+		return map.get(var);
 	}
 
 	public int getNumberOfAssignedVariables() {
-		// TODO Auto-generated method stub
-		return -1;
+		return map.size();
 	}
 
-	public void unassign(int mID) {
-		// TODO Auto-generated method stub
-		
+	public void unassign(int var) {
+		map.remove(var);
 	}
-
 }

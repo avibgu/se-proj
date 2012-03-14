@@ -19,7 +19,15 @@ public class TimeConstreint implements Constreint{
 		if (!(other instanceof TimeConstreint))
 			return false;
 		
-		//TODO
+		Date otherStart = ((TimeConstreint)other).mStartTime;
+		Date otherEnd = ((TimeConstreint)other).mEndTime;
+		
+		if (otherStart.compareTo(mStartTime) >= 0 && otherStart.compareTo(mEndTime) <= 0)
+			return true;
+		
+		if (otherEnd.compareTo(mStartTime) >= 0 && otherEnd.compareTo(mEndTime) <= 0)
+			return true;
+		
 		return false;
 	}
 }
