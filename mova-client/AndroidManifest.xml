@@ -5,11 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="10" />
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission> 
 	
-    <permission
-        android:name="movaProj.agent.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+    <permission android:name="movaProj.agent.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 
     <uses-permission android:name="movaProj.agent.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -30,13 +27,16 @@
         <receiver
             android:name=".C2DMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+              <category android:name="movaProj.agent" />
+          	</intent-filter>
             <intent-filter >
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" >
-                </action>
-
-                <category android:name="movaProj.agent" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+            	<category android:name="movaProj.agent" />
             </intent-filter>
-        </receiver>
+         </receiver>
+     
     </application>
 
 </manifest>
