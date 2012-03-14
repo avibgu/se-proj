@@ -7,20 +7,33 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-
+@Path("/c2dm")
 public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
 	public static final String SENDER_PW = "movaC2DM";
-	 
+	public List<String> registration = new ArrayList<String>() ;
+	public int counter = 0;
+	
+	@GET
+	@Path("/saveRegistrationId/{id}")
+	public String saveRegistrationId(@PathParam("id") String id){
+		System.out.println("HERE");
+		registration.add(id);
+		sendMessageToDevice("a", id, "Hi Shiran");
+		return "MMMMMMM";
+	}
+	
 	public static void sendMessageToDevice(String collapseKey, String registrationId, String message){
 		String authToken = getAutoToken();
 		
@@ -30,8 +43,9 @@ public class C2dmController {
         URL url;
 		try {
 			url = new URL("https://android.apis.google.com/c2dm/send");
-		
-	        HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+			HttpsURLConnection.setDefaultHostnameVerifier(new CustomizedHostnameVerifier()); 
+			HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+			
 	        request.setDoOutput(true);
 	        request.setDoInput(true);
 	
@@ -92,7 +106,7 @@ public class C2dmController {
 	       System.out.println("asking C2DM server for auth token...");
 	        
 	        StringBuilder buf = new StringBuilder();
-	       // HttpsURLConnection.setDefaultHostnameVerifier(new FakeHostnameVerifier()); 
+	        
 	        HttpsURLConnection request = null;
 	        OutputStreamWriter post = null;
 	        try {
@@ -151,16 +165,11 @@ public class C2dmController {
 	        }
 	}
 	
-	 @GET
-	 @Path("/saveRegistrationId/{id}")
-	 @Consumes(MediaType.TEXT_PLAIN)
-	 public void saveRegistrationId(@PathParam("id") String id){
-	  System.out.println("HERE");
-	 }
-	
-	public static void main(String[] args) {
-		String auth = getAutoToken();
-		System.out.println("auth= " + auth);
+	private static class CustomizedHostnameVerifier implements HostnameVerifier {
+		public boolean verify(String hostname, SSLSession session) {
+			return true;
+		}
 	}
+
 	
 }
