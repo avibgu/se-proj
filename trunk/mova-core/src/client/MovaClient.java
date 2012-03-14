@@ -23,6 +23,7 @@ import state.ActivityState;
 import state.ItemState;
 import type.ItemType;
 import utilities.MovaJson;
+import org.restlet.resource.ClientResource;
 
 /**
  * 
@@ -51,6 +52,7 @@ public class MovaClient {
 	
 	private URI getBaseURI() {
 		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	/**
 	 * @param type the type of item to find
@@ -148,15 +150,19 @@ public class MovaClient {
 		.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
-	public String saveRegistrationId(String registraionId){
-		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-	//	queryParams.add("type", type.toString());
-		//queryParams.add("quantity", Integer.toString(quantity));
-		//queryParams.add("location", _mj.locationToJson(location));
+	public void saveRegistrationId(String registraionId){
+		JsonObject j = new JsonObject();
+		j.addProperty("id", registraionId);
 		
-		String response = _service.path("c2dm").path("saveRegistrationId/"+registraionId).accept(
-				MediaType.TEXT_PLAIN).get(String.class);
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/c2dm/saveRegistrationId");
+		resource.put(j.toString());
 		
-		return "AAAA";
+		//_service.path("c2dm").path("saveRegistrationId/"+registraionId).accept(
+				//MediaType.APPLICATION_JSON).get(String.class);
+		
+		//_service.path("c2dm").path("saveRegistrationId").type(
+				//MediaType.APPLICATION_JSON).put(j.toString());
+		
+		//return "AAAA";
 	}
 }

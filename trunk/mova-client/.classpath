@@ -5,5 +5,12 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mova-core"/>
+	<classpathentry kind="lib" path="libs/gson-2.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gson-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/org.restlet.jar"/>
+	<classpathentry kind="lib" path="libs/jersey-client-1.12.jar"/>
+	<classpathentry kind="lib" path="libs/jersey-core-1.12.jar"/>
+	<classpathentry kind="lib" path="libs/jersey-servlet-1.12.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
