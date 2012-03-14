@@ -1,8 +1,12 @@
 package movaProj.agent;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import client.MovaClient;
 
@@ -32,12 +36,45 @@ public class C2DMReceiver extends BroadcastReceiver
     					+ ", error = " + error);
     			sendRegistrationIdToServer("test",registrationId);
     		}
+    		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
+    			
+    			handleMessage(context,intent);
+    		}
     	}
+        
+        public void handleMessage(Context context, Intent intent){
+        	Log.d("CD2M","GOT MESSAGE");
+        	 Bundle extras = intent.getExtras();
+             if (extras != null) {
+                     //parse the message and do something with it.
+                     //For example, if the server sent the payload as "data.message=xxx", here you would have an extra called "message"
+                     String message = extras.getString("message");
+                     
+                     Log.d("CD2M", "received message: " + message);
+                     
+                     String app_name = (String)context.getText(R.string.app_name);
+                                
+                     // Use the Notification manager to send notification
+                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                     // Create a notification using android stat_notify_chat icon. 
+                 	Notification notification = new Notification(android.R.drawable.stat_notify_chat, app_name + ": " + message, 0);
+            
+                 	// Create a pending intent to call the HomeActivity when the notification is clicked
+                 	PendingIntent pendingIntent = PendingIntent.getActivity(context, -1, new Intent(context, MovaAgentActivity.class), PendingIntent.FLAG_UPDATE_CURRENT); // 
+                 	notification.when = System.currentTimeMillis();
+                 	notification.flags |= Notification.FLAG_AUTO_CANCEL; 
+                 	// Set the notification and register the pending intent to it
+                 	notification.setLatestEventInfo(context, app_name, message, pendingIntent); //
+            
+                 	// Trigger the notification
+                 	notificationManager.notify(0, notification);
+             	}
+  
+        }
         
      // Better do this in an asynchronous thread
         public void sendRegistrationIdToServer(String deviceId, String registrationId) {
        		Log.d("C2DM", "Sending registration ID to my application server");
     		new MovaClient().saveRegistrationId(registrationId);
         }
-
-}
+  }

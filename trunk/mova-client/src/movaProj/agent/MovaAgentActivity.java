@@ -1,33 +1,23 @@
 package movaProj.agent;
 
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 
-public class MovaAgentActivity extends Activity {
+public class MovaAgentActivity extends Activity implements OnClickListener{
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        register();
+        setContentView(R.layout.mova);
+        Button button = (Button)this.findViewById(R.id.button1);
+        button.setOnClickListener(this);
     }
     
     public void register() {
@@ -35,6 +25,10 @@ public class MovaAgentActivity extends Activity {
     	intent.putExtra("app",PendingIntent.getBroadcast(this, 0, new Intent(), 0));
     	intent.putExtra("sender", "movaC2DM@gmail.com");
     	startService(intent);
+    }
+    
+    public void onClick(View v){
+    	register();
     }
     
  }
