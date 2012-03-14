@@ -13,9 +13,10 @@ import java.util.List;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
-import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Path("/c2dm")
 public class C2dmController {
@@ -25,13 +26,17 @@ public class C2dmController {
 	public List<String> registration = new ArrayList<String>() ;
 	public int counter = 0;
 	
-	@GET
-	@Path("/saveRegistrationId/{id}")
-	public String saveRegistrationId(@PathParam("id") String id){
+	@PUT
+	@Path("/saveRegistrationId")
+	//@Consumes(MediaType.APPLICATION_JSON)
+	public void saveRegistrationId(String jsonObject){
 		System.out.println("HERE");
-		registration.add(id);
-		sendMessageToDevice("a", id, "Hi Shiran");
-		return "MMMMMMM";
+		JsonParser jp = new JsonParser();
+		//JsonObject j = (JsonObject) jp.parse(jsonObject);
+		//String agentId = j.get("id").getAsString();
+		registration.add("123");
+		sendMessageToDevice("a", "123", "Hi Shiran");
+		//return "MMMMMMM";
 	}
 	
 	public static void sendMessageToDevice(String collapseKey, String registrationId, String message){

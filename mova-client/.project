@@ -3,6 +3,7 @@
 	<name>mova-client</name>
 	<comment></comment>
 	<projects>
+		<project>mova-core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
