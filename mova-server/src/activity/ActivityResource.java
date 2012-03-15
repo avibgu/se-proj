@@ -9,6 +9,7 @@ import state.ActivityState;
 import state.ItemState;
 
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -21,8 +22,11 @@ public class ActivityResource {
 	public void sendActivity(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
-		String id = j.get("activity").getAsString(); 
-		ItemState state = ItemState.valueOf(j.get("state").getAsString());
+		JsonObject jsonActivity = (JsonObject) jp.parse(j.get("activity").getAsString());
+		String id = jsonActivity.get("id").getAsString(); 
+		ActivityState state = ActivityState.valueOf(jsonActivity.get("state").getAsString());
+		JsonArray jsonIds = (JsonArray) jp.parse(j.get("agentIds").getAsString());
+		
 		//add c2dm code here
 	}
 	
