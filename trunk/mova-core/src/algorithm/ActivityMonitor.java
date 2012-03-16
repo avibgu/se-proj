@@ -50,7 +50,7 @@ public class ActivityMonitor implements Runnable {
 				if (isThisActivityChangedHisPriority(activity))
 					mAgent.activityChangedHisPriority(activity);
 				
-				//TODO: monitor due date missing..
+				//TODO: monitor due date that we are going to miss..
 			}
 
 			if (numOfTopPriorityActivities > NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED)
