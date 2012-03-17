@@ -1,8 +1,11 @@
 package algorithm;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
+
+import priority.Priority;
 
 import actor.Activity;
 import actor.Agent;
@@ -16,6 +19,7 @@ public class ActivityMonitor implements Runnable {
 
 	private static final long WAITING_TIME_IN_SECONDS = 2;
 	private static final long WAITING_TIME_IN_MILISECONDS = WAITING_TIME_IN_SECONDS * 1000;
+	
 	private static final int NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED = 2;
 
 	protected boolean mDontStop;
@@ -24,33 +28,40 @@ public class ActivityMonitor implements Runnable {
 
 	protected PriorityQueue<Activity> mActivities;
 
-	protected Map<Activity, Integer> mOldPriority;
+	protected Map<Activity, Priority> mOldPriority;
 
 	public ActivityMonitor(Agent pAgent) {
 		mDontStop = true;
 		mAgent = pAgent;
 		mActivities = mAgent.getActivities();
-		mOldPriority = new HashMap<Activity, Integer>();
+		mOldPriority = new HashMap<Activity, Priority>();
 	}
 
 	@Override
 	public void run() {
 
 		int numOfTopPriorityActivities;
+		int numOfActivitiesBeforeThisOne;
 
 		while (mDontStop) {
 
 			numOfTopPriorityActivities = 0;
-
+			numOfActivitiesBeforeThisOne = 0;
+			
+			//TODO: maybe use read-write lock.. (should be located in Agent..)
+			
 			for (Activity activity : mActivities) {
 
 				if (isThisActivityIsATopPriorityActivity(activity))
 					numOfTopPriorityActivities++;
 
-				if (isThisActivityChangedHisPriority(activity))
+				if (isThisActivityChangedItsPriority(activity))
 					mAgent.activityChangedHisPriority(activity);
+
+				numOfActivitiesBeforeThisOne++;
 				
-				//TODO: monitor due date that we are going to miss..
+				if (areWeGoingToMissThisActivity(activity, numOfActivitiesBeforeThisOne))
+					mAgent.goigToMissThisActivity(activity);
 			}
 
 			if (numOfTopPriorityActivities > NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED)
@@ -61,9 +72,21 @@ public class ActivityMonitor implements Runnable {
 		}
 	}
 
-	protected boolean isThisActivityChangedHisPriority(Activity activity) {
+	private boolean areWeGoingToMissThisActivity(Activity activity, int numOfActivitiesBeforeThisOne) {
 
-		Integer oldPriority = -1;
+		if (mAgent.getCurrentActivity().equals(activity))
+			return false;
+		
+		long now = new Date().getTime();
+		
+		long expectedTime = mAgent.getAverageTimePerActivity() * (1 + numOfActivitiesBeforeThisOne);
+		
+		return now + expectedTime > activity.getDueDate();
+	}
+
+	protected boolean isThisActivityChangedItsPriority(Activity activity) {
+
+		Priority oldPriority;
 
 		if ((oldPriority = mOldPriority.get(activity)) != null
 				&& activity.getPriority() != oldPriority)
@@ -80,7 +103,7 @@ public class ActivityMonitor implements Runnable {
 	}
 
 	protected boolean isThisActivityIsATopPriorityActivity(Activity activity) {
-		return activity.getPriority() == 0;
+		return activity.getPriority() == Priority.HIGH;
 	}
 
 	protected void waitSomeTime() {
