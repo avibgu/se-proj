@@ -23,6 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+         <activity android:name=".CreateActivity" > </activity>
+          <activity android:name=".MovaActivityDetails" > </activity>
 
         <receiver
             android:name=".C2DMReceiver"

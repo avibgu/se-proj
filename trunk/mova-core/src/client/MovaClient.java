@@ -109,8 +109,12 @@ public class MovaClient {
 		j.addProperty("activity", _mj.activityToJson(activity));
 		j.addProperty("agentIds", _mj.agentsToJson(agentIds));
 		
-		_service.path("activities").path("sendActivity")
-			.type(MediaType.APPLICATION_JSON).put(j.toString());
+	//	_service.path("activities").path("sendActivity")
+	//		.type(MediaType.APPLICATION_JSON).put(j.toString());
+		
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/sendActivity");
+		resource.put(j.toString());
+		
 	}
 	
 	/**
@@ -150,9 +154,10 @@ public class MovaClient {
 		.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
-	public void saveRegistrationId(String registraionId){
+	public void saveRegistrationId(String registraionId,String agentId){
 		JsonObject j = new JsonObject();
-		j.addProperty("id", registraionId);
+		j.addProperty("registrationId", registraionId);
+		j.addProperty("agentId", agentId);
 		
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/c2dm/saveRegistrationId");
 		resource.put(j.toString());
