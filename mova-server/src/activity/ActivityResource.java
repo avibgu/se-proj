@@ -6,8 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 import state.ActivityState;
-import state.ItemState;
-
+import c2dm.C2dmController;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -18,16 +17,14 @@ public class ActivityResource {
 	
 	@PUT
 	@Path("/sendActivity")
-	@Consumes(MediaType.APPLICATION_JSON)
+	//@Consumes(MediaType.APPLICATION_JSON)
 	public void sendActivity(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		JsonObject jsonActivity = (JsonObject) jp.parse(j.get("activity").getAsString());
-		String id = jsonActivity.get("id").getAsString(); 
-		ActivityState state = ActivityState.valueOf(jsonActivity.get("state").getAsString());
 		JsonArray jsonIds = (JsonArray) jp.parse(j.get("agentIds").getAsString());
 		
-		//add c2dm code here
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds);
 	}
 	
 	@PUT

@@ -3,5 +3,14 @@
 
     <string name="hello">Hello World, MovaAgentActivity!</string>
     <string name="app_name">MovaAgent</string>
+    <string name="activityName">Activity Name:</string>
+    <string name="Sevirity">Sevirity:</string>
+    <string name="Severity">Severity:</string>
+    <string name="agentType">Agent Type:</string>
+    <string name="activityType">Activity Type:</string>
+    <string name="description">Description</string>
+    <string name="showActivities">My Activities</string>
+    <string name="nextActivity">Show my next activity</string>
+    <string name="description_new">Description:</string>
 
 </resources>

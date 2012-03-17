@@ -7,8 +7,6 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -16,76 +14,93 @@ import javax.net.ssl.SSLSession;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import type.AgentType;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import db.DBHandler;
 
 @Path("/c2dm")
 public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
 	public static final String SENDER_PW = "movaC2DM";
-	public List<String> registration = new ArrayList<String>() ;
+	private final static C2dmController instance = new C2dmController();
 	public int counter = 0;
+	private DBHandler db=DBHandler.getInstance();
+	
+	public static C2dmController getInstance(){
+		return instance;
+	}
 	
 	@PUT
 	@Path("/saveRegistrationId")
 	public void saveRegistrationId(String jsonObject){
-		System.out.println("HERE");
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
-		String agentId = j.get("id").getAsString();
-		sendMessageToDevice("a",agentId , "Hi Shiran");
+		String registrationId = j.get("registrationId").getAsString();
+		String agentId = j.get("agentId").getAsString();
+		db.insertAgent(agentId, AgentType.COORDINATOR, true, "127.0.0.1", registrationId);
+		System.out.println(registrationId);
 	}
 	
-	public static void sendMessageToDevice(String collapseKey, String registrationId, String message){
+	public void sendMessageToDevice(String collapseKey,String message,JsonArray agentIds){
 		String authToken = getAutoToken();
-
+		
         URL url;
 		try {
-			url = new URL("https://android.apis.google.com/c2dm/send");
-			HttpsURLConnection.setDefaultHostnameVerifier(new CustomizedHostnameVerifier()); 
-			HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
-			
-	        request.setDoOutput(true);
-	        request.setDoInput(true);
-	
-	        StringBuilder buf = new StringBuilder();
-	        buf.append("registration_id").append("=").append((URLEncoder.encode(registrationId, "UTF-8")));
-	        buf.append("&collapse_key").append("=").append((URLEncoder.encode(collapseKey, "UTF-8")));
-	        buf.append("&data.message").append("=").append((URLEncoder.encode(message, "UTF-8")));
-	        
-	        request.setRequestMethod("POST");
-	        request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-	        request.setRequestProperty("Content-Length", buf.toString().getBytes().length+"");
-	        request.setRequestProperty("Authorization", "GoogleLogin auth=" + authToken);
-	        
-	        OutputStreamWriter post = new OutputStreamWriter(request.getOutputStream());
-	        post.write(buf.toString());
-	        post.flush();
-	        
-	        BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-	        buf = new StringBuilder();
-	        String inputLine;
-	        while ((inputLine = in.readLine()) != null) {
-	            buf.append(inputLine);
-	        }
-	        post.close();
-	        in.close();
-	
-	      //  _log.info("response from C2DM server:\n" + buf.toString());
-	        
-	        int code = request.getResponseCode();
-	      //  _log.info("response code: " + request.getResponseCode());
-	      //  _log.info("response message: " + request.getResponseMessage());
-	        if (code == 200) {
-	            //TODO: check for an error and if so, handle
-	            
-	        } else if (code == 503) {
-	            //TODO: check for Retry-After header; use exponential backoff and try again
-	            
-	        } else if (code == 401) {
-	            //TODO: get a new auth token
-	        }
+			for (int i=0; i<agentIds.size() ; ++i){
+				// Find the regisration id
+				
+				String regId = db.getAgentRegistrationId(agentIds.get(i).getAsString());
+
+				url = new URL("https://android.apis.google.com/c2dm/send");
+				HttpsURLConnection.setDefaultHostnameVerifier(new CustomizedHostnameVerifier()); 
+				HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+				
+		        request.setDoOutput(true);
+		        request.setDoInput(true);
+		
+		        StringBuilder buf = new StringBuilder();
+		        buf.append("registration_id").append("=").append((URLEncoder.encode(regId, "UTF-8")));
+		        buf.append("&collapse_key").append("=").append((URLEncoder.encode(collapseKey, "UTF-8")));
+		        buf.append("&data.message").append("=").append((URLEncoder.encode(message, "UTF-8")));
+		        
+		        request.setRequestMethod("POST");
+		        request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		        request.setRequestProperty("Content-Length", buf.toString().getBytes().length+"");
+		        request.setRequestProperty("Authorization", "GoogleLogin auth=" + authToken);
+		        
+		        OutputStreamWriter post = new OutputStreamWriter(request.getOutputStream());
+		        post.write(buf.toString());
+		        post.flush();
+		        
+		        BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		        buf = new StringBuilder();
+		        String inputLine;
+		        while ((inputLine = in.readLine()) != null) {
+		            buf.append(inputLine);
+		        }
+		        post.close();
+		        in.close();
+		
+		      //  _log.info("response from C2DM server:\n" + buf.toString());
+		        
+		        int code = request.getResponseCode();
+		      //  _log.info("response code: " + request.getResponseCode());
+		      //  _log.info("response message: " + request.getResponseMessage());
+		        if (code == 200) {
+		            //TODO: check for an error and if so, handle
+		            
+		        } else if (code == 503) {
+		            //TODO: check for Retry-After header; use exponential backoff and try again
+		            
+		        } else if (code == 401) {
+		            //TODO: get a new auth token
+		        }
+			}
 		}catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
