@@ -15,6 +15,8 @@ import type.ItemType;
 
 public class Activity {
 	
+	//TODO: use synchronized when changing the state..
+	
 	// The ID of this Activity
 	protected String					mId;
 
