@@ -1,10 +1,16 @@
 package actor;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import priority.ActivitiesComarator;
 
 import simulator.Location;
 import state.ActivityState;
@@ -22,29 +28,39 @@ public class Agent extends Entity implements Runnable {
 	protected AgentType					mType;
 	protected boolean					mDontStop;
 	protected Activity					mCurrentActivity;
+	protected String					mRegistrationId;
+	protected long						mStartTime;
+	
+	// These Locks protect the mActivitiesToPerform Collection
+	protected ReadWriteLock				mRWLock;
+	protected Lock						mReadLock;
+	protected Lock						mWriteLock;
 	
 	public Agent(AgentType pType) {
 
 		mActivityMonitor = new ActivityMonitor(this);
-		
-		mActivitiesToPerform = new PriorityQueue<Activity>(7, new Comparator<Activity>() {
-
-			@Override
-			public int compare(Activity o1,Activity  o2) {
-				return o1.getPriority().compareTo(o2.getPriority());
-			}
-		});
-		
+		mActivitiesToPerform = new PriorityQueue<Activity>(7, new ActivitiesComarator());
 		mOldActivities = new HashSet<Activity>();
 		mType = pType;
 		mDontStop = true;
 		mCurrentActivity = null;
+		mRWLock = new ReentrantReadWriteLock(true);
+		mReadLock = mRWLock.readLock();
+		mWriteLock = mRWLock.writeLock();
+		mRegistrationId = "";
+		mStartTime = 0;
 	}
+	
+	
+	// From Here: Algorithm's methods
+	
 	
 	@Override
 	public void run() { 
 		
 		new Thread(mActivityMonitor).start();
+		
+		mStartTime = new Date().getTime();
 		
 		while (mDontStop){
 			
@@ -59,13 +75,48 @@ public class Agent extends Entity implements Runnable {
 		mDontStop = false;
 	}
 	
-	public void setCurrentActivity(Activity activity) {
-		mCurrentActivity = activity;
+	@Deprecated
+	protected Activity findNextActivity() {
+		
+		for (Activity act : activities){
+			
+			if (!act.isSatisfiedPreCond())
+				continue;
+			
+			Vector<ItemType> requiredItems = act.getRequiredItems();
+			
+			for (ItemType req_item : requiredItems){
+				
+				for (Item item : items){
+					
+					if (item.getType().equals(req_item) && (item.state == ItemState.AVAILABLE)){
+						
+						item.setState(ItemState.BUSY);
+						myItems.add(item);
+						break;
+					}
+				}
+				
+				// If we got here, it means we didn't find any item from the required item type which available. We will release all the other
+				// items we've captured, and look for another activity.
+				releaseMyItems();
+				
+				continue;
+			}
+			
+			return act;
+		}
+		
+		return null; // No activity was found.
+	}
+	
+	@Deprecated
+	protected void performCurrentActivity() {
+		 currentActivity.setState(ActivityState.IN_PROGRESS);
 	}
 	
 	
-	
-	// From Here: methods that others uses to notify this agent about things:
+	// From Here: methods that others use to notify this agent about things:
 
 	
 	public void tooManyTopPriorityActivities(int howManyOverTheLimit) {
@@ -79,10 +130,37 @@ public class Agent extends Entity implements Runnable {
 	public void goigToMissThisActivity(Activity activity) {
 		// TODO Auto-generated method stub
 	}
+	
+	
+	// From Here: Getters & Setters
+	
+	
+	public void setCurrentActivity(Activity activity) {
+		mCurrentActivity = activity;
+	}
+	
+	public PriorityQueue<Activity> getActivities() {
+		return mActivitiesToPerform;
+	}
+	
+	public Lock getReadLock() {
+		return mReadLock;
+	}
+	
+	public Activity getCurrentActivity() {
+		return mCurrentActivity;
+	}
+	
+	public AgentType getType() {
+		return mType;
+	}
+	
+	public String getRegistrationId(){
+		return mRegistrationId;
+	}
 
 	public long getAverageTimePerActivity() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (new Date().getTime() - mStartTime) / mOldActivities.size();
 	}
 	
 	
@@ -132,129 +210,13 @@ public class Agent extends Entity implements Runnable {
 	
 	@Deprecated
 	protected String					registrationId;
-	
-	@Deprecated
-	public ActivityMonitor getActivityMonitor() {
-		return activityMonitor;
-	}
 
 	@Deprecated
-	public void setActivityMonitor(ActivityMonitor activityMonitor) {
-		this.activityMonitor = activityMonitor;
-	}
-
-	@Deprecated
-	public PriorityQueue<Activity> getActivities() {
-		return activities;
-	}
-
-	@Deprecated
-	public void setActivities(PriorityQueue<Activity> activities) {
-		this.activities = activities;
-	}
-
-	@Deprecated
-	public AgentType getType() {
-		return type;
-	}
-
-	@Deprecated
-	public void setType(AgentType type) {
-		this.type = type;
-	}
-
-	@Deprecated
-	public boolean isDontStop() {
-		return dontStop;
-	}
-
-	@Deprecated
-	public void setDontStop(boolean dontStop) {
-		this.dontStop = dontStop;
-	}
-
-	@Deprecated
-	public Vector<Item> getItems() {
-		return items;
-	}
-
-	@Deprecated
-	public void setItems(Vector<Item> items) {
-		this.items = items;
-	}
-
-	@Deprecated
-	public Vector<Item> getMyItems() {
-		return myItems;
-	}
-
-	@Deprecated
-	public void setMyItems(Vector<Item> myItems) {
-		this.myItems = myItems;
-	}
-
-	@Deprecated
-	public Activity getCurrentActivity() {
-		return currentActivity;
-	}
-
-
-
-	@Deprecated
-	public Agent(AgentType type, boolean DONT_USE_IT) {
-
-		activities = new PriorityQueue<Activity>(11,new Comparator<Activity>() {
-			
-			//TODO
-			@Override
-			public int compare(Activity o1,Activity  o2) {
-//				if (o1.getPriority() < o2.getPriority())
-//					return -1;
-//				else if(o1.getPriority() > o2.getPriority())
-//					return 1;
-				return 0;
-			}
-		});
+	protected void completeCurrentActivity(){
 		
-		this.activityMonitor = new ActivityMonitor(this);
-		this.type = type;
-		this.dontStop = true;
-		this.registrationId = "";
-	}
-
-	@Deprecated
-	protected Activity findNextActivity() {
-		
-		for (Activity act : activities){
-			
-			if (!act.isSatisfiedPreCond())
-				continue;
-			
-			Vector<ItemType> requiredItems = act.getRequiredItems();
-			
-			for (ItemType req_item : requiredItems){
-				
-				for (Item item : items){
-					
-					if (item.getType().equals(req_item) && (item.state == ItemState.AVAILABLE)){
-						
-						item.setState(ItemState.BUSY);
-						myItems.add(item);
-						break;
-					}
-				}
-				
-				// If we got here, it means we didn't find any item from the required item type which available. We will release all the other
-				// items we've captured, and look for another activity.
-				releaseMyItems();
-				
-				continue;
-			}
-			
-			return act;
-		}
-		
-		return null; // No activity was found.
+		releaseMyItems();
+		currentActivity.setState(ActivityState.COMPLETED);
+		currentActivity = null;
 	}
 	
 	@Deprecated
@@ -264,34 +226,6 @@ public class Agent extends Entity implements Runnable {
 			item.setState(ItemState.AVAILABLE);
 	}
 
-	@Deprecated
-	protected void performCurrentActivity() {
-		 currentActivity.setState(ActivityState.IN_PROGRESS);
-	}
-	
-	@Deprecated
-	protected void completeCurrentActivity(){
-		
-		releaseMyItems();
-		currentActivity.setState(ActivityState.COMPLETED);
-		currentActivity = null;
-	}
-
-	@Deprecated
-	public void insertActivity(Activity newActivity){
-		activities.add(newActivity);
-	}
-	
-	@Deprecated
-	public void setRegistrationId(String registrationId){
-		this.registrationId = registrationId;
-	}
-	
-	@Deprecated
-	public String getRegistrationId(){
-		return this.registrationId;
-	}
-	
 	/**
 	 * @param itemType the item type to find
 	 * @return the closest item to the entity, 
