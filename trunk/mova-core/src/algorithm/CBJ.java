@@ -10,18 +10,18 @@ public class CBJ {
 
 	protected SortedSet<Constreint> mFullDomain = null;
 	protected SortedSet<Constreint> mCurrentDomain = null;
-	
+
 	protected SortedSet<Integer> mConfSet = null;
 	protected Vector<Integer> mAssignedVariables = null;
 	protected Vector<Integer> mAllVariables = null;
-	
+
 	protected int mID = -1;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CBJ(SortedSet<Integer> pFullDomain, int pID) {
 
-		//TODO: init mAllVariables..
-		
+		// TODO: init mAllVariables..
+
 		mID = pID;
 
 		mCurrentDomain = new TreeSet(pFullDomain);
@@ -73,7 +73,7 @@ public class CBJ {
 		mCurrentDomain.remove(mCurrentDomain.first());
 	}
 
-	@WhenReceived("LABEL")
+	// TODO: @WhenReceived("LABEL")
 	public void handleLABEL(Assignment pCPA, Vector<Integer> pAssignedVariables) {
 
 		mAssignedVariables = pAssignedVariables;
@@ -90,7 +90,7 @@ public class CBJ {
 
 			for (h = 0; h < mAssignedVariables.size() && consistent; h++)
 				consistent = amIConsistentWithThisVar(pCPA, h);
-			
+
 			if (!consistent) {
 
 				mConfSet.add(mAssignedVariables.get(h - 1));
@@ -102,7 +102,7 @@ public class CBJ {
 	}
 
 	private boolean amIConsistentWithThisVar(Assignment pCPA, int pVar) {
-		
+
 		return !pCPA.getAssignment(mID).isOverlap(pCPA.getAssignment(pVar));
 	}
 
@@ -145,12 +145,12 @@ public class CBJ {
 	private void sendUnlabel(Assignment pCPA, SortedSet<Integer> mConfSet2,
 			int toWho) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void finishWithNoSolution() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void finish(Assignment cpa) {
@@ -169,7 +169,7 @@ public class CBJ {
 		return last;
 	}
 
-	@WhenReceived("UNLABEL")
+	// TODO: @WhenReceived("UNLABEL")
 	public void handleUNLABEL(Assignment cpa, SortedSet<Integer> confSetOfI) {
 
 		mConfSet.addAll(confSetOfI);
@@ -206,13 +206,13 @@ public class CBJ {
 
 	private void sendClearAndRestore(int i) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@WhenReceived("CLEAR_AND_RESTORE")
+	// TODO: @WhenReceived("CLEAR_AND_RESTORE")
 	public void handleCLEARANDRESTORE() {
-		
+
 		mConfSet.clear();
 		mCurrentDomain = new TreeSet(mFullDomain);
 	}

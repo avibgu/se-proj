@@ -82,16 +82,24 @@ public class Agent extends Entity implements Runnable {
 	public Agent(AgentType type) {
 
 		activities = new PriorityQueue<Activity>(11,new Comparator<Activity>() {
-
+			
+//			@Override
+//			public int compare(Activity o1,Activity  o2) {
+//				if (o1.getPriority() < o2.getPriority())
+//					return -1;
+//				else if(o1.getPriority() > o2.getPriority())
+//					return 1;
+//				return 0;
+//			}
+			
+			//TODO: check if it's working
+			
 			@Override
 			public int compare(Activity o1,Activity  o2) {
-				if (o1.getPriority() < o2.getPriority())
-					return -1;
-				else if(o1.getPriority() > o2.getPriority())
-					return 1;
-				return 0;
+				return o1.getPriority().compareTo(o2.getPriority());
 			}
 		});
+		
 		this.activityMonitor = new ActivityMonitor(this);
 		this.type = type;
 		this.dontStop = true;
@@ -233,5 +241,15 @@ public class Agent extends Entity implements Runnable {
 	public void activityChangedHisPriority(Activity activity) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void goigToMissThisActivity(Activity activity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getAverageTimePerActivity() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

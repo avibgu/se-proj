@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.Vector;
 
+import priority.Priority;
+
 import state.ActivityState;
 import type.ActivityType;
 import type.AgentType;
@@ -23,7 +25,7 @@ public class Activity {
 	protected ActivityState				mState;
 
 	// The Priority of this Activity
-	protected int						mPriority;
+	protected Priority					mPriority;
 	
 	// The Due-Date of this Activity
 	protected Date						mDueDate; 
@@ -35,7 +37,7 @@ public class Activity {
 	protected Map<ItemType,Integer>		mRequiredItems; 
 	
 	public Activity(	ActivityType			pType,
-						int						pPriority,
+						Priority				pPriority,
 						Date					pDueDate,
 						Map<AgentType,Integer>	pRequiredAents,
 						Map<ItemType,Integer>	pRequiredItems	){
@@ -49,6 +51,13 @@ public class Activity {
 		mRequiredItems = pRequiredItems; 
 	}
 	
+	public Priority getPriority() {
+		return mPriority;
+	}
+
+	public long getDueDate() {
+		return mDueDate.getTime();
+	}
 	
 	
 	
@@ -90,11 +99,6 @@ public class Activity {
 	}
 
 	@Deprecated
-	public int getPriority() {
-		return priority;
-	}
-
-	@Deprecated
 	public void setPriority(int priority) {
 		this.priority = priority;
 	}
@@ -109,4 +113,6 @@ public class Activity {
 	public String getId(){
 		return id;
 	}
+
+
 }
