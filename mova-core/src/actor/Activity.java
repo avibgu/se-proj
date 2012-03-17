@@ -61,58 +61,18 @@ public class Activity {
 	
 	
 	
-	
-	
 	@Deprecated
-	protected String id;
-	@Deprecated
-	protected int priority;
-	@Deprecated
-	protected ActivityState state;
-	@Deprecated
-	protected Vector<ItemType> requiredItems;	
-	
-	@Deprecated
-	public Activity(){
-		id = UUID.randomUUID().toString();
-		requiredItems = new Vector<ItemType>();
+	public void setState(ActivityState pState) {
+		this.mState = pState;
 	}
-	
+
 	@Deprecated
 	public Vector<ItemType> getRequiredItems() {
-		return requiredItems;
+		return new Vector<ItemType>();
 	}
 
-	@Deprecated
-	public void setRequiredItems(Vector<ItemType> requiredItems) {
-		this.requiredItems = requiredItems;
-	}
-
-	@Deprecated
-	public ActivityState getState() {
-		return state;
-	}
-
-	@Deprecated
-	public void setState(ActivityState state) {
-		this.state = state;
-	}
-
-	@Deprecated
-	public void setPriority(int priority) {
-		this.priority = priority;
-	}
-	
 	@Deprecated
 	public boolean isSatisfiedPreCond(){
-
 		return true;
 	}
-	
-	@Deprecated
-	public String getId(){
-		return id;
-	}
-
-
 }
