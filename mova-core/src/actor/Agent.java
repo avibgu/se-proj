@@ -14,14 +14,21 @@ import algorithm.ActivityMonitor;
 
 public class Agent extends Entity implements Runnable {
 
-	protected ActivityMonitor	activityMonitor;
+	// TODO: check if there are duplication between Agent and Entity
+	
+	protected ActivityMonitor			activityMonitor;
 	protected PriorityQueue<Activity>	activities;
-	protected AgentType			type;
-	protected boolean			dontStop;
-	protected Vector<Item> 		items; // The list of known locations of the items.
-	protected Vector<Item>		myItems; // The items the agent has.
-	protected Activity currentActivity;
-	protected String registrationId;
+	protected AgentType					type;
+	protected boolean					dontStop;
+	
+	 // The list of known locations of the items.
+	protected Vector<Item> 				items;
+	
+	 // The items the agent has.
+	protected Vector<Item>				myItems;
+	
+	protected Activity					currentActivity;
+	protected String					registrationId;
 	
 	public ActivityMonitor getActivityMonitor() {
 		return activityMonitor;
@@ -233,22 +240,24 @@ public class Agent extends Entity implements Runnable {
 		return -1;
 	}
 
+	
+	
+	// From Here: methods that others uses to notify this agent about things:
+
+	
 	public void tooManyTopPriorityActivities(int howManyOverTheLimit) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void activityChangedHisPriority(Activity activity) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void goigToMissThisActivity(Activity activity) {
 		// TODO Auto-generated method stub
-		
 	}
 
-	public int getAverageTimePerActivity() {
+	public long getAverageTimePerActivity() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
