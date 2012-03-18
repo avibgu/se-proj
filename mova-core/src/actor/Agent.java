@@ -53,7 +53,7 @@ public class Agent extends Entity implements Runnable {
 	}
 	
 	
-	// From Here: Algorithm's methods
+	// From Here: Algorithm's methods:
 	
 	
 	@Override
@@ -129,6 +129,12 @@ public class Agent extends Entity implements Runnable {
 	protected void performCurrentActivity() {
 		 currentActivity.setState(ActivityState.IN_PROGRESS);
 	}
+	
+	
+	// From Here: Constreints Processing methods:  
+	
+	
+	
 	
 	
 	// From Here: methods that others use to notify this agent about things:
