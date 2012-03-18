@@ -1,8 +1,9 @@
 package actor;
 
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.Vector;
@@ -44,11 +45,11 @@ public class Agent extends Entity implements Runnable {
 		mType = pType;
 		mDontStop = true;
 		mCurrentActivity = null;
+		mRegistrationId = "";
+		mStartTime = 0;
 		mRWLock = new ReentrantReadWriteLock(true);
 		mReadLock = mRWLock.readLock();
 		mWriteLock = mRWLock.writeLock();
-		mRegistrationId = "";
-		mStartTime = 0;
 	}
 	
 	
@@ -64,6 +65,8 @@ public class Agent extends Entity implements Runnable {
 		
 		while (mDontStop){
 			
+			//TODO: resolve issues that others told me about..
+			
 			setCurrentActivity(findNextActivity());
 			performCurrentActivity();
 		}
@@ -74,37 +77,49 @@ public class Agent extends Entity implements Runnable {
 	public void stop() {
 		mDontStop = false;
 	}
-	
-	@Deprecated
+
 	protected Activity findNextActivity() {
 		
-		for (Activity act : activities){
+		Map<ItemType,Integer> requiredItems = null;
+		Map<AgentType,Integer> requiredAgents = null;
+		
+		int numOfItems = 0;
+		
+		Activity[] sortedActivities = (Activity[]) mActivitiesToPerform.toArray();
+		
+		Arrays.sort(sortedActivities);
+		
+		for (Activity activity : sortedActivities){
 			
-			if (!act.isSatisfiedPreCond())
-				continue;
+//			if (!activity.isSatisfiedPreCond())
+//				continue;
+		
+			requiredAgents = activity.getRequiredAgents();
+			requiredItems = activity.getRequiredItems();
 			
-			Vector<ItemType> requiredItems = act.getRequiredItems();
 			
-			for (ItemType req_item : requiredItems){
-				
-				for (Item item : items){
-					
-					if (item.getType().equals(req_item) && (item.state == ItemState.AVAILABLE)){
-						
-						item.setState(ItemState.BUSY);
-						myItems.add(item);
-						break;
-					}
-				}
-				
-				// If we got here, it means we didn't find any item from the required item type which available. We will release all the other
-				// items we've captured, and look for another activity.
-				releaseMyItems();
-				
-				continue;
-			}
+//			for (ItemType itemType : requiredItems.keySet()){
+//				
+//				numOfItems = requiredItems.get(itemType);
+//				
+//				for (Item item : items){
+//					
+//					if (item.getType().equals(itemType) && (item.state == ItemState.AVAILABLE)){
+//						
+//						item.setState(ItemState.BUSY);
+//						myItems.add(item);
+//						break;
+//					}
+//				}
+//				
+//				// If we got here, it means we didn't find any item from the required item type which available. We will release all the other
+//				// items we've captured, and look for another activity.
+//				releaseMyItems();
+//				
+//				continue;
+//			}
 			
-			return act;
+			return activity;
 		}
 		
 		return null; // No activity was found.

@@ -28,4 +28,20 @@ public class Item extends Entity{
 	public void setType(ItemType type) {
 		this.type = type;
 	}
+	
+	public void markAsBusy() {
+		
+		synchronized (state) {
+		
+			state = ItemState.BUSY;
+		}
+	}
+	
+	public void markAsAvailable() {
+		
+		synchronized (state) {
+		
+			state = ItemState.AVAILABLE;
+		}
+	}
 }
