@@ -16,22 +16,6 @@ import type.ItemType;
 public class Activity {
 	
 	//TODO: use synchronized when changing the state..
-	
-	public ActivityType getType() {
-		return mType;
-	}
-
-	public void setType(ActivityType mType) {
-		this.mType = mType;
-	}
-
-	public String getId() {
-		return mId;
-	}
-
-	public void setId(String mId) {
-		this.mId = mId;
-	}
 
 	// The ID of this Activity
 	protected String					mId;
@@ -57,29 +41,9 @@ public class Activity {
 	// Map between the required Item of a specific type and the desired quantity
 	protected Map<ItemType,Integer>		mRequiredItems; 
 	
-	protected String mDescription;
+	protected String					mDescription;
 	
-	protected String mName;
-	
-	public String getDescription() {
-		return mDescription;
-	}
-
-	public void setDescription(String mDescription) {
-		this.mDescription = mDescription;
-	}
-
-	public String getName() {
-		return mName;
-	}
-
-	public void setName(String mName) {
-		this.mName = mName;
-	}
-
-	public Activity(String name){
-		this.mName = name;
-	}
+	protected String					mName;
 	
 	public Activity(	ActivityType			pType,
 						Priority				pPriority,
@@ -93,7 +57,9 @@ public class Activity {
 		mPriority = pPriority;
 		mDueDate = pDueDate; 
 		mRequiredAents = pRequiredAents;
-		mRequiredItems = pRequiredItems; 
+		mRequiredItems = pRequiredItems;
+		mDescription = "";
+		mName = "";
 	}
 	
 	public Priority getPriority() {
@@ -116,18 +82,66 @@ public class Activity {
 		this.mPriority = mPriority;
 	}
 
+	public Map<ItemType,Integer> getRequiredItems() {
+		return mRequiredItems;
+	}
+
+	public Map<AgentType,Integer> getRequiredAgents() {
+		return mRequiredAents;
+	}
+	
+	
+	
+
+	public ActivityType getType() {
+		return mType;
+	}
+
+	public void setType(ActivityType mType) {
+		this.mType = mType;
+	}
+
+	public String getId() {
+		return mId;
+	}
+
+	public void setId(String mId) {
+		this.mId = mId;
+	}
+	
+	public String getDescription() {
+		return mDescription;
+	}
+
+	public void setDescription(String mDescription) {
+		this.mDescription = mDescription;
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public void setName(String mName) {
+		this.mName = mName;
+	}
+
+	public Activity(String name){
+		this.mName = name;
+	}
+	
+	
+	
+	
+	
 	@Deprecated
 	public void setState(ActivityState pState) {
 		this.mState = pState;
 	}
 
 	@Deprecated
-	public Vector<ItemType> getRequiredItems() {
-		return new Vector<ItemType>();
-	}
-
-	@Deprecated
 	public boolean isSatisfiedPreCond(){
 		return true;
 	}
+
+	
 }
