@@ -11,6 +11,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import client.MovaClient;
+
 import priority.ActivitiesComarator;
 
 import simulator.Location;
@@ -39,9 +41,8 @@ public class Agent extends Entity implements Runnable {
 	
 	// These Collections hold activities that should be fixed
 	protected Set<Activity>				mActivitiesThatChangedTheirPriority;
-	protected Set<Activity>				mActivitiesThatShouldBeTransffered;
-	
-	
+	protected Vector<Activity>			mActivitiesThatShouldBeTransffered;
+	protected Integer					mHowManyOverTheLimit;
 	
 	public Agent(AgentType pType) {
 
@@ -57,7 +58,8 @@ public class Agent extends Entity implements Runnable {
 		mReadLock = mRWLock.readLock();
 		mWriteLock = mRWLock.writeLock();
 		mActivitiesThatChangedTheirPriority = new HashSet<Activity>();
-		mActivitiesThatShouldBeTransffered = new HashSet<Activity>();
+		mActivitiesThatShouldBeTransffered = new Vector<Activity>();
+		mHowManyOverTheLimit = 0;
 	}
 	
 	
@@ -161,46 +163,106 @@ public class Agent extends Entity implements Runnable {
 	protected void performCurrentActivity() {
 		 currentActivity.setState(ActivityState.IN_PROGRESS);
 		//TODO: tell server that we perform this activity
+		//TODO: when completing the activity, remove it from mActivitiesToPerform and add it to mOldActivities
 	}
 	
 	
 	// From Here: Constraints Processing methods:  
 	
 	
+	private void resolveIssuesThatOthersToldMeAbout() {
 	
+		maintainActivitiesThatChangedTheirPriority();
+		maintainActivitiesToSend();
+		sendActivitiesToOtherAgents();
+	}
+	
+	private void maintainActivitiesThatChangedTheirPriority() {
+
+		mWriteLock.lock();
+		
+		synchronized (mActivitiesThatChangedTheirPriority) {
+		
+			for (Activity activity : mActivitiesThatChangedTheirPriority){
+
+				mActivitiesToPerform.remove(activity);
+				mActivitiesToPerform.add(activity);
+			}
+		}
+		
+		mWriteLock.unlock();
+	}
+
+	private void maintainActivitiesToSend() {
+		
+		mWriteLock.lock();
+		
+		synchronized (mHowManyOverTheLimit) {
+			
+			if (0 == mHowManyOverTheLimit){
+				
+				mWriteLock.unlock();
+				return;					//TODO: return releases the synchronized, right??..
+			}
+			
+			synchronized (mActivitiesThatShouldBeTransffered) {
+				
+				Activity[] sortedActivities = (Activity[]) mActivitiesToPerform.toArray();
+				
+				Arrays.sort(sortedActivities);
+				
+				for (Activity activity : sortedActivities)
+					if (!activity.equals(mCurrentActivity) && activity.isTopPriority())
+						mActivitiesThatShouldBeTransffered.add(activity);
+
+				int toKeep = mActivitiesThatShouldBeTransffered.size() - mHowManyOverTheLimit;
+				
+				while(toKeep-- > 0)
+					mActivitiesThatShouldBeTransffered.removeElementAt(0);
+				
+				for (Activity activity : mActivitiesThatShouldBeTransffered)
+					mActivitiesToPerform.remove(activity);
+			}
+		}
+		
+		mWriteLock.unlock();
+	}
+	
+	//TODO: improve it badly!!..
+	private void sendActivitiesToOtherAgents() {
+
+		synchronized (mActivitiesThatShouldBeTransffered) {
+			
+			for (Activity activity : mActivitiesThatShouldBeTransffered){
+				
+				String agentID = findAnAgentWhoCanReceiveThisActivity(activity);
+				MovaClient mc = new MovaClient();
+				Vector<String> tVec = new Vector<String>(1);
+				tVec.add(agentID);
+				mc.sendActivity(activity, tVec);
+			}
+		}
+	}
+	
+	private String findAnAgentWhoCanReceiveThisActivity(Activity activity) {
+		
+		// TODO Broadcast Agents of my type
+		//      choose the first that response with a positive answer
+		//		return his ID.
+		
+		return "";
+	}
 	
 	
 	// From Here: methods that others use to notify this agent about things:
 
+
+	public void tooManyTopPriorityActivities(int pHowManyOverTheLimit) {
 	
-	private void resolveIssuesThatOthersToldMeAbout() {
+		synchronized (mHowManyOverTheLimit) {
 		
-		mWriteLock.lock();
-		// TODO mActivitiesThatShouldBeTransffered
-		// TODO mActivitiesThatChangedTheirPriority
-		mWriteLock.unlock();
-	}
-	
-	public void tooManyTopPriorityActivities(int howManyOverTheLimit) {
-		
-		mReadLock.lock();
-		
-		Activity[] sortedActivities = (Activity[]) mActivitiesToPerform.toArray();
-		
-		Arrays.sort(sortedActivities);
-		
-		for (Activity activity : sortedActivities){
-		
-			synchronized (mActivitiesThatShouldBeTransffered) {
-				
-				if (howManyOverTheLimit > 0)
-					mActivitiesThatShouldBeTransffered.add(activity);
-				
-				howManyOverTheLimit--;
-			}
-		}
-		
-		mReadLock.unlock();	
+			mHowManyOverTheLimit = pHowManyOverTheLimit;
+		}	
 	}
 
 	public void activityChangedHisPriority(Activity activity) {
@@ -222,6 +284,7 @@ public class Agent extends Entity implements Runnable {
 	private void notifyThisAgentAboutLocationOfItem() {
 		// TODO Auto-generated method stub
 	}
+	
 	
 	// From Here: Getters & Setters
 	
