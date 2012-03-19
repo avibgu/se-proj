@@ -143,5 +143,9 @@ public class Activity {
 		return true;
 	}
 
+	public boolean isTopPriority() {
+		return mPriority == Priority.URGENT;
+	}
+
 	
 }

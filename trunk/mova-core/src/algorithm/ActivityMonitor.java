@@ -55,7 +55,7 @@ public class ActivityMonitor implements Runnable {
 
 				synchronized (activity) {
 
-					if (isThisActivityIsATopPriorityActivity(activity))
+					if (activity.isTopPriority())
 						numOfTopPriorityActivities++;
 	
 					if (isThisActivityChangedItsPriority(activity))
@@ -106,10 +106,6 @@ public class ActivityMonitor implements Runnable {
 
 	public void stop() {
 		mDontStop = false;
-	}
-
-	protected boolean isThisActivityIsATopPriorityActivity(Activity activity) {
-		return activity.getPriority() == Priority.HIGH;
 	}
 
 	protected void waitSomeTime() {
