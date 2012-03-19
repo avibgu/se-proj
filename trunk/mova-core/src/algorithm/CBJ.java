@@ -8,8 +8,8 @@ import java.util.Vector;
 
 public class CBJ {
 
-	protected SortedSet<Constreint> mFullDomain = null;
-	protected SortedSet<Constreint> mCurrentDomain = null;
+	protected SortedSet<Constraint> mFullDomain = null;
+	protected SortedSet<Constraint> mCurrentDomain = null;
 
 	protected SortedSet<Integer> mConfSet = null;
 	protected Vector<Integer> mAssignedVariables = null;
@@ -63,7 +63,7 @@ public class CBJ {
 		return -1;
 	}
 
-	protected Constreint getFirstElementInCurrentDomain() {
+	protected Constraint getFirstElementInCurrentDomain() {
 
 		return mCurrentDomain.first();
 	}

@@ -37,6 +37,12 @@ public class Agent extends Entity implements Runnable {
 	protected Lock						mReadLock;
 	protected Lock						mWriteLock;
 	
+	// These Collections hold activities that should be fixed
+	protected Set<Activity>				mActivitiesThatChangedTheirPriority;
+	protected Set<Activity>				mActivitiesThatShouldBeTransffered;
+	
+	
+	
 	public Agent(AgentType pType) {
 
 		mActivityMonitor = new ActivityMonitor(this);
@@ -50,6 +56,8 @@ public class Agent extends Entity implements Runnable {
 		mRWLock = new ReentrantReadWriteLock(true);
 		mReadLock = mRWLock.readLock();
 		mWriteLock = mRWLock.writeLock();
+		mActivitiesThatChangedTheirPriority = new HashSet<Activity>();
+		mActivitiesThatShouldBeTransffered = new HashSet<Activity>();
 	}
 	
 	
@@ -65,8 +73,7 @@ public class Agent extends Entity implements Runnable {
 		
 		while (mDontStop){
 			
-			//TODO: resolve issues that others told me about..
-			
+			resolveIssuesThatOthersToldMeAbout();
 			setCurrentActivity(findNextActivity());
 			performCurrentActivity();
 		}
@@ -81,9 +88,15 @@ public class Agent extends Entity implements Runnable {
 	protected Activity findNextActivity() {
 		
 		Map<ItemType,Integer> requiredItems = null;
+		
+		//TODO: we are currently ignoring other Agents - just for the prototype
 		Map<AgentType,Integer> requiredAgents = null;
 		
 		int numOfItems = 0;
+		
+		boolean ok = false;
+		
+		mReadLock.lock();
 		
 		Activity[] sortedActivities = (Activity[]) mActivitiesToPerform.toArray();
 		
@@ -91,36 +104,55 @@ public class Agent extends Entity implements Runnable {
 		
 		for (Activity activity : sortedActivities){
 			
+			ok = true;
+			
 //			if (!activity.isSatisfiedPreCond())
 //				continue;
 		
-			requiredAgents = activity.getRequiredAgents();
+//			TODO: we are currently ignoring other Agents - just for the prototype
+//			requiredAgents = activity.getRequiredAgents();
+			
 			requiredItems = activity.getRequiredItems();
 			
+			for (ItemType itemType : requiredItems.keySet()){
+				
+				numOfItems = requiredItems.get(itemType);
+				
+				for (Item item : items){
+					
+					if (item.getType().equals(itemType) && (item.state == ItemState.AVAILABLE)){
+
+						item.markAsBusy();
+						
+						//TODO: tell server that we took this item
+						
+						myItems.add(item);
+						
+						numOfItems--;
+						
+						if (0 == numOfItems)
+							break;
+					}
+				}
+				
+				// If we got here, it means we didn't find any item from the required item type which available. We will release all the other
+				// items we've captured, and look for another activity.
+				if (0 != numOfItems){
+					
+					ok = false;
+					break;
+				}
+			}
 			
-//			for (ItemType itemType : requiredItems.keySet()){
-//				
-//				numOfItems = requiredItems.get(itemType);
-//				
-//				for (Item item : items){
-//					
-//					if (item.getType().equals(itemType) && (item.state == ItemState.AVAILABLE)){
-//						
-//						item.setState(ItemState.BUSY);
-//						myItems.add(item);
-//						break;
-//					}
-//				}
-//				
-//				// If we got here, it means we didn't find any item from the required item type which available. We will release all the other
-//				// items we've captured, and look for another activity.
-//				releaseMyItems();
-//				
-//				continue;
-//			}
+			if (ok){
+				mReadLock.unlock();
+				return activity;
+			}
 			
-			return activity;
+			else releaseMyItems();
 		}
+		
+		mReadLock.unlock();
 		
 		return null; // No activity was found.
 	}
@@ -128,10 +160,11 @@ public class Agent extends Entity implements Runnable {
 	@Deprecated
 	protected void performCurrentActivity() {
 		 currentActivity.setState(ActivityState.IN_PROGRESS);
+		//TODO: tell server that we perform this activity
 	}
 	
 	
-	// From Here: Constreints Processing methods:  
+	// From Here: Constraints Processing methods:  
 	
 	
 	
@@ -140,18 +173,55 @@ public class Agent extends Entity implements Runnable {
 	// From Here: methods that others use to notify this agent about things:
 
 	
+	private void resolveIssuesThatOthersToldMeAbout() {
+		
+		mWriteLock.lock();
+		// TODO mActivitiesThatShouldBeTransffered
+		// TODO mActivitiesThatChangedTheirPriority
+		mWriteLock.unlock();
+	}
+	
 	public void tooManyTopPriorityActivities(int howManyOverTheLimit) {
-		// TODO Auto-generated method stub
+		
+		mReadLock.lock();
+		
+		Activity[] sortedActivities = (Activity[]) mActivitiesToPerform.toArray();
+		
+		Arrays.sort(sortedActivities);
+		
+		for (Activity activity : sortedActivities){
+		
+			synchronized (mActivitiesThatShouldBeTransffered) {
+				
+				if (howManyOverTheLimit > 0)
+					mActivitiesThatShouldBeTransffered.add(activity);
+				
+				howManyOverTheLimit--;
+			}
+		}
+		
+		mReadLock.unlock();	
 	}
 
 	public void activityChangedHisPriority(Activity activity) {
-		// TODO Auto-generated method stub
+		
+		synchronized (mActivitiesThatChangedTheirPriority) {
+			
+			mActivitiesThatChangedTheirPriority.add(activity);
+		}
 	}
 
 	public void goigToMissThisActivity(Activity activity) {
-		// TODO Auto-generated method stub
+
+		synchronized (mActivitiesThatShouldBeTransffered) {
+			
+			mActivitiesThatShouldBeTransffered.add(activity);
+		}
 	}
 	
+	private void notifyThisAgentAboutLocationOfItem() {
+		// TODO Auto-generated method stub
+	}
 	
 	// From Here: Getters & Setters
 	
@@ -181,6 +251,7 @@ public class Agent extends Entity implements Runnable {
 	}
 
 	public long getAverageTimePerActivity() {
+		//TODO: improve it - calc also idle time..
 		return (new Date().getTime() - mStartTime) / mOldActivities.size();
 	}
 	
@@ -243,8 +314,11 @@ public class Agent extends Entity implements Runnable {
 	@Deprecated
 	private void releaseMyItems() {
 		
-		for (Item item : myItems)
-			item.setState(ItemState.AVAILABLE);
+		for (Item item : myItems){
+			
+			item.markAsAvailable();
+			//TODO: tell server that we released this item
+		}
 	}
 
 	/**
