@@ -5,18 +5,18 @@ import java.util.Map;
 
 public class Assignment {
 
-	protected Map<Integer,Constreint> map = null;
+	protected Map<Integer,Constraint> map = null;
 	
 	public Assignment() {
-		map = new HashMap<Integer, Constreint>();
+		map = new HashMap<Integer, Constraint>();
 	}
 	
 	
-	public void assign(int var, Constreint val) {
+	public void assign(int var, Constraint val) {
 		map.put(var, val);
 	}
 
-	public Constreint getAssignment(int var) {
+	public Constraint getAssignment(int var) {
 		return map.get(var);
 	}
 

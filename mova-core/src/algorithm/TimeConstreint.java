@@ -2,7 +2,7 @@ package algorithm;
 
 import java.util.Date;
 
-public class TimeConstreint implements Constreint{
+public class TimeConstreint implements Constraint{
 
 	protected Date mStartTime = null;
 	protected Date mEndTime = null;
@@ -14,7 +14,7 @@ public class TimeConstreint implements Constreint{
 	}
 	
 	@Override
-	public boolean isOverlap(Constreint other){
+	public boolean isOverlap(Constraint other){
 
 		if (!(other instanceof TimeConstreint))
 			return false;
