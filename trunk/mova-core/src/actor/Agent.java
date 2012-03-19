@@ -275,6 +275,8 @@ public class Agent extends Entity implements Runnable {
 
 	public void goigToMissThisActivity(Activity activity) {
 
+		//TODO: increase priority first..
+		
 		synchronized (mActivitiesThatShouldBeTransffered) {
 			
 			mActivitiesThatShouldBeTransffered.add(activity);
