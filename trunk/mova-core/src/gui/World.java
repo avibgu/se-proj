@@ -4,17 +4,11 @@
  */
 package gui;
 
-import actor.Entity;
 import configuration.ConfigurationManager;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
-import javax.swing.table.DefaultTableModel;
-import simulator.Domain;
-import simulator.Location;
+import simulator.NewDomain;
 
 /**
  *
@@ -24,16 +18,15 @@ public class World extends javax.swing.JFrame implements Observer{
 
     private static final long serialVersionUID = 7902455422644793244L;
 	private Controller _controller;
-    private Domain _domain;
-    private Vector<Vector<Entity>> _entities;
+    private NewDomain _domain;
+    
     /**
      * Creates new form World
      */
     public World(Controller controller) {
         _controller = controller;
-        _controller.getDomain().getObservers().add(this);
         _domain = controller.getDomain();
-        _entities = _domain.getEntities();
+        _domain.getObservers().add(this);
         initComponents();
     }
 
@@ -61,45 +54,22 @@ public class World extends javax.swing.JFrame implements Observer{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        domainTable.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        domainTable.setRowHeight(domainTable.getRowHeight() * 2);
-        domainTable.setDefaultRenderer(String.class, new MultiLineCellRenderer(_domain));
-        String [][] locations = new String[_domain.getDomainSize()][_domain.getDomainSize()];
-        for(int i = 0; i < locations.length; i++){
-            for(int j = 0; j < locations.length; j++){
-                locations[i][j] = "";
-            }
-        }
-        for(int entityIndex = 0; entityIndex < _entities.size(); entityIndex++)
-        for(Entity entity : _entities.elementAt(entityIndex)){
-            Location l = entity.getLocation();
-            int latitude = l.getLatitude();
-            int longitude = l.getLongitude();
-            locations[latitude][longitude] = entity.toString();
-        }
-        String[] names = new String[]{"0", "1", "2", "3", "4", "5", "6"};
-        DefaultTableModel model = new DefaultTableModel(locations, names){
-			private static final long serialVersionUID = 1297866531965024542L;
-
-			@Override
-            public boolean isCellEditable(int row, int column) {
-                //all cells false
-                return false;
-            }
-
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-			public Class getColumnClass(int columnIndex) {
-                return String.class;
-            }
-        };
-        domainTable.setModel(model
-        );
+        //domainTable.setTableHeader(null);
+        domainTable.setFont(new java.awt.Font("Tahoma", 0, 10));
+        domainTable.setDefaultRenderer(String.class, new IconCellRenderer(_domain));
+        domainTable.setModel(_domain);
         domainTable.setAlignmentX(2.0F);
         domainTable.setAlignmentY(1.0F);
         domainTable.setFocusable(false);
         domainTable.setIntercellSpacing(new java.awt.Dimension(3, 3));
-        domainTable.setRowHeight(70);
+        domainTable.setOpaque(false);
+        domainTable.setRowHeight(35);
         jScrollPane1.setViewportView(domainTable);
+        jScrollPane1.getViewport().setBackground(Color.BLACK);
+        FillPainter bgPainter = new FillPainter();
+        WatermarkViewport vp = new WatermarkViewport(bgPainter);
+        vp.setView(domainTable);
+        jScrollPane1.setViewport(vp);
 
         stopButton.setText("Stop");
         stopButton.addActionListener(new java.awt.event.ActionListener() {
@@ -148,19 +118,21 @@ public class World extends javax.swing.JFrame implements Observer{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(65, 65, 65)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(stopLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(stopLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(RestartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE))
+                                .addComponent(RestartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
@@ -172,15 +144,15 @@ public class World extends javax.swing.JFrame implements Observer{
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stopLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,7 +170,7 @@ public class World extends javax.swing.JFrame implements Observer{
     private void RestartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestartButtonActionPerformed
         _controller.stop();
         ConfigurationManager config = new ConfigurationManager();
-        Domain domain = config.loadParameters();
+        NewDomain domain = config.loadParameters();
         Controller controller = new Controller(domain);
         new World(controller).setVisible(true);
         this.dispose();
@@ -241,7 +213,7 @@ public class World extends javax.swing.JFrame implements Observer{
         //</editor-fold>
         
         ConfigurationManager config = new ConfigurationManager();
-        Domain domain = config.loadParameters();
+        NewDomain domain = config.loadParameters();
         final Controller controller = new Controller(domain);
         /*
          * Create and display the form
@@ -268,65 +240,8 @@ public class World extends javax.swing.JFrame implements Observer{
     private javax.swing.JLabel stopLabel;
     // End of variables declaration//GEN-END:variables
 
-    @SuppressWarnings("unchecked")
 	@Override
-    public void update(Observable entity, Object visibleItems) {
-        if(entity == null && visibleItems != null){//itemScanner has executed this method
-            //update table for each visible item
-        	for (Entity e : (Vector<Entity>) visibleItems) {
-				updateSignalEntity(e);
-			}
-        }
-        if(entity != null && visibleItems == null){//locationMonitor has executed this method
-            //update table for the agent's new location
-        	updateSignalEntity((Entity)entity);
-        }
-    }
-    
-    public synchronized void updateSignalEntity(Entity entity){
-        //Location oldLocation = entity.getOldLocation();
-        Location oldLocation = entity.getLastRepLocation();
-        Location newLocation = entity.getLocation();
-        if(!newLocation.equals(oldLocation) && oldLocation != null && !entity.updated())
-        	changeCellRepresentation(oldLocation, newLocation, entity);
-    }
-    
-    public void changeCellRepresentation(Location oldLocation, Location newLocation, Entity entity){
-    	String oldLocationRep = domainTable.getModel().getValueAt(oldLocation.getLatitude(), oldLocation.getLongitude()).toString();
-        String newLocationRep = domainTable.getModel().getValueAt(newLocation.getLatitude(), newLocation.getLongitude()).toString();
-    	
-        if(newLocationRep.equals(""))
-    		domainTable.getModel().setValueAt(entity.toString(), newLocation.getLatitude(), newLocation.getLongitude());
-    	else{
-    		newLocationRep = newLocationRep.concat("\n" + entity.toString());
-    		domainTable.getModel().setValueAt(newLocationRep, newLocation.getLatitude(), newLocation.getLongitude());
-    	}
-    	if(oldLocation != null){
-	    	String[] entitiesRep = oldLocationRep.split("\n");
-	    	if(entitiesRep.length == 1){
-	    		domainTable.getModel().setValueAt("", oldLocation.getLatitude(), oldLocation.getLongitude());
-	    	}
-	    	else{
-	    		String newRep = "";
-	    		for (int i = 0; i < entitiesRep.length - 1; i++) {
-					if(!entitiesRep[i].equals(entity.toString()))
-						newRep = newRep.concat(entitiesRep[i] + "\n");
-				}
-	    		if(!entitiesRep[entitiesRep.length - 1].equals(entity.toString()))
-	    			newRep = newRep.concat(entitiesRep[entitiesRep.length - 1]);
-	    		else{
-	    			newRep = newRep.substring(0, newRep.length() - 1);
-	    		}
-	    			
-	    		domainTable.getModel().setValueAt(newRep, oldLocation.getLatitude(), oldLocation.getLongitude());
-	    	}
-            String first = entity.toString() + " moved from (" + oldLocation.getLatitude() + "," + oldLocation.getLongitude() + ") to (";
-            String second = newLocation.getLatitude() + "," + newLocation.getLongitude() + ")";
-            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            Date date = new Date();
-            String third = "at " + dateFormat.format(date);
-            messageArea.append(first + second + " " + third + '\n');
-    	}
-    	entity.update();
+    public void update(Observable domain, Object newMessage) {
+        messageArea.append((String)newMessage);
     }
 }
