@@ -4,7 +4,7 @@
  */
 package gui;
 
-import simulator.Domain;
+import simulator.NewDomain;
 import simulator.Simulator;
 
 /**
@@ -13,10 +13,10 @@ import simulator.Simulator;
  */
 public class Controller {
     
-    private Domain _domain;
+    private NewDomain _domain;
     private Simulator _sim;
     
-    public Controller(Domain domain){
+    public Controller(NewDomain domain){
         _domain = domain;
         _sim = new Simulator(_domain);
     }
@@ -25,7 +25,7 @@ public class Controller {
         _sim.start();
     }
     
-    public Domain getDomain(){
+    public NewDomain getDomain(){
         return _domain;
     }
 

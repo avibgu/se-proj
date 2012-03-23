@@ -9,7 +9,7 @@ import actor.SensorAgent;
 public class ItemScanner implements Runnable {
 	
 	protected boolean _dontStop;
-	protected Domain _domain;
+	protected NewDomain _domain;
 	protected SensorAgent _sensorAgent;
 	protected Location _sensorLocation;
 	protected final long _refreshRate = 3;
@@ -17,7 +17,7 @@ public class ItemScanner implements Runnable {
 	protected Vector<Entity> _visibleItems;
 	protected Vector<Observer> _observers;
 	
-	public ItemScanner(Entity entity, Domain domain, Vector<Observer> observers, double scanDistance){
+	public ItemScanner(Entity entity, NewDomain domain, Vector<Observer> observers, double scanDistance){
 		_domain = domain;
 		_sensorAgent = (SensorAgent)entity;
 		_sensorLocation = _sensorAgent.getLocation();
@@ -39,9 +39,10 @@ public class ItemScanner implements Runnable {
 			_sensorAgent.setVisibleItems(visible);
 			_visibleItems = visible;
 			if(changedLocationItems.size() > 0){
-				for (Observer ob : _observers) {
-					ob.update(null, changedLocationItems);
-				}
+//				for (Observer ob : _observers) {
+//					ob.update(null, changedLocationItems);
+//				}
+                _domain.changeItemsLocation(changedLocationItems);
 			}
 			try {
 				Thread.sleep(_refreshRate * 1000);

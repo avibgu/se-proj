@@ -110,9 +110,9 @@ public class Domain {
 			Runnable lm = new LocationMonitor(sensor, _observers);
 			_locationMonitors.add(lm);
 			new Thread(lm).start();
-			Runnable is = new ItemScanner(sensor, this, _observers, _nScanDistance);
-			_itemScanners.add(is);
-			new Thread(is).start();
+			//Runnable is = new ItemScanner(sensor, this, _observers, _nScanDistance);
+			//_itemScanners.add(is);
+			//new Thread(is).start();
 		}
 		_entities.add(sensorAgents);
 		return _entities;
@@ -126,7 +126,7 @@ public class Domain {
 	public Vector<Vector<Entity>> manuallyInitializeLocations() {
 		_entities.add(manuallyInitializeAgents());
 		_entities.add(manuallyInitializeItems());
-		_entities.add(manuallyInitializeSensorAgents());
+		//_entities.add(manuallyInitializeSensorAgents());
 		
 		return _entities;
 	}
@@ -198,17 +198,17 @@ public class Domain {
 		Agent networkManagerAgent = new Agent(AgentType.NETWORK_MANAGER);
 		Agent SoundManagerAgent = new Agent(AgentType.SOUND_MANAGER);
 		
-		agents.add(coordinatorAgent);
+		//agents.add(coordinatorAgent);
 		agents.add(securityOfficerAgent);
 		agents.add(secretaryAgent);
-		agents.add(networkManagerAgent);
+		//agents.add(networkManagerAgent);
 		agents.add(SoundManagerAgent);
 		
-		Location coordinatorAgentLocation = new Location(0, 0);
-		Location securitOfficerAgentLocation = new Location(1, 3);
-		Location secretaryAgentLocation = new Location(2, 6);
-		Location networkManagerAgentLocation = new Location(3, 5);
-		Location SoundManagerAgentLocation = new Location(4, 4);
+		//Location coordinatorAgentLocation = new Location(13, 12);
+		Location securitOfficerAgentLocation = new Location(9, 3);
+		Location secretaryAgentLocation = new Location(13, 27);
+		//Location networkManagerAgentLocation = new Location(4, 14);
+		Location SoundManagerAgentLocation = new Location(10, 27);
 		
 		coordinatorAgent.setRepresentation(coordinatorAgent.getType().toString());
 		securityOfficerAgent.setRepresentation(securityOfficerAgent.getType().toString());
@@ -216,16 +216,16 @@ public class Domain {
 		networkManagerAgent.setRepresentation(networkManagerAgent.getType().toString());
 		SoundManagerAgent.setRepresentation(SoundManagerAgent.getType().toString());
 		
-		coordinatorAgent.setRepLocation(coordinatorAgentLocation);
+		//coordinatorAgent.setRepLocation(coordinatorAgentLocation);
 		securityOfficerAgent.setRepLocation(securitOfficerAgentLocation);
 		secretaryAgent.setRepLocation(secretaryAgentLocation);
-		networkManagerAgent.setRepLocation(networkManagerAgentLocation);
+		//networkManagerAgent.setRepLocation(networkManagerAgentLocation);
 		SoundManagerAgent.setRepLocation(SoundManagerAgentLocation);
 		
-		_grid.put(coordinatorAgent.getId(), coordinatorAgentLocation);
+		//_grid.put(coordinatorAgent.getId(), coordinatorAgentLocation);
 		_grid.put(securityOfficerAgent.getId(), securitOfficerAgentLocation);
 		_grid.put(secretaryAgent.getId(), secretaryAgentLocation);
-		_grid.put(networkManagerAgent.getId(), networkManagerAgentLocation);
+		//_grid.put(networkManagerAgent.getId(), networkManagerAgentLocation);
 		_grid.put(SoundManagerAgent.getId(), SoundManagerAgentLocation);
 		
 		Runnable lm1 = new LocationMonitor(coordinatorAgent, _observers);
@@ -270,13 +270,13 @@ public class Domain {
 		stand.setRepresentation(stand.getType().toString());
 		lazerCursor.setRepresentation(lazerCursor.getType().toString());
 		
-		Location boardLocation = new Location(1, 1);
-		Location laptopLocation = new Location(2, 2);
-		Location mouseLocation = new Location(2, 4);
-		Location cableLocation = new Location(6, 6);
-		Location speakerLocation = new Location(5, 3);
-		Location standLocation = new Location(6, 2);
-		Location lazerCursorLocation = new Location(0, 4);
+		Location boardLocation = new Location(12, 28);
+		Location laptopLocation = new Location(12, 26);
+		Location mouseLocation = new Location(13, 4);
+		Location cableLocation = new Location(12,13);
+		Location speakerLocation = new Location(8,6);
+		Location standLocation = new Location(6, 3);
+		Location lazerCursorLocation = new Location(14, 15);
 		
 		board.setRepLocation(boardLocation);
 		laptop.setRepLocation(laptopLocation);
@@ -296,67 +296,67 @@ public class Domain {
 		
 		return items;
 	}
-	private Vector<Entity> manuallyInitializeSensorAgents(){
-		Vector<Entity> sensorAgents = new Vector<Entity>();
-		
-		SensorAgent rfidAgent1 = new SensorAgent(AgentType.RFID);
-		//SensorAgent rfidAgent2 = new SensorAgent(AgentType.RFID);
-		SensorAgent rfidAgent3 = new SensorAgent(AgentType.RFID);
-		SensorAgent rfidAgent4 = new SensorAgent(AgentType.RFID);
-		
-		sensorAgents.add(rfidAgent1);
-		//sensorAgents.add(rfidAgent2);
-		sensorAgents.add(rfidAgent3);
-		sensorAgents.add(rfidAgent4);
-		
-		rfidAgent1.setRepresentation("Sensor 1");
-		//rfidAgent2.setRepresentation("Sensor 2");
-		rfidAgent3.setRepresentation("Sensor 3");
-		rfidAgent4.setRepresentation("Sensor 4");
-		
-		Location rfidAgent1Location = new Location(4, 0);
-		//Location rfidAgent2Location = new Location(3, 6);
-		Location rfidAgent3Location = new Location(1, 2);
-		Location rfidAgent4Location = new Location(5, 5);
-		
-		rfidAgent1.setRepLocation(rfidAgent1Location);
-		//rfidAgent2.setRepLocation(rfidAgent2Location);
-		rfidAgent3.setRepLocation(rfidAgent3Location);
-		rfidAgent4.setRepLocation(rfidAgent4Location);
-		
-		_grid.put(rfidAgent1.getId(), rfidAgent1Location);
-		//_grid.put(rfidAgent2.getId(), rfidAgent2Location);
-		_grid.put(rfidAgent3.getId(), rfidAgent3Location);
-		_grid.put(rfidAgent4.getId(), rfidAgent4Location);
-		
-		Runnable lm1 = new LocationMonitor(rfidAgent1, _observers);
-		_locationMonitors.add(lm1);
-		new Thread(lm1).start();
-		Runnable is1 = new ItemScanner(rfidAgent1, this, _observers, _nScanDistance);
-		_itemScanners.add(is1);
-		new Thread(is1).start();
-		
+//	private Vector<Entity> manuallyInitializeSensorAgents(){
+//		Vector<Entity> sensorAgents = new Vector<Entity>();
+//		
+//		SensorAgent rfidAgent1 = new SensorAgent(AgentType.RFID);
+//		SensorAgent rfidAgent2 = new SensorAgent(AgentType.RFID);
+//		SensorAgent rfidAgent3 = new SensorAgent(AgentType.RFID);
+//		SensorAgent rfidAgent4 = new SensorAgent(AgentType.RFID);
+//
+//		sensorAgents.add(rfidAgent1);
+//		sensorAgents.add(rfidAgent2);
+//		sensorAgents.add(rfidAgent3);
+//		sensorAgents.add(rfidAgent4);
+//
+//		rfidAgent1.setRepresentation("Sensor 1");
+//		rfidAgent2.setRepresentation("Sensor 2");
+//		rfidAgent3.setRepresentation("Sensor 3");
+//		rfidAgent4.setRepresentation("Sensor 4");
+//
+//		Location rfidAgent1Location = new Location(10, 10);
+//		Location rfidAgent2Location = new Location(11, 24);
+//		Location rfidAgent3Location = new Location(8, 21);
+//		Location rfidAgent4Location = new Location(3, 21);
+//
+//		rfidAgent1.setRepLocation(rfidAgent1Location);
+//		rfidAgent2.setRepLocation(rfidAgent2Location);
+//		rfidAgent3.setRepLocation(rfidAgent3Location);
+//		rfidAgent4.setRepLocation(rfidAgent4Location);
+//
+//		_grid.put(rfidAgent1.getId(), rfidAgent1Location);
+//		_grid.put(rfidAgent2.getId(), rfidAgent2Location);
+//		_grid.put(rfidAgent3.getId(), rfidAgent3Location);
+//		_grid.put(rfidAgent4.getId(), rfidAgent4Location);
+//
+//		Runnable lm1 = new LocationMonitor(rfidAgent1, _observers);
+//		_locationMonitors.add(lm1);
+//		new Thread(lm1).start();
+//		Runnable is1 = new ItemScanner(rfidAgent1, this, _observers, _nScanDistance);
+//		_itemScanners.add(is1);
+//		new Thread(is1).start();
+//
 //		Runnable lm2 = new LocationMonitor(rfidAgent2, _observers);
 //		_locationMonitors.add(lm2);
 //		new Thread(lm2).start();
 //		Runnable is2 = new ItemScanner(rfidAgent2, this, _observers, _nScanDistance);
 //		_itemScanners.add(is2);
 //		new Thread(is2).start();
-		
-		Runnable lm3 = new LocationMonitor(rfidAgent3, _observers);
-		_locationMonitors.add(lm3);
-		new Thread(lm3).start();
-		Runnable is3 = new ItemScanner(rfidAgent3, this, _observers, _nScanDistance);
-		_itemScanners.add(is3);
-		new Thread(is3).start();
-		
-		Runnable lm4 = new LocationMonitor(rfidAgent4, _observers);
-		_locationMonitors.add(lm4);
-		new Thread(lm4).start();
-		Runnable is4 = new ItemScanner(rfidAgent4, this, _observers, _nScanDistance);
-		_itemScanners.add(is4);
-		new Thread(is4).start();
-		
-		return sensorAgents;
-	}
+//
+//		Runnable lm3 = new LocationMonitor(rfidAgent3, _observers);
+//		_locationMonitors.add(lm3);
+//		new Thread(lm3).start();
+//		Runnable is3 = new ItemScanner(rfidAgent3, this, _observers, _nScanDistance);
+//		_itemScanners.add(is3);
+//		new Thread(is3).start();
+//
+//		Runnable lm4 = new LocationMonitor(rfidAgent4, _observers);
+//		_locationMonitors.add(lm4);
+//		new Thread(lm4).start();
+//		Runnable is4 = new ItemScanner(rfidAgent4, this, _observers, _nScanDistance);
+//		_itemScanners.add(is4);
+//		new Thread(is4).start();
+//
+//		return sensorAgents;
+//	}
 }

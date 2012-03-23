@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import simulator.Domain;
+import simulator.NewDomain;
 
 public class ConfigurationManager {
 
@@ -13,8 +14,8 @@ public class ConfigurationManager {
 	 * Reads the number of agents, items and sensors configured in the config.properties file
 	 * The file is to be placed inside the simulator package
 	 */
-	public Domain loadParameters() {
-		int nAgents, nItems, nSensors, domainSize;
+	public NewDomain loadParameters() {
+		int nAgents, nItems, nSensors;
 		double nScanDistance;
 		Properties prop = new Properties();
 		try {
@@ -31,8 +32,7 @@ public class ConfigurationManager {
 		nSensors = Integer.parseInt(prop.getProperty("nSensors"));
 		nScanDistance = Double.parseDouble(prop.getProperty("nScanDistance"));
 		
-		domainSize = (nAgents + nItems + nSensors) / 2;
-		Domain domain = new Domain(domainSize, nAgents, nItems, nSensors, nScanDistance);
+		NewDomain domain = new NewDomain(15, 35, nAgents, nItems, nSensors, nScanDistance);
 		return domain;
 	}
 }

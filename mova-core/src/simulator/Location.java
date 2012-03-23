@@ -4,7 +4,7 @@ public class Location implements Cloneable{
 	private int latitude;
 	private int longitude;
 	
-	public Location(int lat, int lon){
+	public Location(int lon, int lat){
 		latitude = lat;
 		longitude = lon;
 	}
@@ -21,14 +21,14 @@ public class Location implements Cloneable{
 		latitude = lat;
 	}
 	
-	public synchronized void setLongitude(int longitude){
-		latitude = longitude;
+	public synchronized void setLongitude(int lon){
+		longitude = lon;
 	}
 	
 	public Location clone(){
 		int lat = latitude;
 		int lon = longitude;
-		Location loc = new Location(lat, lon);		
+		Location loc = new Location(lon, lat);
 		return loc;
 	}
 	
