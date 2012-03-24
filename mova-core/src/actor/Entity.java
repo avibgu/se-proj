@@ -43,14 +43,14 @@ public class Entity extends Observable{
 	public synchronized Location getLastRepLocation(){
 		return lastRepesentedLocation;
 	}
-	
+
 	public synchronized void setLocation(Location loc){
 		if(location != null)
 			oldLocation = location.clone();
 		location = loc;
 		updated = false;
 	}
-	
+
 	public void setRepLocation(Location l){
 		lastRepesentedLocation = l;
 		setLocation(l);

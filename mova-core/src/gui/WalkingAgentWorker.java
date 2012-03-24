@@ -36,10 +36,12 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
         Room toRoom = _movaMap.getRoom(_to);
         if(fromRoom.getName().equals(toRoom.getName())){
             Stack<Location> path = _movaMap.calculateShortestPath(_from, _to);
-            for (int i = 0; i < path.size() - 1; i++) {
-                Location oldLocation = path.pop();
+            Location oldLocation = _from;
+            while(path.size() > 0){
                 Location newLocation = path.pop();
                 _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+				Thread.sleep(800);
+                oldLocation = newLocation;
             }
         }
         else{

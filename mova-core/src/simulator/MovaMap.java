@@ -153,7 +153,7 @@ public class MovaMap {
 
         Room room1 = getRoom(l1);
         Room room2 = getRoom(l2);
-
+        
         if(room1 == null || room2 == null)
             return true;
         if(!room1.equals(room2)){
