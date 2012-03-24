@@ -88,7 +88,7 @@ public class NewDomain extends DefaultTableModel{
 
         //Conference Room B
         Vector<Location> conferenceRoomBMargins = new Vector<Location>();
-        conferenceRoomBMargins.addAll(initializeLocationRange(10, 16, 19));
+        conferenceRoomBMargins.addAll(initializeLocationRange(10, 15, 19));
         conferenceRoomBMargins.addAll(initializeLocationRange(11, 16, 19));
         conferenceRoomBMargins.addAll(initializeLocationRange(12, 14, 19));
         conferenceRoomBMargins.addAll(initializeLocationRange(13, 14, 19));
@@ -155,7 +155,7 @@ public class NewDomain extends DefaultTableModel{
         Door door2 = new Door(new Location(9,30), _movaMap.getRoom("Lobby"), _movaMap.getRoom("Air Court"));
         Door door3 = new Door(new Location(9,24), _movaMap.getRoom("Lobby"), _movaMap.getRoom("Air Court"));
         Door door4 = new Door(new Location(10,21), _movaMap.getRoom("Lobby"), _movaMap.getRoom("Conference Lobby"));
-        Door door5 = new Door(new Location(10,15), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("conferenceRoomB"));
+        Door door5 = new Door(new Location(10,15), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Conference Room B"));
         Door door6 = new Door(new Location(10,14), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Auditorium"));
         Door door7 = new Door(new Location(4,24), _movaMap.getRoom("Air Court"), _movaMap.getRoom("Executive Boardroom"));
         Door door8 = new Door(new Location(4,30), _movaMap.getRoom("Air Court"), _movaMap.getRoom("Executive Boardroom"));
