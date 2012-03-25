@@ -24,6 +24,7 @@ public class Activity {
 	protected ActivityType				mType;
 	
 	// The Type of this Activity
+  @Deprecated
 	protected AgentType					mAgentType;
 	
 	// The State of this Activity
