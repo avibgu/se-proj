@@ -3,7 +3,6 @@ package actor;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Vector;
 
 import priority.Priority;
 
@@ -22,10 +21,6 @@ public class Activity {
 
 	// The Type of this Activity
 	protected ActivityType				mType;
-	
-	// The Type of this Activity
-  @Deprecated
-	protected AgentType					mAgentType;
 	
 	// The State of this Activity
 	protected ActivityState				mState;
@@ -71,14 +66,6 @@ public class Activity {
 		return mDueDate.getTime();
 	}
 	
-	public AgentType getAgentType() {
-		return mAgentType;
-	}
-
-	public void setAgentType(AgentType mAgentType) {
-		this.mAgentType = mAgentType;
-	}
-	
 	public void setPriority(Priority mPriority) {
 		this.mPriority = mPriority;
 	}
@@ -91,9 +78,6 @@ public class Activity {
 		return mRequiredAents;
 	}
 	
-	
-	
-
 	public ActivityType getType() {
 		return mType;
 	}
@@ -129,24 +113,16 @@ public class Activity {
 	public Activity(String name){
 		this.mName = name;
 	}
-	
-	
-	
-	
-	
-	@Deprecated
-	public void setState(ActivityState pState) {
-		this.mState = pState;
-	}
-
-	@Deprecated
-	public boolean isSatisfiedPreCond(){
-		return true;
-	}
 
 	public boolean isTopPriority() {
 		return mPriority == Priority.URGENT;
 	}
 
-	
+	public void markAsInProgress() {
+		mState = ActivityState.IN_PROGRESS;
+	}
+
+	public void markAsCompleted() {
+		mState = ActivityState.COMPLETED;
+	}
 }
