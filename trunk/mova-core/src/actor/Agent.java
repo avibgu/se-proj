@@ -15,8 +15,6 @@ import client.MovaClient;
 
 import priority.ActivitiesComarator;
 
-import simulator.Location;
-import state.ActivityState;
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
@@ -25,6 +23,8 @@ import algorithm.ActivityMonitor;
 
 public class Agent extends Entity implements Runnable {
 
+	// TODO: check if there are duplication between Agent and Entity
+	
 	protected ActivityMonitor			mActivityMonitor;
 	protected PriorityQueue<Activity>	mActivitiesToPerform;
 	protected Set<Activity>				mOldActivities;
@@ -33,6 +33,12 @@ public class Agent extends Entity implements Runnable {
 	protected Activity					mCurrentActivity;
 	protected String					mRegistrationId;
 	protected long						mStartTime;
+	
+	// The list of known locations of the items.
+	protected Vector<Item> 				mItems;
+	
+	 // The items the agent has.
+	protected Vector<Item>				mMyItems;
 	
 	// These Locks protect the mActivitiesToPerform Collection
 	protected ReadWriteLock				mRWLock;
@@ -54,6 +60,10 @@ public class Agent extends Entity implements Runnable {
 		mCurrentActivity = null;
 		mRegistrationId = "";
 		mStartTime = 0;
+		
+		mItems = new Vector<Item>();
+		mMyItems = new Vector<Item>();
+		
 		mRWLock = new ReentrantReadWriteLock(true);
 		mReadLock = mRWLock.readLock();
 		mWriteLock = mRWLock.writeLock();
@@ -120,7 +130,7 @@ public class Agent extends Entity implements Runnable {
 				
 				numOfItems = requiredItems.get(itemType);
 				
-				for (Item item : items){
+				for (Item item : mItems){
 					
 					if (item.getType().equals(itemType) && (item.state == ItemState.AVAILABLE)){
 
@@ -128,7 +138,7 @@ public class Agent extends Entity implements Runnable {
 						
 						//TODO: tell server that we took this item
 						
-						myItems.add(item);
+						mMyItems.add(item);
 						
 						numOfItems--;
 						
@@ -159,11 +169,29 @@ public class Agent extends Entity implements Runnable {
 		return null; // No activity was found.
 	}
 	
-	@Deprecated
+	// TODO: improve it..
 	protected void performCurrentActivity() {
-		 currentActivity.setState(ActivityState.IN_PROGRESS);
+		 mCurrentActivity.markAsInProgress();
 		//TODO: tell server that we perform this activity
 		//TODO: when completing the activity, remove it from mActivitiesToPerform and add it to mOldActivities
+	}
+	
+	// TODO: improve it..
+	protected void completeCurrentActivity(){
+		
+		releaseMyItems();
+		mCurrentActivity.markAsCompleted();
+		mCurrentActivity = null;
+	}
+	
+	// TODO: improve it..
+	private void releaseMyItems() {
+		
+		for (Item item : mMyItems){
+			
+			item.markAsAvailable();
+			//TODO: tell server that we released this item
+		}
 	}
 	
 	
@@ -340,96 +368,55 @@ public class Agent extends Entity implements Runnable {
 	
 	
 	
-	// TODO: check if there are duplication between Agent and Entity
 	
-	@Deprecated
-	protected ActivityMonitor			activityMonitor;
-	
-	@Deprecated
-	protected PriorityQueue<Activity>	activities;
-	
-	@Deprecated
-	protected AgentType					type;
-	
-	@Deprecated
-	protected boolean					dontStop;
-	
-	 // The list of known locations of the items.
-	@Deprecated
-	protected Vector<Item> 				items;
-	
-	 // The items the agent has.
-	@Deprecated
-	protected Vector<Item>				myItems;
-	
-	@Deprecated
-	protected Activity					currentActivity;
-	
-	@Deprecated
-	protected String					registrationId;
 
-	@Deprecated
-	protected void completeCurrentActivity(){
-		
-		releaseMyItems();
-		currentActivity.setState(ActivityState.COMPLETED);
-		currentActivity = null;
-	}
-	
-	@Deprecated
-	private void releaseMyItems() {
-		
-		for (Item item : myItems){
-			
-			item.markAsAvailable();
-			//TODO: tell server that we released this item
-		}
-	}
+	//TODO: what to do with that??..
 
-	/**
-	 * @param itemType the item type to find
-	 * @return the closest item to the entity, 
-	 * or null if there is no item inside the domain
-	 */
-	@Deprecated
-	private Location findClosestItem(ItemType itemType) {
-		
-		Location entityLocation = getLocation();//TODO Should be changed to android getLastKnownLocation(String provider) in LocationManager class
-		Location closestItem = new Location(-1, -1);
-		
-		double closestLocation = Double.MAX_VALUE;
-		
-		synchronized (items) {
-			
-			for (Item it : items) {
-				
-				Location itemLocation = it.getLocation();
-				
-				double distance = calcDistance(entityLocation, itemLocation);//TODO should be changed to android "distanceTo(Location dest)" in Location Class
-				
-				if(distance >= 0 && distance < closestLocation){
-					
-					closestLocation = distance;
-					closestItem = itemLocation;
-				}
-			}
-		}
-		
-		if(closestItem.getLatitude() != -1)
-			return closestItem;
-		
-		return null;
-	}
-	
-	@Deprecated
-	private double calcDistance(Location entityLocation, Location location) {
-		
-		if(entityLocation != null && location != null){
-			
-			double latitudeDiff = entityLocation.getLatitude() - location.getLatitude();
-			double longitudeDiff = entityLocation.getLongitude() - location.getLongitude();
-			return Math.sqrt(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff);
-		}
-		return -1;
-	}
+//
+//	/**
+//	 * @param itemType the item type to find
+//	 * @return the closest item to the entity, 
+//	 * or null if there is no item inside the domain
+//	 */
+//	@Deprecated
+//	private Location findClosestItem(ItemType itemType) {
+//		
+//		Location entityLocation = getLocation();//TODO Should be changed to android getLastKnownLocation(String provider) in LocationManager class
+//		Location closestItem = new Location(-1, -1);
+//		
+//		double closestLocation = Double.MAX_VALUE;
+//		
+//		synchronized (items) {
+//			
+//			for (Item it : items) {
+//				
+//				Location itemLocation = it.getLocation();
+//				
+//				double distance = calcDistance(entityLocation, itemLocation);//TODO should be changed to android "distanceTo(Location dest)" in Location Class
+//				
+//				if(distance >= 0 && distance < closestLocation){
+//					
+//					closestLocation = distance;
+//					closestItem = itemLocation;
+//				}
+//			}
+//		}
+//		
+//		if(closestItem.getLatitude() != -1)
+//			return closestItem;
+//		
+//		return null;
+//	}
+//	
+//	@Deprecated
+//	private double calcDistance(Location entityLocation, Location location) {
+//		
+//		if(entityLocation != null && location != null){
+//			
+//			double latitudeDiff = entityLocation.getLatitude() - location.getLatitude();
+//			double longitudeDiff = entityLocation.getLongitude() - location.getLongitude();
+//			return Math.sqrt(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff);
+//		}
+//		return -1;
+//	}
 }
