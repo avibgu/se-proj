@@ -6,81 +6,83 @@ import java.util.UUID;
 import simulator.Location;
 
 public class Entity extends Observable{
-	protected String id;
-	protected Location location;
-	protected Location oldLocation;
-	protected boolean loggedIn;
-	private transient Location lastRepesentedLocation;
-    private transient String representation;
-    private transient boolean updated;
+	
+	protected String				mId;
+	protected Location				mLocation;
+	protected Location				mOldLocation;
+	protected boolean				mLoggedIn;
+	protected transient Location	mLastRepesentedLocation;
+	protected transient String		mRepresentation;
+	protected transient boolean		mUpdated;
 	
 	public Entity(){
-		id = UUID.randomUUID().toString();
-		location = null;
-		oldLocation = null;
-		loggedIn = false;
-		lastRepesentedLocation = null;
-        representation = "";
-        updated = true;
+		
+		mId = UUID.randomUUID().toString();
+		mLocation = null;
+		mOldLocation = null;
+		mLoggedIn = false;
+		mLastRepesentedLocation = null;
+        mRepresentation = "";
+        mUpdated = true;
 	}
 	
 	public String getId() {
-		return id;
+		return mId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String pId) {
+		this.mId = pId;
 	}
 	
 	public synchronized Location getLocation(){
-		return location;
+		return mLocation;
 	}
 	
 	public synchronized Location getOldLocation(){
-		return oldLocation;
+		return mOldLocation;
 	}
 	
 	public synchronized Location getLastRepLocation(){
-		return lastRepesentedLocation;
+		return mLastRepesentedLocation;
 	}
 
-	public synchronized void setLocation(Location loc){
-		if(location != null)
-			oldLocation = location.clone();
-		location = loc;
-		updated = false;
+	public synchronized void setLocation(Location pLocation){
+		if(mLocation != null)
+			mOldLocation = mLocation.clone();
+		mLocation = pLocation;
+		mUpdated = false;
 	}
 
-	public void setRepLocation(Location l){
-		lastRepesentedLocation = l;
-		setLocation(l);
+	public synchronized void setRepLocation(Location pLocation){
+		mLastRepesentedLocation = pLocation;
+		setLocation(pLocation);
 	}
 	
     @Override
     public String toString(){
-    	return representation;
+    	return mRepresentation;
     }
-    public void setRepresentation(String rep){
-        representation = rep;
+    public void setRepresentation(String pRepresentation){
+        mRepresentation = pRepresentation;
     }
     
     public synchronized void update(){
-    	updated = true;
-    	lastRepesentedLocation = location;
+    	mUpdated = true;
+    	mLastRepesentedLocation = mLocation;
     }
     public synchronized boolean updated(){
-    	return updated;
+    	return mUpdated;
     }
     
     public void logIn(){
-    	loggedIn = true;
+    	mLoggedIn = true;
     }
     
     public void logOff(){
-    	loggedIn = false;
+    	mLoggedIn = false;
     }
     
     public boolean isLoggedIn(){
-    	return loggedIn;
+    	return mLoggedIn;
     }
 }
