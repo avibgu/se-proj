@@ -4,44 +4,49 @@ import state.ItemState;
 import type.ItemType;
 
 public class Item extends Entity{
-	protected ItemType type;
-	protected ItemState state;
+	
+	protected ItemType mType;
+	protected ItemState mState;
 
 	public Item(){}
 	
-	public Item(ItemType itemType){
-		type = itemType;
+	public Item(ItemType pItemType){
+		mType = pItemType;
 	}
 	
 	public ItemState getState() {
-		return state;
+		synchronized (mState) {
+			return mState;
+		}
 	}
 
-	public void setState(ItemState state) {
-		this.state = state;
+	public void setState(ItemState pState) {
+		synchronized (mState) {
+			this.mState = pState;
+		}
 	}
 
 	public ItemType getType() {
-		return type;
+		synchronized (mType) {
+			return mType;
+		}
 	}
 
-	public void setType(ItemType type) {
-		this.type = type;
+	public void setType(ItemType pType) {
+		synchronized (mType) {
+			this.mType = pType;
+		}
 	}
 	
 	public void markAsBusy() {
-		
-		synchronized (state) {
-		
-			state = ItemState.BUSY;
+		synchronized (mState) {
+			mState = ItemState.BUSY;
 		}
 	}
 	
 	public void markAsAvailable() {
-		
-		synchronized (state) {
-		
-			state = ItemState.AVAILABLE;
+		synchronized (mState) {
+			mState = ItemState.AVAILABLE;
 		}
 	}
 }

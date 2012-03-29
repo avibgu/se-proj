@@ -3,8 +3,6 @@ package algorithm;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.concurrent.locks.Lock;
 
 import priority.Priority;
 
@@ -25,17 +23,13 @@ public class ActivityMonitor implements Runnable {
 
 	protected boolean					mDontStop;
 	protected Agent						mAgent;
-	protected PriorityQueue<Activity>	mActivities;
 	protected Map<Activity, Priority>	mOldPriority;
-	protected Lock						mReadLock;
 	
 	public ActivityMonitor(Agent pAgent) {
 		
 		mDontStop = true;
 		mAgent = pAgent;
-		mActivities = mAgent.getActivities();
 		mOldPriority = new HashMap<Activity, Priority>();
-		mReadLock = mAgent.getReadLock();
 	}
 
 	@Override
@@ -49,9 +43,9 @@ public class ActivityMonitor implements Runnable {
 			numOfTopPriorityActivities = 0;
 			numOfActivitiesBeforeThisOne = 0;
 			
-			mReadLock.lock();
+			mAgent.getReadLock().lock();
 			
-			for (Activity activity : mActivities) {
+			for (Activity activity : mAgent.getActivities()) {
 
 				synchronized (activity) {
 
@@ -68,7 +62,7 @@ public class ActivityMonitor implements Runnable {
 				}
 			}
 			
-			mReadLock.unlock();
+			mAgent.getReadLock().unlock();
 
 			if (numOfTopPriorityActivities > NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED)
 				mAgent.tooManyTopPriorityActivities(numOfTopPriorityActivities
@@ -78,7 +72,7 @@ public class ActivityMonitor implements Runnable {
 		}
 	}
 
-	private boolean areWeGoingToMissThisActivity(Activity activity, int numOfActivitiesBeforeThisOne) {
+	protected boolean areWeGoingToMissThisActivity(Activity activity, int numOfActivitiesBeforeThisOne) {
 
 		if (mAgent.getCurrentActivity().equals(activity))
 			return false;
