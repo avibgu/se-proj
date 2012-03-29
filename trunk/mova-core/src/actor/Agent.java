@@ -132,7 +132,7 @@ public class Agent extends Entity implements Runnable {
 				
 				for (Item item : mItems){
 					
-					if (item.getType().equals(itemType) && (item.state == ItemState.AVAILABLE)){
+					if (item.getType().equals(itemType) && (item.mState == ItemState.AVAILABLE)){
 
 						item.markAsBusy();
 						
