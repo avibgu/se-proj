@@ -35,19 +35,19 @@ import org.restlet.resource.ClientResource;
  */
 public class MovaClient {
 	
-	private MovaJson _mj;
-	private WebResource _service;
+	private MovaJson mMj;
+	private WebResource mService;
 	
 	/**
 	 * Creates a new MOVA client containing a MOVA to JSON Serializer
 	 * and a Jersey Client to access server web services
 	 */
 	public MovaClient(){
-		_mj = new MovaJson();
+		mMj = new MovaJson();
 		ClientConfig config = new DefaultClientConfig();
 		
 		Client client = Client.create(config);
-		_service = client.resource(getBaseURI());
+		mService = client.resource(getBaseURI());
 	}
 	
 	private URI getBaseURI() {
@@ -55,59 +55,59 @@ public class MovaClient {
 		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	/**
-	 * @param type the type of item to find
-	 * @param quantity the number of items to find
-	 * @param location the location of the agent
+	 * @param pType the type of item to find
+	 * @param pQuantity the number of items to find
+	 * @param pLocation the location of the agent
 	 * @return a vector of items of type <type> closest to the agent's location.
 	 * if the number of items are more than <quantity>, only the first <quantity> items
 	 * are returned. If less, only those items are returned
 	 */
-	public Vector<Item> findItem(ItemType type, int quantity, Location location){
+	public Vector<Item> findItem(ItemType pType, int pQuantity, Location pLocation){
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-		queryParams.add("type", type.toString());
-		queryParams.add("quantity", Integer.toString(quantity));
-		queryParams.add("location", _mj.locationToJson(location));
+		queryParams.add("type", pType.toString());
+		queryParams.add("quantity", Integer.toString(pQuantity));
+		queryParams.add("location", mMj.locationToJson(pLocation));
 		
-		String response = _service.queryParams(queryParams).path("items").path("findItem").accept(
+		String response = mService.queryParams(queryParams).path("items").path("findItem").accept(
 				MediaType.APPLICATION_JSON).get(String.class);
 		
-		return _mj.jsonToItems(response);
+		return mMj.jsonToItems(response);
 	}
 	
 	/**
-	 * @param itemId the id of the item
-	 * @param location the item's current location
+	 * @param pItemId the id of the item
+	 * @param pLocation the item's current location
 	 */
-	public void distributeItemLocation(String itemId, Location location){
+	public void distributeItemLocation(String pItemId, Location pLocation){
 		JsonObject j = new JsonObject();
-		j.addProperty("id", itemId);
-		j.addProperty("location", _mj.locationToJson(location));
+		j.addProperty("id", pItemId);
+		j.addProperty("location", mMj.locationToJson(pLocation));
 		
-		_service.path("items").path("distributeItemLocation")
+		mService.path("items").path("distributeItemLocation")
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
 	/**
-	 * @param itemId the id of the item
-	 * @param state the item's current state
+	 * @param pItemId the id of the item
+	 * @param pState the item's current state
 	 */
-	public void distributeItemState(String itemId, ItemState state){
+	public void distributeItemState(String pItemId, ItemState pState){
 		JsonObject j = new JsonObject();
-		j.addProperty("id", itemId);
-		j.addProperty("state", state.toString());
+		j.addProperty("id", pItemId);
+		j.addProperty("state", pState.toString());
 		
-		_service.path("items").path("distributeItemState")
+		mService.path("items").path("distributeItemState")
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
 	/**
-	 * @param activity the activity to send
-	 * @param agentIds a vector of agent ID's to send to
+	 * @param pActivity the activity to send
+	 * @param pAgentIds a vector of agent ID's to send to
 	 */
-	public void sendActivity(Activity activity, Vector<String> agentIds){
+	public void sendActivity(Activity pActivity, Vector<String> pAgentIds){
 		JsonObject j = new JsonObject();
-		j.addProperty("activity", _mj.activityToJson(activity));
-		j.addProperty("agentIds", _mj.agentsToJson(agentIds));
+		j.addProperty("activity", mMj.activityToJson(pActivity));
+		j.addProperty("agentIds", mMj.agentsToJson(pAgentIds));
 		
 	//	_service.path("activities").path("sendActivity")
 	//		.type(MediaType.APPLICATION_JSON).put(j.toString());
@@ -118,46 +118,46 @@ public class MovaClient {
 	}
 	
 	/**
-	 * @param id the id of the activity
-	 * @param state the new state of the activity
+	 * @param pId the id of the activity
+	 * @param pState the new state of the activity
 	 */
-	public void changeActivityStatus(String id, ActivityState state){
+	public void changeActivityStatus(String pId, ActivityState pState){
 		JsonObject j = new JsonObject();
-		j.addProperty("activityId", id);
-		j.addProperty("state", state.toString());
+		j.addProperty("activityId", pId);
+		j.addProperty("state", pState.toString());
 		
-		_service.path("activities").path("changeActivityStatus")
+		mService.path("activities").path("changeActivityStatus")
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
 	/**
-	 * @param id the id of the activity
-	 * @param newLocation the new location of the agent
+	 * @param pId the id of the activity
+	 * @param pNewLocation the new location of the agent
 	 */
-	public void changeAgentLocation(String id, Location newLocation){
+	public void changeAgentLocation(String pId, Location pNewLocation){
 		JsonObject j = new JsonObject();
-		j.addProperty("id", id);
-		j.addProperty("location", _mj.locationToJson(newLocation));
+		j.addProperty("id", pId);
+		j.addProperty("location", mMj.locationToJson(pNewLocation));
 		
-		_service.path("agents").path("changeAgentLocation")
+		mService.path("agents").path("changeAgentLocation")
 			.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
-	public void registerAgent(Agent agent){
+	public void registerAgent(Agent pAgent){
 		JsonObject j = new JsonObject();
-		j.addProperty("id", agent.getId());
-		j.addProperty("type", agent.getType().toString());
-		j.addProperty("loggedIn", agent.isLoggedIn());
-		j.addProperty("registrationId", agent.getRegistrationId());
+		j.addProperty("id", pAgent.getId());
+		j.addProperty("type", pAgent.getType().toString());
+		j.addProperty("loggedIn", pAgent.isLoggedIn());
+		j.addProperty("registrationId", pAgent.getRegistrationId());
 		
-		_service.path("agents").path("registerAgent")
+		mService.path("agents").path("registerAgent")
 		.type(MediaType.APPLICATION_JSON).put(j.toString());
 	}
 	
-	public void saveRegistrationId(String registraionId,String agentId){
+	public void saveRegistrationId(String pRegistraionId, String pAgentId){
 		JsonObject j = new JsonObject();
-		j.addProperty("registrationId", registraionId);
-		j.addProperty("agentId", agentId);
+		j.addProperty("registrationId", pRegistraionId);
+		j.addProperty("agentId", pAgentId);
 		
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/c2dm/saveRegistrationId");
 		resource.put(j.toString());
