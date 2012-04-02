@@ -7,14 +7,14 @@ public class SensorAgent extends Agent {
 	
 	protected Vector<Entity> mVisibleItems;
 	
-	public SensorAgent(AgentType type) {
-		super(type);
+	public SensorAgent(AgentType pType) {
+		super(pType);
 		mVisibleItems = new Vector<Entity>();
 	}
 
-	public void setVisibleItems(Vector<Entity> items){
+	public void setVisibleItems(Vector<Entity> pItems){
 		synchronized (mVisibleItems) {
-			mVisibleItems = items;	
+			mVisibleItems = pItems;	
 		}
 	}
 	
