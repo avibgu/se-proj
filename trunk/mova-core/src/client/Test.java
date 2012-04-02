@@ -10,7 +10,7 @@ public class Test {
 	public static void main(String[] args) {
 		MovaClient mc = new MovaClient();
 		
-		Activity ac = new Activity("ad");
+//		Activity ac = new Activity("ad");
 
 	}
 

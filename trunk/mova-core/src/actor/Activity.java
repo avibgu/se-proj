@@ -66,8 +66,8 @@ public class Activity {
 		return mDueDate.getTime();
 	}
 	
-	public void setPriority(Priority mPriority) {
-		this.mPriority = mPriority;
+	public void setPriority(Priority pPriority) {
+		this.mPriority = pPriority;
 	}
 
 	public Map<ItemType,Integer> getRequiredItems() {
@@ -82,36 +82,32 @@ public class Activity {
 		return mType;
 	}
 
-	public void setType(ActivityType mType) {
-		this.mType = mType;
+	public void setType(ActivityType pType) {
+		this.mType = pType;
 	}
 
 	public String getId() {
 		return mId;
 	}
 
-	public void setId(String mId) {
-		this.mId = mId;
+	public void setId(String pId) {
+		this.mId = pId;
 	}
 	
 	public String getDescription() {
 		return mDescription;
 	}
 
-	public void setDescription(String mDescription) {
-		this.mDescription = mDescription;
+	public void setDescription(String pDescription) {
+		this.mDescription = pDescription;
 	}
 
 	public String getName() {
 		return mName;
 	}
 
-	public void setName(String mName) {
-		this.mName = mName;
-	}
-
-	public Activity(String name){
-		this.mName = name;
+	public void setName(String pName) {
+		this.mName = pName;
 	}
 
 	public boolean isTopPriority() {
