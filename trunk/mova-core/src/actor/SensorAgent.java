@@ -5,23 +5,28 @@ import type.AgentType;
 
 public class SensorAgent extends Agent {
 	
-	protected Vector<Entity> _visibleItems;
+	protected Vector<Entity> mVisibleItems;
 	
 	public SensorAgent(AgentType type) {
 		super(type);
-		_visibleItems = new Vector<Entity>();
+		mVisibleItems = new Vector<Entity>();
 	}
 
-	public synchronized void setVisibleItems(Vector<Entity> items){
-		_visibleItems = items;
+	public void setVisibleItems(Vector<Entity> items){
+		synchronized (mVisibleItems) {
+			mVisibleItems = items;	
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Vector<Entity> getVisibleItems(){
+		
 		Vector<Entity> visibleItems = new Vector<Entity>();
-		synchronized (_visibleItems) {
-			visibleItems = (Vector<Entity>) _visibleItems.clone();
+		
+		synchronized (mVisibleItems) {
+			visibleItems = (Vector<Entity>) mVisibleItems.clone();
 		}
+		
 		return visibleItems;
 	}
 }
