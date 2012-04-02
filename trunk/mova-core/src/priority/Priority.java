@@ -6,14 +6,14 @@ public enum Priority {
 	MEDIUM(3),
 	LOW(4);
 	
-	private final int severity;
+	private final int mSeverity;
 	
-	Priority(int severity) {
-		this.severity = severity;
+	Priority(int pSeverity) {
+		this.mSeverity = pSeverity;
 	}
 	
-	public int severity(){
-		return this.severity;
+	public int getSeverity(){
+		return this.mSeverity;
 	}
 	
 }
