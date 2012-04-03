@@ -2,7 +2,9 @@ package actor;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import priority.Priority;
@@ -44,6 +46,9 @@ public class Activity {
 	// Map between the required Item of a specific type and the desired quantity
 	protected Map<ItemType,Integer>		mRequiredItems; 
 	
+	// the Activities which this Activity can be performed only after they finished
+	protected Set<Activity>				mRequiredActivities;
+	
 	// The Description of this Activity
 	protected String					mDescription;
 
@@ -63,9 +68,9 @@ public class Activity {
 		Map<ItemType,Integer> requiredItems = new HashMap<ItemType,Integer>();
 		requiredItems.put(ItemType.LAPTOP, 1);
 		
-		init(ActivityType.PRESENTATION, Priority.MEDIUM, startTime,
+		init(	ActivityType.PRESENTATION, Priority.MEDIUM, startTime,
 				endTime, estimateTime, requiredAents, requiredItems,
-				"DEFAULT ACTIVITY", pName);
+				new HashSet<Activity>(), "DEFAULT ACTIVITY", pName);
 	}
 	
 	public Activity(	ActivityType			pType,
@@ -75,11 +80,13 @@ public class Activity {
 						long					pEstimateTime,
 						Map<AgentType,Integer>	pRequiredAents,
 						Map<ItemType, Integer>	pRequiredItems,
+						Set<Activity>			pRequiredActivities,
 						String					pDescription,
 						String					pName){
 		
-		init(pType, pPriority, pStartTime, pEndTime, pEstimateTime, pRequiredAents, pRequiredItems,
-				pDescription, pName);
+		init(	pType, pPriority, pStartTime, pEndTime,
+				pEstimateTime, pRequiredAents, pRequiredItems,
+				pRequiredActivities, pDescription, pName);
 	}
 
 	protected void init(	ActivityType			pType,
@@ -89,6 +96,7 @@ public class Activity {
 							long					pEstimateTime,
 							Map<AgentType,Integer>	pRequiredAents,
 							Map<ItemType, Integer>	pRequiredItems,
+							Set<Activity>			pRequiredActivities,
 							String					pDescription,
 							String					pName) {
 		
@@ -101,6 +109,7 @@ public class Activity {
 		mEstimateTime = pEstimateTime;
 		mRequiredAents = pRequiredAents;
 		mRequiredItems = pRequiredItems;
+		mRequiredActivities = pRequiredActivities;
 		mDescription = pDescription;
 		mName = pName;
 	}
