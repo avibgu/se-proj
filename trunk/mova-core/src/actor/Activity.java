@@ -1,6 +1,7 @@
 package actor;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,8 +29,14 @@ public class Activity {
 	// The Priority of this Activity
 	protected Priority					mPriority;
 	
-	// The Due-Date of this Activity
-	protected Date						mDueDate; 
+	// The Lower bound time of this Activity
+	protected Date						mStartTime; 
+	
+	// The Upper bound time of this Activity
+	protected Date						mEndTime;
+
+	// The time (in milliseconds) that we assume this Activity will takes
+	protected long						mEstimateTime;
 	
 	// Map between the required Agent of a specific type and the desired quantity
 	protected Map<AgentType,Integer>	mRequiredAents;
@@ -37,33 +44,73 @@ public class Activity {
 	// Map between the required Item of a specific type and the desired quantity
 	protected Map<ItemType,Integer>		mRequiredItems; 
 	
+	// The Description of this Activity
 	protected String					mDescription;
-	
+
+	// The Name of this Activity
 	protected String					mName;
+	
+	public Activity(String pName) {
+		
+		long estimateTime = 1000 * 60 * 60 * 1;
+		
+		Date startTime = new Date();
+		Date endTime = new Date(startTime.getTime() + estimateTime * 5);
+		
+		Map<AgentType,Integer> requiredAents = new HashMap<AgentType,Integer>();
+		requiredAents.put(AgentType.COORDINATOR, 1);
+		
+		Map<ItemType,Integer> requiredItems = new HashMap<ItemType,Integer>();
+		requiredItems.put(ItemType.LAPTOP, 1);
+		
+		init(ActivityType.PRESENTATION, Priority.MEDIUM, startTime,
+				endTime, estimateTime, requiredAents, requiredItems,
+				"DEFAULT ACTIVITY", pName);
+	}
 	
 	public Activity(	ActivityType			pType,
 						Priority				pPriority,
-						Date					pDueDate,
+						Date					pStartTime,
+						Date					pEndTime,
+						long					pEstimateTime,
 						Map<AgentType,Integer>	pRequiredAents,
-						Map<ItemType,Integer>	pRequiredItems	){
+						Map<ItemType, Integer>	pRequiredItems,
+						String					pDescription,
+						String					pName){
+		
+		init(pType, pPriority, pStartTime, pEndTime, pEstimateTime, pRequiredAents, pRequiredItems,
+				pDescription, pName);
+	}
+
+	protected void init(	ActivityType			pType,
+							Priority				pPriority,
+							Date					pStartTime,
+							Date					pEndTime,
+							long					pEstimateTime,
+							Map<AgentType,Integer>	pRequiredAents,
+							Map<ItemType, Integer>	pRequiredItems,
+							String					pDescription,
+							String					pName) {
 		
 		mId = UUID.randomUUID().toString();
 		mType = pType;
 		mState = ActivityState.PENDING;
 		mPriority = pPriority;
-		mDueDate = pDueDate; 
+		mStartTime = pStartTime;
+		mEndTime = pEndTime;
+		mEstimateTime = pEstimateTime;
 		mRequiredAents = pRequiredAents;
 		mRequiredItems = pRequiredItems;
-		mDescription = "";
-		mName = "";
+		mDescription = pDescription;
+		mName = pName;
 	}
-	
+
 	public Priority getPriority() {
 		return mPriority;
 	}
 
-	public long getDueDate() {
-		return mDueDate.getTime();
+	public long getEndTime() {
+		return mStartTime.getTime();
 	}
 	
 	public void setPriority(Priority pPriority) {
