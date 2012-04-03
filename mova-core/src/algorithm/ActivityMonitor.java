@@ -81,7 +81,7 @@ public class ActivityMonitor implements Runnable {
 		
 		long expectedTime = mAgent.getAverageTimePerActivity() * (1 + numOfActivitiesBeforeThisOne);
 		
-		return now + expectedTime > activity.getDueDate();
+		return now + expectedTime > activity.getEndTime();
 	}
 
 	protected boolean isThisActivityChangedItsPriority(Activity activity) {

@@ -5,5 +5,5 @@ public enum ActivityType {
 	TOUR,
 	LUNCH,
 	PRESENTATION,
-	DISCUSSION,
+	DISCUSSION;
 }

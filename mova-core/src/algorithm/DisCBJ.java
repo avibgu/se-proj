@@ -6,7 +6,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-public class CBJ {
+public class DisCBJ {
 
 	protected SortedSet<Constraint> mFullDomain = null;
 	protected SortedSet<Constraint> mCurrentDomain = null;
@@ -18,7 +18,7 @@ public class CBJ {
 	protected int mID = -1;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public CBJ(SortedSet<Integer> pFullDomain, int pID) {
+	public DisCBJ(SortedSet<Integer> pFullDomain, int pID) {
 
 		// TODO: init mAllVariables..
 
