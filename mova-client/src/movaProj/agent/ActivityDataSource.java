@@ -76,7 +76,7 @@ public class ActivityDataSource {
 			ans.setId(cursor.getString(0));
 			ans.setName(cursor.getString(1));
 			ans.setType(ActivityType.CONFERENCE_REGISTRATION);
-			ans.setAgentType(AgentType.COORDINATOR);
+//			ans.setAgentType(AgentType.COORDINATOR);
 			ans.setPriority(Priority.LOW);
 			return ans;
 		}
