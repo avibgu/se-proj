@@ -3,25 +3,25 @@
 package simulator;
 
 public class Door {
-    Location _location;
-    Room _room1;
-    Room _room2;
+    Location mLocation;
+    Room mRoom1;
+    Room mRoom2;
 
     public Door(Location location, Room room1, Room room2){
-        _location = location;
-        _room1 = room1;
-        _room2 = room2;
+        mLocation = location;
+        mRoom1 = room1;
+        mRoom2 = room2;
     }
 
     public Location getLocation(){
-        return _location;
+        return mLocation;
     }
 
     public Room getRoom1(){
-        return _room1;
+        return mRoom1;
     }
 
     public Room getRoom2(){
-        return _room2;
+        return mRoom2;
     }
 }

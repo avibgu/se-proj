@@ -20,7 +20,7 @@ import type.ItemType;
 public class NewDomain extends DefaultTableModel{
     
 	private static final long serialVersionUID = 3391358106917744757L;
-	private MovaMap _movaMap;
+	private MovaMap mMovaMap;
     private int _nAgents;
 	private int _nItems;
 	private int _nSensors;
@@ -43,7 +43,7 @@ public class NewDomain extends DefaultTableModel{
         _entitiesMap = new HashMap<Entity, Location>();
         _observers = new Vector<Observer>();
         _itemScanners = new Vector<Runnable>();
-        _movaMap = new MovaMap(height, width);
+        mMovaMap = new MovaMap(height, width);
         initializeLocations(height, width);
         initializeMap();
         manuallyInitializeLocations();
@@ -53,8 +53,8 @@ public class NewDomain extends DefaultTableModel{
     private void initializeMap() {
         initializeRooms();
         initializeDoors();
-        _movaMap.initializeLocations();
-        _movaMap.setLocationNodesNeighbors();
+        mMovaMap.initializeLocations();
+        mMovaMap.setLocationNodesNeighbors();
     }
 
     private void initializeRooms() {
@@ -147,30 +147,30 @@ public class NewDomain extends DefaultTableModel{
         rooms.add(auditorium);
         rooms.add(conferenceRoomA);
         _rooms = rooms;
-        _movaMap.setRooms(rooms);
+        mMovaMap.setRooms(rooms);
     }
 
     private void initializeDoors() {
-        Door door1 = new Door(new Location(13,27), null, _movaMap.getRoom("Lobby"));
-        Door door2 = new Door(new Location(9,30), _movaMap.getRoom("Lobby"), _movaMap.getRoom("Air Court"));
-        Door door3 = new Door(new Location(9,24), _movaMap.getRoom("Lobby"), _movaMap.getRoom("Air Court"));
-        Door door4 = new Door(new Location(10,21), _movaMap.getRoom("Lobby"), _movaMap.getRoom("Conference Lobby"));
-        Door door5 = new Door(new Location(10,15), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Conference Room B"));
-        Door door6 = new Door(new Location(10,14), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Auditorium"));
-        Door door7 = new Door(new Location(4,24), _movaMap.getRoom("Air Court"), _movaMap.getRoom("Executive Boardroom"));
-        Door door8 = new Door(new Location(4,30), _movaMap.getRoom("Air Court"), _movaMap.getRoom("Executive Boardroom"));
-        Door door9 = new Door(new Location(3,22), _movaMap.getRoom("Executive Boardroom"), _movaMap.getRoom("Lounge"));
-        Door door10 = new Door(new Location(8,10), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Auditorium"));
-        Door door11 = new Door(new Location(7,10), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Conference Room A"));
-        Door door12 = new Door(new Location(4,12), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Main Office"));
-        Door door13 = new Door(new Location(5,20), _movaMap.getRoom("Conference Lobby"), _movaMap.getRoom("Lounge"));
+        Door door1 = new Door(new Location(13,27), null, mMovaMap.getRoom("Lobby"));
+        Door door2 = new Door(new Location(9,30), mMovaMap.getRoom("Lobby"), mMovaMap.getRoom("Air Court"));
+        Door door3 = new Door(new Location(9,24), mMovaMap.getRoom("Lobby"), mMovaMap.getRoom("Air Court"));
+        Door door4 = new Door(new Location(10,21), mMovaMap.getRoom("Lobby"), mMovaMap.getRoom("Conference Lobby"));
+        Door door5 = new Door(new Location(10,15), mMovaMap.getRoom("Conference Lobby"), mMovaMap.getRoom("Conference Room B"));
+        Door door6 = new Door(new Location(10,14), mMovaMap.getRoom("Conference Lobby"), mMovaMap.getRoom("Auditorium"));
+        Door door7 = new Door(new Location(4,24), mMovaMap.getRoom("Air Court"), mMovaMap.getRoom("Executive Boardroom"));
+        Door door8 = new Door(new Location(4,30), mMovaMap.getRoom("Air Court"), mMovaMap.getRoom("Executive Boardroom"));
+        Door door9 = new Door(new Location(3,22), mMovaMap.getRoom("Executive Boardroom"), mMovaMap.getRoom("Lounge"));
+        Door door10 = new Door(new Location(8,10), mMovaMap.getRoom("Conference Lobby"), mMovaMap.getRoom("Auditorium"));
+        Door door11 = new Door(new Location(7,10), mMovaMap.getRoom("Conference Lobby"), mMovaMap.getRoom("Conference Room A"));
+        Door door12 = new Door(new Location(4,12), mMovaMap.getRoom("Conference Lobby"), mMovaMap.getRoom("Main Office"));
+        Door door13 = new Door(new Location(5,20), mMovaMap.getRoom("Conference Lobby"), mMovaMap.getRoom("Lounge"));
         Vector<Door> doors = new Vector<Door>();
         doors.add(door1); doors.add(door2);doors.add(door3);
         doors.add(door4); doors.add(door5);doors.add(door6);
         doors.add(door7); doors.add(door8);doors.add(door9);
         doors.add(door10); doors.add(door11);doors.add(door12);doors.add(door13);
         _doors = doors;
-        _movaMap.setDoors(doors);
+        mMovaMap.setDoors(doors);
     }
 
     private Vector<Location> initializeLocationRange(int row, int start, int end){
@@ -219,7 +219,7 @@ public class NewDomain extends DefaultTableModel{
             if(room1 == null || room2 == null)
                 continue;
             if(room1.equals(fromRoom) || room2.equals(fromRoom)){
-                Stack<Location> path = _movaMap.calculateShortestPath(from, door.getLocation());
+                Stack<Location> path = mMovaMap.calculateShortestPath(from, door.getLocation());
                 if(path.size() < shortestPath){
                     shortestPath = path.size();
                     closestDoor = door;
@@ -245,7 +245,7 @@ public class NewDomain extends DefaultTableModel{
 //    }
 
     public MovaMap getMovaMap(){
-        return _movaMap;
+        return mMovaMap;
     }
 
     public Vector<Observer> getObservers() {
@@ -287,7 +287,7 @@ public class NewDomain extends DefaultTableModel{
     public boolean checkNewLocation(Location newLocation) {
 		int latitude = newLocation.getLatitude();
 		int longitude = newLocation.getLongitude();
-		if(latitude >= _movaMap.getWidth() || longitude >= _movaMap.getHeight() || latitude < 0 || longitude < 0)
+		if(latitude >= mMovaMap.getWidth() || longitude >= mMovaMap.getHeight() || latitude < 0 || longitude < 0)
 			return false;
 		return true;
 	}

@@ -3,43 +3,43 @@ package simulator;
 import java.util.Vector;
 
 public class LocationNode {
-    private Location _location;
-    private boolean _marked;
-    private Vector<LocationNode> _neighbors;
-    private LocationNode _parent;
+    private Location mLocation;
+    private boolean mMarked;
+    private Vector<LocationNode> mNeighbors;
+    private LocationNode mParent;
 
     public LocationNode(Location location){
-        _location = location;
-        _marked = false;
-        _neighbors = new Vector<LocationNode>();
-        _parent = null;
+        mLocation = location;
+        mMarked = false;
+        mNeighbors = new Vector<LocationNode>();
+        mParent = null;
     }
 
     public boolean isMarked(){
-        return _marked;
+        return mMarked;
     }
 
     public void mark(){
-        _marked= true;
+        mMarked= true;
     }
 
     public void unMark(){
-        _marked= false;
+        mMarked= false;
     }
 
     public Vector<LocationNode> getNeighbors(){
-        return _neighbors;
+        return mNeighbors;
     }
 
     public Location getLocation(){
-        return _location;
+        return mLocation;
     }
 
     public LocationNode getParent(){
-        return _parent;
+        return mParent;
     }
 
     public void setParent(LocationNode parent){
-        _parent = parent;
+        mParent = parent;
     }
 }
