@@ -8,44 +8,44 @@ import actor.SensorAgent;
 
 public class ItemScanner implements Runnable {
 	
-	protected boolean _dontStop;
-	protected NewDomain _domain;
-	protected SensorAgent _sensorAgent;
-	protected Location _sensorLocation;
-	protected final long _refreshRate = 3;
-	protected final double _scanDistance;
-	protected Vector<Entity> _visibleItems;
-	protected Vector<Observer> _observers;
+	protected boolean mDontStop;
+	protected NewDomain mDomain;
+	protected SensorAgent mSensorAgent;
+	protected Location mSensorLocation;
+	protected final long mRefreshRate = 3;
+	protected final double mScanDistance;
+	protected Vector<Entity> mVisibleItems;
+	protected Vector<Observer> mObservers;
 	
 	public ItemScanner(Entity entity, NewDomain domain, Vector<Observer> observers, double scanDistance){
-		_domain = domain;
-		_sensorAgent = (SensorAgent)entity;
-		_sensorLocation = _sensorAgent.getLocation();
-		_dontStop = true;
-		_visibleItems = new Vector<Entity>();
-		_observers = observers;
-		_scanDistance = scanDistance;
+		mDomain = domain;
+		mSensorAgent = (SensorAgent)entity;
+		mSensorLocation = mSensorAgent.getLocation();
+		mDontStop = true;
+		mVisibleItems = new Vector<Entity>();
+		mObservers = observers;
+		mScanDistance = scanDistance;
 	}
 	
 	@Override
 	public void run() {
-		while (_dontStop){
-			Vector<Entity> visible = _domain.scanForItems(_sensorLocation, _scanDistance);
+		while (mDontStop){
+			Vector<Entity> visible = mDomain.scanForItems(mSensorLocation, mScanDistance);
 			Vector<Entity> changedLocationItems = new Vector<Entity>(); 
 			for (Entity entity : visible) {
 				if(!entity.getLocation().equals(entity.getOldLocation()) && entity.getOldLocation() != null)
 					changedLocationItems.add(entity);
 			}
-			_sensorAgent.setVisibleItems(visible);
-			_visibleItems = visible;
+			mSensorAgent.setVisibleItems(visible);
+			mVisibleItems = visible;
 			if(changedLocationItems.size() > 0){
 //				for (Observer ob : _observers) {
 //					ob.update(null, changedLocationItems);
 //				}
-                _domain.changeItemsLocation(changedLocationItems);
+                mDomain.changeItemsLocation(changedLocationItems);
 			}
 			try {
-				Thread.sleep(_refreshRate * 1000);
+				Thread.sleep(mRefreshRate * 1000);
 			} catch (InterruptedException e) {
 				stop();
 			}
@@ -53,6 +53,6 @@ public class ItemScanner implements Runnable {
 	}
 	
 	public void stop() {
-		_dontStop = false;
+		mDontStop = false;
 	}
 }

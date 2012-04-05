@@ -14,33 +14,33 @@ import type.ItemType;
 
 public class Domain {
 
-	private HashMap<String, Location> _grid;
+	private HashMap<String, Location> mGrid;
 	
 	private int DOMAIN_SIZE;
-	private int _nAgents;
-	private int _nItems;
-	private int _nSensors;
-	private double _nScanDistance;
-	private Vector<Vector<Entity>> _entities;
-	private Vector<Observer> _observers;
-	private Vector<Runnable> _locationMonitors;
-	private Vector<Runnable> _itemScanners;
+	private int mAgents;
+	private int mItems;
+	private int mSensors;
+	private double mScanDistance;
+	private Vector<Vector<Entity>> mEntities;
+	private Vector<Observer> mObservers;
+	private Vector<Runnable> mLocationMonitors;
+	private Vector<Runnable> mItemScanners;
 	
 	public Domain(int domainSize, int nAgents, int nItems, int nSensors, double nScanDistance){
 		DOMAIN_SIZE = domainSize;
-		_nAgents = nAgents;
-		_nItems = nItems;
-		_nSensors = nSensors;
-		_nScanDistance = nScanDistance;
-		_grid = new HashMap<String, Location>();
-		_entities = new Vector<Vector<Entity>>();
-		_observers = new Vector<Observer>();
-		_locationMonitors = new Vector<Runnable>();
-		_itemScanners = new Vector<Runnable>();
+		mAgents = nAgents;
+		mItems = nItems;
+		mSensors = nSensors;
+		mScanDistance = nScanDistance;
+		mGrid = new HashMap<String, Location>();
+		mEntities = new Vector<Vector<Entity>>();
+		mObservers = new Vector<Observer>();
+		mLocationMonitors = new Vector<Runnable>();
+		mItemScanners = new Vector<Runnable>();
 	}
 
 	public Vector<Observer> getObservers() {
-		return _observers;
+		return mObservers;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Domain {
 		}
 
 		Vector<Entity> agents = new Vector<Entity>();
-		for(int i = 0; i < _nAgents; i++){
+		for(int i = 0; i < mAgents; i++){
 			Agent agent = new Agent(AgentType.COORDINATOR);
 			agents.add(agent);
 			
@@ -68,16 +68,16 @@ public class Domain {
 			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
 			agent.setRepLocation(l);
 			
-			_grid.put(agent.getId(), l);
+			mGrid.put(agent.getId(), l);
 			
-			Runnable lm = new LocationMonitor(agent, _observers);
-			_locationMonitors.add(lm);
+			Runnable lm = new LocationMonitor(agent, mObservers);
+			mLocationMonitors.add(lm);
 			new Thread(lm).start();
 		}
-		_entities.add(agents);
+		mEntities.add(agents);
 
 		Vector<Entity> items = new Vector<Entity>();
-		for(int i = 0; i < _nItems; i++){
+		for(int i = 0; i < mItems; i++){
 			Item item = new Item(ItemType.MOUSE);
 			items.add(item);
 			
@@ -89,11 +89,11 @@ public class Domain {
 			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
 			item.setRepLocation(l);
 			
-			_grid.put(item.getId(), l);
+			mGrid.put(item.getId(), l);
 		}
-		_entities.add(items);
+		mEntities.add(items);
 		Vector<Entity> sensorAgents = new Vector<Entity>();
-		for(int i = 0; i < _nSensors; i++){
+		for(int i = 0; i < mSensors; i++){
 			SensorAgent sensor = new SensorAgent(AgentType.RFID);
 			sensorAgents.add(sensor);
 			
@@ -105,17 +105,17 @@ public class Domain {
 			Location l = new Location(location / DOMAIN_SIZE, location % DOMAIN_SIZE);
 			sensor.setRepLocation(l);
 			
-			_grid.put(sensor.getId(), l);
+			mGrid.put(sensor.getId(), l);
 			
-			Runnable lm = new LocationMonitor(sensor, _observers);
-			_locationMonitors.add(lm);
+			Runnable lm = new LocationMonitor(sensor, mObservers);
+			mLocationMonitors.add(lm);
 			new Thread(lm).start();
 			//Runnable is = new ItemScanner(sensor, this, _observers, _nScanDistance);
 			//_itemScanners.add(is);
 			//new Thread(is).start();
 		}
-		_entities.add(sensorAgents);
-		return _entities;
+		mEntities.add(sensorAgents);
+		return mEntities;
 	}
 	
 	/**
@@ -124,17 +124,17 @@ public class Domain {
 	 * items are the second vector and sensors are the third vector
 	 */
 	public Vector<Vector<Entity>> manuallyInitializeLocations() {
-		_entities.add(manuallyInitializeAgents());
-		_entities.add(manuallyInitializeItems());
+		mEntities.add(manuallyInitializeAgents());
+		mEntities.add(manuallyInitializeItems());
 		//_entities.add(manuallyInitializeSensorAgents());
 		
-		return _entities;
+		return mEntities;
 	}
 	
 	public Vector<Entity> scanForItems(Location entityLocation, double distance){
 		Vector<Entity> items = new Vector<Entity>();
-		synchronized (_entities) {
-			for (Entity item : _entities.get(1)) {
+		synchronized (mEntities) {
+			for (Entity item : mEntities.get(1)) {
 				Location itemLocation = item.getLocation();
 				double dist = calcDistance(entityLocation, itemLocation);
 				if(dist <= distance){
@@ -156,11 +156,11 @@ public class Domain {
 	}
         
     public Vector<Vector<Entity>> getEntities(){
-        return _entities;
+        return mEntities;
     }
     
     public double getScanDistance(){
-    	return _nScanDistance;
+    	return mScanDistance;
     }
     
     public int getDomainSize(){
@@ -168,7 +168,7 @@ public class Domain {
     }
     
     public synchronized HashMap<String, Location> getGrid(){
-    	return _grid;
+    	return mGrid;
     }
 
 	public boolean checkNewLocation(Location newLocation) {
@@ -180,11 +180,11 @@ public class Domain {
 	}
 
 	public void stop() {
-		for (Runnable listener : _locationMonitors) {
+		for (Runnable listener : mLocationMonitors) {
 			((LocationMonitor)listener).stop();
 		}
 		
-		for (Runnable listener : _itemScanners) {
+		for (Runnable listener : mItemScanners) {
 			((ItemScanner)listener).stop();
 		}
 	}
@@ -223,29 +223,29 @@ public class Domain {
 		SoundManagerAgent.setRepLocation(SoundManagerAgentLocation);
 		
 		//_grid.put(coordinatorAgent.getId(), coordinatorAgentLocation);
-		_grid.put(securityOfficerAgent.getId(), securitOfficerAgentLocation);
-		_grid.put(secretaryAgent.getId(), secretaryAgentLocation);
+		mGrid.put(securityOfficerAgent.getId(), securitOfficerAgentLocation);
+		mGrid.put(secretaryAgent.getId(), secretaryAgentLocation);
 		//_grid.put(networkManagerAgent.getId(), networkManagerAgentLocation);
-		_grid.put(SoundManagerAgent.getId(), SoundManagerAgentLocation);
+		mGrid.put(SoundManagerAgent.getId(), SoundManagerAgentLocation);
 		
-		Runnable lm1 = new LocationMonitor(coordinatorAgent, _observers);
-		_locationMonitors.add(lm1);
+		Runnable lm1 = new LocationMonitor(coordinatorAgent, mObservers);
+		mLocationMonitors.add(lm1);
 		new Thread(lm1).start();
 		
-		Runnable lm2 = new LocationMonitor(securityOfficerAgent, _observers);
-		_locationMonitors.add(lm2);
+		Runnable lm2 = new LocationMonitor(securityOfficerAgent, mObservers);
+		mLocationMonitors.add(lm2);
 		new Thread(lm2).start();
 		
-		Runnable lm3 = new LocationMonitor(secretaryAgent, _observers);
-		_locationMonitors.add(lm3);
+		Runnable lm3 = new LocationMonitor(secretaryAgent, mObservers);
+		mLocationMonitors.add(lm3);
 		new Thread(lm3).start();
 		
-		Runnable lm4 = new LocationMonitor(networkManagerAgent, _observers);
-		_locationMonitors.add(lm4);
+		Runnable lm4 = new LocationMonitor(networkManagerAgent, mObservers);
+		mLocationMonitors.add(lm4);
 		new Thread(lm4).start();
 		
-		Runnable lm5 = new LocationMonitor(SoundManagerAgent, _observers);
-		_locationMonitors.add(lm5);
+		Runnable lm5 = new LocationMonitor(SoundManagerAgent, mObservers);
+		mLocationMonitors.add(lm5);
 		new Thread(lm5).start();
 		
 		return agents;
@@ -286,13 +286,13 @@ public class Domain {
 		stand.setRepLocation(standLocation);
 		lazerCursor.setRepLocation(lazerCursorLocation);
 		
-		_grid.put(board.getId(), boardLocation);
-		_grid.put(laptop.getId(), laptopLocation);
-		_grid.put(mouse.getId(), mouseLocation);
-		_grid.put(cable.getId(), cableLocation);
-		_grid.put(speaker.getId(), speakerLocation);
-		_grid.put(stand.getId(), standLocation);
-		_grid.put(lazerCursor.getId(), lazerCursorLocation);
+		mGrid.put(board.getId(), boardLocation);
+		mGrid.put(laptop.getId(), laptopLocation);
+		mGrid.put(mouse.getId(), mouseLocation);
+		mGrid.put(cable.getId(), cableLocation);
+		mGrid.put(speaker.getId(), speakerLocation);
+		mGrid.put(stand.getId(), standLocation);
+		mGrid.put(lazerCursor.getId(), lazerCursorLocation);
 		
 		return items;
 	}

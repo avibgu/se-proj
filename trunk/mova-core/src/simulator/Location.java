@@ -1,33 +1,33 @@
 package simulator;
 
 public class Location implements Cloneable{
-	private int latitude;
-	private int longitude;
+	private int mLatitude;
+	private int mLongitude;
 	
-	public Location(int lon, int lat){
-		latitude = lat;
-		longitude = lon;
+	public Location(int longitude, int latitude){
+		mLatitude = latitude;
+		mLongitude = longitude;
 	}
 	
 	public synchronized int getLatitude(){
-		return latitude;
+		return mLatitude;
 	}
 	
 	public synchronized int getLongitude(){
-		return longitude;
+		return mLongitude;
 	}
 	
-	public synchronized void setLatitude(int lat){
-		latitude = lat;
+	public synchronized void setLatitude(int latitude){
+		mLatitude = latitude;
 	}
 	
-	public synchronized void setLongitude(int lon){
-		longitude = lon;
+	public synchronized void setLongitude(int longitude){
+		mLongitude = longitude;
 	}
 	
 	public Location clone(){
-		int lat = latitude;
-		int lon = longitude;
+		int lat = mLatitude;
+		int lon = mLongitude;
 		Location loc = new Location(lon, lat);
 		return loc;
 	}
@@ -35,7 +35,7 @@ public class Location implements Cloneable{
 	public boolean equals(Object l){
 		Location loc = (Location)l;
 		if(loc != null){
-			if(loc.getLatitude() != latitude || loc.getLongitude() != longitude)
+			if(loc.getLatitude() != mLatitude || loc.getLongitude() != mLongitude)
 				return false;
 			else
 				return true;
