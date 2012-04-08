@@ -41,7 +41,7 @@ public class Activity {
 	protected long						mEstimateTime;
 	
 	// Map between the required Agent of a specific type and the desired quantity
-	protected Map<AgentType,Integer>	mRequiredAents;
+	protected Map<AgentType,Integer>	mRequiredAgents;
 	
 	// Map between the required Item of a specific type and the desired quantity
 	protected Map<ItemType,Integer>		mRequiredItems; 
@@ -62,14 +62,14 @@ public class Activity {
 		Date startTime = new Date();
 		Date endTime = new Date(startTime.getTime() + estimateTime * 5);
 		
-		Map<AgentType,Integer> requiredAents = new HashMap<AgentType,Integer>();
-		requiredAents.put(AgentType.COORDINATOR, 1);
+		Map<AgentType,Integer> requiredAgents = new HashMap<AgentType,Integer>();
+		requiredAgents.put(AgentType.COORDINATOR, 1);
 		
 		Map<ItemType,Integer> requiredItems = new HashMap<ItemType,Integer>();
 		requiredItems.put(ItemType.LAPTOP, 1);
 		
 		init(	ActivityType.PRESENTATION, Priority.MEDIUM, startTime,
-				endTime, estimateTime, requiredAents, requiredItems,
+				endTime, estimateTime, requiredAgents, requiredItems,
 				new HashSet<Activity>(), "DEFAULT ACTIVITY", pName);
 	}
 	
@@ -78,14 +78,14 @@ public class Activity {
 						Date					pStartTime,
 						Date					pEndTime,
 						long					pEstimateTime,
-						Map<AgentType,Integer>	pRequiredAents,
+						Map<AgentType,Integer>	pRequiredAgents,
 						Map<ItemType, Integer>	pRequiredItems,
 						Set<Activity>			pRequiredActivities,
 						String					pDescription,
 						String					pName){
 		
 		init(	pType, pPriority, pStartTime, pEndTime,
-				pEstimateTime, pRequiredAents, pRequiredItems,
+				pEstimateTime, pRequiredAgents, pRequiredItems,
 				pRequiredActivities, pDescription, pName);
 	}
 
@@ -94,7 +94,7 @@ public class Activity {
 							Date					pStartTime,
 							Date					pEndTime,
 							long					pEstimateTime,
-							Map<AgentType,Integer>	pRequiredAents,
+							Map<AgentType,Integer>	pRequiredAgents,
 							Map<ItemType, Integer>	pRequiredItems,
 							Set<Activity>			pRequiredActivities,
 							String					pDescription,
@@ -107,39 +107,11 @@ public class Activity {
 		mStartTime = pStartTime;
 		mEndTime = pEndTime;
 		mEstimateTime = pEstimateTime;
-		mRequiredAents = pRequiredAents;
+		mRequiredAgents = pRequiredAgents;
 		mRequiredItems = pRequiredItems;
 		mRequiredActivities = pRequiredActivities;
 		mDescription = pDescription;
 		mName = pName;
-	}
-
-	public Priority getPriority() {
-		return mPriority;
-	}
-
-	public long getEndTime() {
-		return mStartTime.getTime();
-	}
-	
-	public void setPriority(Priority pPriority) {
-		this.mPriority = pPriority;
-	}
-
-	public Map<ItemType,Integer> getRequiredItems() {
-		return mRequiredItems;
-	}
-
-	public Map<AgentType,Integer> getRequiredAgents() {
-		return mRequiredAents;
-	}
-	
-	public ActivityType getType() {
-		return mType;
-	}
-
-	public void setType(ActivityType pType) {
-		this.mType = pType;
 	}
 
 	public String getId() {
@@ -147,15 +119,87 @@ public class Activity {
 	}
 
 	public void setId(String pId) {
-		this.mId = pId;
+		mId = pId;
 	}
-	
+
+	public ActivityType getType() {
+		return mType;
+	}
+
+	public void setType(ActivityType pType) {
+		mType = pType;
+	}
+
+	public ActivityState getState() {
+		return mState;
+	}
+
+	public void setState(ActivityState pState) {
+		mState = pState;
+	}
+
+	public Priority getPriority() {
+		return mPriority;
+	}
+
+	public void setPriority(Priority pPriority) {
+		mPriority = pPriority;
+	}
+
+	public Date getStartTime() {
+		return mStartTime;
+	}
+
+	public void setStartTime(Date pStartTime) {
+		mStartTime = pStartTime;
+	}
+
+	public Date getEndTime() {
+		return mEndTime;
+	}
+
+	public void setEndTime(Date pEndTime) {
+		mEndTime = pEndTime;
+	}
+
+	public long getEstimateTime() {
+		return mEstimateTime;
+	}
+
+	public void setEstimateTime(long pEstimateTime) {
+		mEstimateTime = pEstimateTime;
+	}
+
+	public Map<AgentType, Integer> getRequiredAgents() {
+		return mRequiredAgents;
+	}
+
+	public void setRequiredAgents(Map<AgentType, Integer> pRequiredAents) {
+		mRequiredAgents = pRequiredAents;
+	}
+
+	public Map<ItemType, Integer> getRequiredItems() {
+		return mRequiredItems;
+	}
+
+	public void setRequiredItems(Map<ItemType, Integer> pRequiredItems) {
+		mRequiredItems = pRequiredItems;
+	}
+
+	public Set<Activity> getRequiredActivities() {
+		return mRequiredActivities;
+	}
+
+	public void setRequiredActivities(Set<Activity> pRequiredActivities) {
+		mRequiredActivities = pRequiredActivities;
+	}
+
 	public String getDescription() {
 		return mDescription;
 	}
 
 	public void setDescription(String pDescription) {
-		this.mDescription = pDescription;
+		mDescription = pDescription;
 	}
 
 	public String getName() {
@@ -163,18 +207,18 @@ public class Activity {
 	}
 
 	public void setName(String pName) {
-		this.mName = pName;
+		mName = pName;
 	}
-
-	public boolean isTopPriority() {
-		return mPriority == Priority.URGENT;
-	}
-
+	
 	public void markAsInProgress() {
 		mState = ActivityState.IN_PROGRESS;
 	}
 
 	public void markAsCompleted() {
 		mState = ActivityState.COMPLETED;
+	}
+
+	public boolean isTopPriority() {
+		return mPriority == Priority.URGENT;
 	}
 }
