@@ -31,6 +31,10 @@ public class C2dmController {
 	public int counter = 0;
 	private DBHandler db=DBHandler.getInstance();
 	
+	private C2dmController() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public static C2dmController getInstance(){
 		return instance;
 	}
