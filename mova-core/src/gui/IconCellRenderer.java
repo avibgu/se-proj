@@ -7,6 +7,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
+
+import actor.Agent;
+import actor.Item;
 import simulator.NewDomain;
 import type.AgentType;
 import type.ItemType;
@@ -32,11 +35,11 @@ public class IconCellRenderer  implements TableCellRenderer{
 
         cell.setBackground(new Color(0,0,0,0));
 
-        if(isAgent((String)value))
+        if(isAgent(value))
             cell.setIcon(_agentIcon);
         else if(isSensor((String)value))
              cell.setIcon(_sensorIcon);
-        else if(isItem((String)value))
+        else if(isItem(value))
              cell.setIcon(_itemIcon);
         else
             cell.setText((String)value);
@@ -50,32 +53,40 @@ public class IconCellRenderer  implements TableCellRenderer{
         return cell;
     }
 
-    private boolean isAgent(String value) {
-        try{
-            @SuppressWarnings("unused")
-			AgentType type = AgentType.valueOf((String)value);
-            return true;
-        }
-        catch(IllegalArgumentException e){
-            return false;
-        }
+//    private boolean isAgent(String value) {
+//        try{
+//            @SuppressWarnings("unused")
+//			AgentType type = AgentType.valueOf((String)value);
+//            return true;
+//        }
+//        catch(IllegalArgumentException e){
+//            return false;
+//        }
+//    }
+    
+    private boolean isAgent(Object value) {
+        return value instanceof AgentType || value instanceof Agent;
     }
 
     private boolean isSensor(String value) {
         return value.contains("Sensor");
     }
 
-    private boolean isItem(String value) {
-        try{
-            @SuppressWarnings("unused")
-			ItemType type = ItemType.valueOf((String)value);
-            return true;
-        }
-        catch(IllegalArgumentException e){
-            return false;
-        }
-    }
+//    private boolean isItem(String value) {
+//        try{
+//            @SuppressWarnings("unused")
+//			ItemType type = ItemType.valueOf((String)value);
+//            return true;
+//        }
+//        catch(IllegalArgumentException e){
+//            return false;
+//        }
+//    }
 
+    private boolean isItem(Object value) {
+    	return value instanceof ItemType || value instanceof Item;
+    }
+    
 //    private void colorCells(String value, JLabel cell, JTable table, int row, int column) {
 //		for(int i = 0; i < table.getRowCount(); i++)
 //			for(int j = 0; j < table.getColumnCount(); j++){

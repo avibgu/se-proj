@@ -46,7 +46,7 @@ public class C2dmController {
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String registrationId = j.get("registrationId").getAsString();
 		String agentId = j.get("agentId").getAsString();
-		db.insertAgent(agentId, AgentType.COORDINATOR, true, "127.0.0.1", registrationId);
+		db.insertAgent(agentId, new AgentType("COORDINATOR"), true, "127.0.0.1", registrationId);
 		System.out.println(registrationId);
 	}
 	

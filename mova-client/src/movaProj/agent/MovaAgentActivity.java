@@ -55,7 +55,7 @@ public class MovaAgentActivity extends Activity implements OnClickListener{
     			 actor.Activity item = values.get(0);
 	   	 		 Intent i2 = new Intent(MovaAgentActivity.this, MovaActivityDetails.class);
 		   	 	 Bundle bundle = new Bundle();
-		   	     bundle.putString("severity", item.getPriority().toString());
+//		   	     bundle.putString("severity", item.getPriority().toString());
 		   	     bundle.putString("description", item.getDescription());
 		   	     bundle.putString("activityType", item.getType().toString());
 		   	     bundle.putString("activityName", item.getName());

@@ -92,7 +92,7 @@ public class C2DMReceiver extends BroadcastReceiver
         
         public void saveActivity(Activity item){
         	String[] comments = new String[] { item.getId().toString(),item.getName(),item.getType().toString(),
-        			"DESCRIPTION",item.getPriority().toString()};
+        			"DESCRIPTION"};
 			// Save the new activity to the database
 			datasource.createActivity(item);
 	   }

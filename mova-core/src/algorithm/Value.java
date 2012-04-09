@@ -4,44 +4,33 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import priority.Priority;
 import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
 public class Value {
 
-	private Priority				mPriority;
-	private Date					mActualStartTime; 
-	private Date					mActualEndTime;
-	private Map<Agent,Integer>		mRequiredAents;
-	private Map<Item,Integer>		mRequiredItems; 
-	private Set<Activity>			mRequiredActivities;
+	private Date				mActualStartTime;
+	private Date				mActualEndTime;
+	private Map<Agent, Integer>	mRequiredAents;
+	private Map<Item, Integer>	mRequiredItems;
+	private Set<Activity>		mRequiredActivities;
 
-	public Value(Priority pPriority, Date pActualStartTime,
-			Date pActualEndTime, Map<Agent, Integer> pRequiredAents,
+	public Value(Date pActualStartTime, Date pActualEndTime,
+			Map<Agent, Integer> pRequiredAents,
 			Map<Item, Integer> pRequiredItems, Set<Activity> pRequiredActivities) {
-		
-		mPriority = pPriority;
+
 		mActualStartTime = pActualStartTime;
 		mActualEndTime = pActualEndTime;
 		mRequiredAents = pRequiredAents;
 		mRequiredItems = pRequiredItems;
 		mRequiredActivities = pRequiredActivities;
 	}
-	
-	//	true - bad for us..
-	public boolean isOverlap(Value pOther){
+
+	// true - bad for us..
+	public boolean isOverlap(Value pOther) {
 		// TODO consider times... it's a complex task..
 		return false;
-	}
-
-	public Priority getPriority() {
-		return mPriority;
-	}
-
-	public void setPriority(Priority pPriority) {
-		this.mPriority = pPriority;
 	}
 
 	public Date getActualStartTime() {
@@ -60,19 +49,19 @@ public class Value {
 		this.mActualEndTime = pActualEndTime;
 	}
 
-	public Map<Agent,Integer> getRequiredAents() {
+	public Map<Agent, Integer> getRequiredAents() {
 		return mRequiredAents;
 	}
 
-	public void setRequiredAents(Map<Agent,Integer> pRequiredAents) {
+	public void setRequiredAents(Map<Agent, Integer> pRequiredAents) {
 		mRequiredAents = pRequiredAents;
 	}
 
-	public Map<Item,Integer> getRequiredItems() {
+	public Map<Item, Integer> getRequiredItems() {
 		return mRequiredItems;
 	}
 
-	public void setRequiredItems(Map<Item,Integer> pRequiredItems) {
+	public void setRequiredItems(Map<Item, Integer> pRequiredItems) {
 		mRequiredItems = pRequiredItems;
 	}
 

@@ -24,11 +24,11 @@ public class ItemResourceTest {
 
 	@Test
 	public void testFindItem() {
-		Vector<Item> items1 = _mc.findItem(ItemType.BOARD, 1, new Location(0, 0));
-		Item i1 = new Item(ItemType.BOARD);
+		Vector<Item> items1 = _mc.findItem(new ItemType("BOARD"), 1, new Location(0, 0));
+		Item i1 = new Item(new ItemType("BOARD"));
 		assertEquals(i1.getType(), items1.elementAt(0).getType());
 		
-		Vector<Item> items2 = _mc.findItem(ItemType.CHAIR, 1, new Location(0, 0));
+		Vector<Item> items2 = _mc.findItem(new ItemType("CHAIR"), 1, new Location(0, 0));
 		assertEquals(0, items2.size());
 	}
 
