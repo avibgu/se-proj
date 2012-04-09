@@ -29,7 +29,7 @@ public class ItemDeserializer implements JsonDeserializer<Item> {
 		if(jobject.get("state") != null)
 			state = ItemState.valueOf(jobject.get("state").getAsString().toUpperCase());
 		if(jobject.get("type") != null)
-			type = ItemType.valueOf(jobject.get("type").getAsString().toUpperCase());
+			type = new ItemType(jobject.get("type").getAsString().toUpperCase());
 		
 		Item i = new Item();
 		i.setId(id);

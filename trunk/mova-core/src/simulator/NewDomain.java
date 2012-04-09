@@ -305,11 +305,11 @@ public class NewDomain extends DefaultTableModel{
     private Vector<Entity> manuallyInitializeAgents(){
         Vector<Entity> agents = new Vector<Entity>();
 
-        Agent coordinatorAgent = new Agent(AgentType.COORDINATOR);
-        Agent securityOfficerAgent = new Agent(AgentType.SECURITY_OFFICER);
-        Agent secretaryAgent = new Agent(AgentType.SECRETARY);
-        Agent networkManagerAgent = new Agent(AgentType.NETWORK_MANAGER);
-        Agent SoundManagerAgent = new Agent(AgentType.SOUND_MANAGER);
+        Agent coordinatorAgent = new Agent(new AgentType("COORDINATOR"));
+        Agent securityOfficerAgent = new Agent(new AgentType("SECURITY_OFFICER"));
+        Agent secretaryAgent = new Agent(new AgentType("SECRETARY"));
+        Agent networkManagerAgent = new Agent(new AgentType("NETWORK_MANAGER"));
+        Agent SoundManagerAgent = new Agent(new AgentType("SOUND_MANAGER"));
 
         agents.add(coordinatorAgent);
         agents.add(securityOfficerAgent);
@@ -347,13 +347,13 @@ public class NewDomain extends DefaultTableModel{
     private Vector<Entity> manuallyInitializeItems(){
             Vector<Entity> items = new Vector<Entity>();
 
-            Item board = new Item(ItemType.BOARD); items.add(board);
-            Item laptop = new Item(ItemType.LAPTOP); items.add(laptop);
-            Item mouse = new Item(ItemType.MOUSE); items.add(mouse);
-            Item cable = new Item(ItemType.CABLE); items.add(cable);
-            Item speaker = new Item(ItemType.SPEAKER); items.add(speaker);
-            Item stand = new Item(ItemType.STAND); items.add(stand);
-            Item lazerCursor = new Item(ItemType.LAZER_CURSOR); items.add(lazerCursor);
+            Item board = new Item(new ItemType("BOARD")); items.add(board);
+            Item laptop = new Item(new ItemType("LAPTOP")); items.add(laptop);
+            Item mouse = new Item(new ItemType("MOUSE")); items.add(mouse);
+            Item cable = new Item(new ItemType("CABLE")); items.add(cable);
+            Item speaker = new Item(new ItemType("SPEAKER")); items.add(speaker);
+            Item stand = new Item(new ItemType("STAND")); items.add(stand);
+            Item lazerCursor = new Item(new ItemType("LAZER_CURSOR")); items.add(lazerCursor);
 
             board.setRepresentation(board.getType().toString());
             laptop.setRepresentation(laptop.getType().toString());
@@ -392,10 +392,10 @@ public class NewDomain extends DefaultTableModel{
 	private Vector<Entity> manuallyInitializeSensorAgents(){
 		Vector<Entity> sensorAgents = new Vector<Entity>();
 
-		SensorAgent rfidAgent1 = new SensorAgent(AgentType.RFID);
-		SensorAgent rfidAgent2 = new SensorAgent(AgentType.RFID);
-		SensorAgent rfidAgent3 = new SensorAgent(AgentType.RFID);
-		SensorAgent rfidAgent4 = new SensorAgent(AgentType.RFID);
+		SensorAgent rfidAgent1 = new SensorAgent(new AgentType("RFID"));
+		SensorAgent rfidAgent2 = new SensorAgent(new AgentType("RFID"));
+		SensorAgent rfidAgent3 = new SensorAgent(new AgentType("RFID"));
+		SensorAgent rfidAgent4 = new SensorAgent(new AgentType("RFID"));
 
 		sensorAgents.add(rfidAgent1);
 		sensorAgents.add(rfidAgent2);

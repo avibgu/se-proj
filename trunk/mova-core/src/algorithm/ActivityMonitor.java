@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import priority.Priority;
+//import priority.Priority;
 
 import actor.Activity;
 import actor.Agent;
@@ -14,6 +14,7 @@ import actor.Agent;
 // When it's happening, we will count it as a Problem and we will handle it as
 // described in the following Problems Solving section.
 
+@Deprecated
 public class ActivityMonitor implements Runnable {
 
 	private static final long WAITING_TIME_IN_SECONDS = 2;
@@ -23,13 +24,13 @@ public class ActivityMonitor implements Runnable {
 
 	protected boolean					mDontStop;
 	protected Agent						mAgent;
-	protected Map<Activity, Priority>	mOldPriority;
+//	protected Map<Activity, Priority>	mOldPriority;
 	
 	public ActivityMonitor(Agent pAgent) {
 		
 		mDontStop = true;
 		mAgent = pAgent;
-		mOldPriority = new HashMap<Activity, Priority>();
+//		mOldPriority = new HashMap<Activity, Priority>();
 	}
 
 	@Override
@@ -49,8 +50,8 @@ public class ActivityMonitor implements Runnable {
 
 				synchronized (activity) {
 
-					if (activity.isTopPriority())
-						numOfTopPriorityActivities++;
+//					if (activity.isTopPriority())
+//						numOfTopPriorityActivities++;
 	
 					if (isThisActivityChangedItsPriority(activity))
 						mAgent.activityChangedHisPriority(activity);
@@ -86,14 +87,14 @@ public class ActivityMonitor implements Runnable {
 
 	protected boolean isThisActivityChangedItsPriority(Activity activity) {
 
-		Priority oldPriority;
-
-		if ((oldPriority = mOldPriority.get(activity)) != null
-				&& activity.getPriority() != oldPriority)
-			return true;
-
-		else
-			mOldPriority.put(activity, activity.getPriority());
+//		Priority oldPriority;
+//
+//		if ((oldPriority = mOldPriority.get(activity)) != null
+//				&& activity.getPriority() != oldPriority)
+//			return true;
+//
+//		else
+//			mOldPriority.put(activity, activity.getPriority());
 
 		return false;
 	}

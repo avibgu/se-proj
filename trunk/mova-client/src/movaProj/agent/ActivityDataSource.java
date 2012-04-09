@@ -3,8 +3,6 @@ package movaProj.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-import priority.Priority;
-
 import type.ActivityType;
 import type.AgentType;
 import actor.Activity;
@@ -75,9 +73,9 @@ public class ActivityDataSource {
 			Activity ans = new Activity("");
 			ans.setId(cursor.getString(0));
 			ans.setName(cursor.getString(1));
-			ans.setType(ActivityType.CONFERENCE_REGISTRATION);
+//			ans.setType(ActivityType.CONFERENCE_REGISTRATION);
 //			ans.setAgentType(AgentType.COORDINATOR);
-			ans.setPriority(Priority.LOW);
+//			ans.setPriority(Priority.LOW);
 			return ans;
 		}
 }

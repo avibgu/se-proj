@@ -36,12 +36,12 @@ public class ItemResource {
 		
 		
 		Vector<Item> items = new Vector<Item>();
-		Item i1 = new Item(ItemType.BOARD);
-		Item i2 = new Item(ItemType.CABLE);
-		if(ItemType.valueOf(type).equals(i1.getType()))
+		Item i1 = new Item(new ItemType("BOARD"));
+		Item i2 = new Item(new ItemType("CABLE"));
+		if(new ItemType(type).equals(i1.getType()))
 			items.add(i1);
 		
-		if(ItemType.valueOf(type).equals(i2.getType()))
+		if(new ItemType(type).equals(i2.getType()))
 			items.add(i2);
 		MovaJson mj = new MovaJson();
 		

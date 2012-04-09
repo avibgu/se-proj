@@ -7,13 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import priority.Priority;
-
 import state.ActivityState;
-import type.ActivityType;
 import type.AgentType;
 import type.ItemType;
-
 
 public class Activity {
 	
@@ -23,13 +19,13 @@ public class Activity {
 	protected String					mId;
 
 	// The Type of this Activity
-	protected ActivityType				mType;
+	protected String					mType;
 	
 	// The State of this Activity
 	protected ActivityState				mState;
 
 	// The Priority of this Activity
-	protected Priority					mPriority;
+//	protected Priority					mPriority;
 	
 	// The Lower bound time of this Activity
 	protected Date						mStartTime; 
@@ -49,6 +45,12 @@ public class Activity {
 	// the Activities which this Activity can be performed only after they finished
 	protected Set<Activity>				mRequiredActivities;
 	
+	// the Agents that assigned to this Activity
+	protected Set<Agent>				mParticipatingAgents;
+	
+	// the Items that assigned to this Activity
+	protected Set<Item>					mParticipatingItems; 
+	
 	// The Description of this Activity
 	protected String					mDescription;
 
@@ -63,18 +65,17 @@ public class Activity {
 		Date endTime = new Date(startTime.getTime() + estimateTime * 5);
 		
 		Map<AgentType,Integer> requiredAgents = new HashMap<AgentType,Integer>();
-		requiredAgents.put(AgentType.COORDINATOR, 1);
+		requiredAgents.put(new AgentType("DEFAULT"), 1);
 		
 		Map<ItemType,Integer> requiredItems = new HashMap<ItemType,Integer>();
-		requiredItems.put(ItemType.LAPTOP, 1);
+		requiredItems.put(new ItemType("DEFAULT"), 1);
 		
-		init(	ActivityType.PRESENTATION, Priority.MEDIUM, startTime,
+		init(	"DEFAULT", startTime,
 				endTime, estimateTime, requiredAgents, requiredItems,
 				new HashSet<Activity>(), "DEFAULT ACTIVITY", pName);
 	}
 	
-	public Activity(	ActivityType			pType,
-						Priority				pPriority,
+	public Activity(	String					pType,
 						Date					pStartTime,
 						Date					pEndTime,
 						long					pEstimateTime,
@@ -84,13 +85,12 @@ public class Activity {
 						String					pDescription,
 						String					pName){
 		
-		init(	pType, pPriority, pStartTime, pEndTime,
+		init(	pType, pStartTime, pEndTime,
 				pEstimateTime, pRequiredAgents, pRequiredItems,
 				pRequiredActivities, pDescription, pName);
 	}
 
-	protected void init(	ActivityType			pType,
-							Priority				pPriority,
+	protected void init(	String					pType,
 							Date					pStartTime,
 							Date					pEndTime,
 							long					pEstimateTime,
@@ -103,13 +103,14 @@ public class Activity {
 		mId = UUID.randomUUID().toString();
 		mType = pType;
 		mState = ActivityState.PENDING;
-		mPriority = pPriority;
 		mStartTime = pStartTime;
 		mEndTime = pEndTime;
 		mEstimateTime = pEstimateTime;
 		mRequiredAgents = pRequiredAgents;
 		mRequiredItems = pRequiredItems;
 		mRequiredActivities = pRequiredActivities;
+		mParticipatingAgents = new HashSet<Agent>();
+		mParticipatingItems = new HashSet<Item>(); 
 		mDescription = pDescription;
 		mName = pName;
 	}
@@ -122,11 +123,11 @@ public class Activity {
 		mId = pId;
 	}
 
-	public ActivityType getType() {
+	public String getType() {
 		return mType;
 	}
 
-	public void setType(ActivityType pType) {
+	public void setType(String pType) {
 		mType = pType;
 	}
 
@@ -136,14 +137,6 @@ public class Activity {
 
 	public void setState(ActivityState pState) {
 		mState = pState;
-	}
-
-	public Priority getPriority() {
-		return mPriority;
-	}
-
-	public void setPriority(Priority pPriority) {
-		mPriority = pPriority;
 	}
 
 	public Date getStartTime() {
@@ -217,8 +210,12 @@ public class Activity {
 	public void markAsCompleted() {
 		mState = ActivityState.COMPLETED;
 	}
-
-	public boolean isTopPriority() {
-		return mPriority == Priority.URGENT;
+	
+	public void assignAgents(Set<Agent> pAgents){
+		mParticipatingAgents = pAgents;
+	}
+	
+	public void assignItems(Set<Item> pItems){
+		mParticipatingItems = pItems;
 	}
 }

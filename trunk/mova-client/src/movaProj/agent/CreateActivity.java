@@ -2,8 +2,6 @@ package movaProj.agent;
 
 import java.util.Vector;
 
-import priority.Priority;
-
 import type.ActivityType;
 import type.AgentType;
 import android.app.Activity;
@@ -20,19 +18,19 @@ import android.widget.Spinner;
 import client.MovaClient;
 
 public class CreateActivity extends Activity implements OnClickListener,OnItemSelectedListener {
-	  private Priority severity = Priority.URGENT;
-	  private AgentType agentType = AgentType.COORDINATOR;
-	  private ActivityType activityType = ActivityType.CONFERENCE_REGISTRATION;
+//	  private Priority severity = Priority.URGENT;
+	  private AgentType agentType = new AgentType("COORDINATOR");
+	  private ActivityType activityType = new ActivityType("CONFERENCE_REGISTRATION");
 	  EditText activityName;
 	  
 	  @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.create_activity);
-	        Spinner s1 = (Spinner) findViewById(R.id.severitySpinner);
-	        ArrayAdapter<String> adapter1 = new ArrayAdapter(this,android.R.layout.simple_spinner_item, Priority.values());
-	        s1.setAdapter(adapter1);
-        	s1.setOnItemSelectedListener(this);
+//	        Spinner s1 = (Spinner) findViewById(R.id.severitySpinner);
+//	        ArrayAdapter<String> adapter1 = new ArrayAdapter(this,android.R.layout.simple_spinner_item, Priority.values());
+//	        s1.setAdapter(adapter1);
+//        	s1.setOnItemSelectedListener(this);
 	        
 	        Spinner s2 = (Spinner) findViewById(R.id.agentTypeSpinner);
 	        ArrayAdapter<String> adapter2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item, AgentType.values());
@@ -53,8 +51,8 @@ public class CreateActivity extends Activity implements OnClickListener,OnItemSe
 		  public void onClick(View v){
 			 activityName   = (EditText)findViewById(R.id.ActivityNameText);
 			 actor.Activity newActivity = new actor.Activity(activityName.getText().toString()); 
-			 newActivity.setPriority(severity);
-			 newActivity.setType(activityType);
+//			 newActivity.setPriority(severity);
+//			 newActivity.setType(activityType);
 			 //newActivity.setAgentType(agentType);
 			 newActivity.setDescription(((EditText)findViewById(R.id.descriptionText)).getText().toString());
 			 Vector<String> agentIds = new Vector<String>();
@@ -69,9 +67,9 @@ public class CreateActivity extends Activity implements OnClickListener,OnItemSe
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			switch(arg0.getId()){
-	    	 	case R.id.severitySpinner :
-	    	 		this.severity = (Priority)arg0.getItemAtPosition(arg2);
-	    	 		break;
+//	    	 	case R.id.severitySpinner :
+//	    	 		this.severity = (Priority)arg0.getItemAtPosition(arg2);
+//	    	 		break;
 	    	 	case R.id.activityTypeSpinner :
 	    	 		this.activityType = (ActivityType)arg0.getItemAtPosition(arg2);
 	    	 		break;	

@@ -13,8 +13,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import client.MovaClient;
 
-import priority.ActivitiesComarator;
-
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
@@ -25,8 +23,8 @@ public class Agent extends Entity implements Runnable {
 
 	// TODO: check if there are duplication between Agent and Entity
 	
-	protected ActivityMonitor			mActivityMonitor;
-	protected PriorityQueue<Activity>	mActivitiesToPerform;
+//	protected ActivityMonitor			mActivityMonitor;
+	protected Vector<Activity>			mActivitiesToPerform;
 	protected Set<Activity>				mOldActivities;
 	protected AgentType					mType;
 	protected boolean					mDontStop;
@@ -52,8 +50,8 @@ public class Agent extends Entity implements Runnable {
 	
 	public Agent(AgentType pType) {
 
-		mActivityMonitor = new ActivityMonitor(this);
-		mActivitiesToPerform = new PriorityQueue<Activity>(7, new ActivitiesComarator());
+//		mActivityMonitor = new ActivityMonitor(this);
+		mActivitiesToPerform = new Vector<Activity>();
 		mOldActivities = new HashSet<Activity>();
 		mType = pType;
 		mDontStop = true;
@@ -79,7 +77,7 @@ public class Agent extends Entity implements Runnable {
 	@Override
 	public void run() { 
 		
-		new Thread(mActivityMonitor).start();
+//		new Thread(mActivityMonitor).start();
 		
 		mStartTime = new Date().getTime();
 		
@@ -90,7 +88,7 @@ public class Agent extends Entity implements Runnable {
 			performCurrentActivity();
 		}
 		
-		mActivityMonitor.stop();
+//		mActivityMonitor.stop();
 	}
 	
 	public void stop() {
@@ -240,7 +238,7 @@ public class Agent extends Entity implements Runnable {
 				Arrays.sort(sortedActivities);
 				
 				for (Activity activity : sortedActivities)
-					if (!activity.equals(mCurrentActivity) && activity.isTopPriority())
+					if (!activity.equals(mCurrentActivity) /* && activity.isTopPriority() */)
 						mActivitiesThatShouldBeTransffered.add(activity);
 
 				int toKeep = mActivitiesThatShouldBeTransffered.size() - mHowManyOverTheLimit;
@@ -323,7 +321,7 @@ public class Agent extends Entity implements Runnable {
 		mCurrentActivity = activity;
 	}
 	
-	public PriorityQueue<Activity> getActivities() {
+	public Vector<Activity> getActivities() {
 		return mActivitiesToPerform;
 	}
 	
