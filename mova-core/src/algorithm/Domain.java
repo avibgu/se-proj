@@ -48,8 +48,8 @@ public class Domain implements Cloneable {
 		return mValues;
 	}
 
-	public void setValues(Vector<Value> values) {
-		mValues = values;
+	public void setValues(Vector<Value> pValues) {
+		mValues = pValues;
 	}
 	
 	@Override
@@ -71,12 +71,8 @@ public class Domain implements Cloneable {
 		return mValues.firstElement();
 	}
 
-	public void removeAll(Vector<Value> pReduction) {
-		mValues.removeAll(pReduction);
-	}
-
-	public void addAll(Vector<Value> pReduction) {
-		mValues.addAll(pReduction);
+	public void removeAll(Vector<Value> pValues) {
+		mValues.removeAll(pValues);
 	}
 
 	public void remove(int pIndex) {
@@ -85,6 +81,10 @@ public class Domain implements Cloneable {
 
 	public void remove(Value pValue) {
 		mValues.remove(pValue);
+	}
+	
+	public void addAll(Vector<Value> pValues) {
+		mValues.addAll(pValues);
 	}
 
 	public int size() {
