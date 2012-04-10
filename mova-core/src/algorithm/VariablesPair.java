@@ -1,5 +1,6 @@
 package algorithm;
 
+@Deprecated
 public class VariablesPair {
 	
 	protected	int	_first;

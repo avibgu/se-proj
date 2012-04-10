@@ -3,6 +3,7 @@ package algorithm;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class Assignment {
 
 	protected Map<Integer,Constraint> map = null;

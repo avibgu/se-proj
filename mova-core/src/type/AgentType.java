@@ -24,6 +24,15 @@ public class AgentType {
 		mType = pType;
 	}
 
+	@Override
+	public boolean equals(Object pOther) {
+		
+		if (!(pOther instanceof AgentType))
+			return false;
+		
+		return ((AgentType)pOther).getType().equals(mType);
+	}
+	
 	@Deprecated
 	public static String[] values() {
 		return new String[]{COORDINATOR,SECURITY_OFFICER,SECRETARY,NETWORK_MANAGER,LOGISTIC_MANAGER,SOUND_MANAGER,RFID};

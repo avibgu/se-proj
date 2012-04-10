@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
+@Deprecated
 public class Problem {
 
 	protected	int											mN;
