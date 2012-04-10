@@ -7,7 +7,7 @@ import type.AgentType;
 import actor.Activity;
 import actor.Agent;
 
-public class Domain {
+public class Domain implements Cloneable {
 
 	protected Activity		mActivity;
 	protected Vector<Value>	mValues;
@@ -15,13 +15,18 @@ public class Domain {
 	public Domain(Activity pActivity) {
 
 		mActivity = pActivity;
-		
 		initValues();
+	}
+	
+	public Domain(Activity pActivity, Vector<Value>	pValues) {
+
+		mActivity = pActivity;
+		mValues = pValues;
 	}
 
 	protected void initValues() {
 		
-		mValues = new Vector<Value>();
+		setValues(new Vector<Value>());
 		
 //		mValues.add(new Value(..));
 		
@@ -37,5 +42,56 @@ public class Domain {
 //				;
 //			}
 		}
+	}
+
+	public Vector<Value> getValues() {
+		return mValues;
+	}
+
+	public void setValues(Vector<Value> values) {
+		mValues = values;
+	}
+	
+	@Override
+	protected Domain clone() {
+
+		Vector<Value> tValues = new Vector<Value>(mValues.size());
+		
+		for (Value value : mValues)
+			tValues.add(value);
+		
+		return new Domain(mActivity, tValues);
+	}
+
+	public boolean isEmpty() {
+		return mValues.isEmpty();
+	}
+
+	public Value firstElement() {
+		return mValues.firstElement();
+	}
+
+	public void removeAll(Vector<Value> pReduction) {
+		mValues.removeAll(pReduction);
+	}
+
+	public void addAll(Vector<Value> pReduction) {
+		mValues.addAll(pReduction);
+	}
+
+	public void remove(int pIndex) {
+		mValues.remove(pIndex);
+	}
+
+	public void remove(Value pValue) {
+		mValues.remove(pValue);
+	}
+
+	public int size() {
+		return mValues.size();
+	}
+
+	public Value get(int pIndex) {
+		return mValues.get(pIndex);
 	}
 }

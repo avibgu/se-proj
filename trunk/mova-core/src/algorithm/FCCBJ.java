@@ -12,88 +12,92 @@ public class FCCBJ implements CSPAlgorithm{
 	protected static final int UNKNOWN			= 1;
 	protected static final int SOLUTION			= 2;
 	protected static final int IMPOSSIBLE		= 3;
-	
-	protected Problem							mProblem;
+
 	protected boolean							mConsistent;
 	protected int								mStatus;
-	protected Vector<Vector<Integer>>			mCurrentDomain;
+	protected int								mN;
+
+	protected Vector<Variable>					mVariables;
+	protected Vector<Domain>					mCurrentDomains;
+	protected Vector<Value>						mAssignment;
 	
-	protected Vector<SortedSet<Integer>>		mConfSets;
+	protected Vector<SortedSet<Variable>>		mConfSets;
 	
-	protected Vector<Stack<Vector<Integer>>>	mReductions;
-	protected Vector<Stack<Integer>>			mPastFc;
-	protected Vector<Stack<Integer>>			mFutureFc;
+	protected Vector<Stack<Vector<Value>>>		mReductions;
+	protected Vector<Stack<Variable>>			mPastFc;
+	protected Vector<Stack<Variable>>			mFutureFc;
 	
 	public FCCBJ() {
-		mStatus = UNINITIALIZED;
+		setStatus(UNINITIALIZED);
 	}
 	
-	public FCCBJ(Problem problem) {
-		init(problem);
+	public FCCBJ(Vector<Variable> pVariables) {
+		init(pVariables);
 	}
-	
-	@SuppressWarnings("unchecked")
-	protected void init(Problem problem) {
-		
-		mProblem = problem;
-		
-		mStatus = INITIALIZED;
-		
-		mCurrentDomain = new Vector<Vector<Integer>>();
-		
-		for (int i = 0; i < mProblem.getN(); i++)
-			mCurrentDomain.add(
-					(Vector<Integer>)mProblem.getDomain().get(i).clone());
 
-		mConfSets = new Vector<SortedSet<Integer>>();
+	protected void init(Vector<Variable> pVariables) {
 		
-		for (int i = 0; i < mProblem.getN(); i++)
-			mConfSets.add(new TreeSet<Integer>());
+		setStatus(INITIALIZED);
 		
-		mReductions = new Vector<Stack<Vector<Integer>>>(mProblem.getN());
-		mPastFc = new Vector<Stack<Integer>>(mProblem.getN());
-		mFutureFc = new Vector<Stack<Integer>>(mProblem.getN());
+		mN = pVariables.size();
 		
-		for (int i = 0; i < mProblem.getN(); i++){
+		mVariables = pVariables;
+		
+		mCurrentDomains = new Vector<Domain>();
+		
+		for (int i = 0; i < getN(); i++)
+			mCurrentDomains.add(mVariables.get(i).getDomain());
+
+		mAssignment = new Vector<Value>();
+		
+		for (int i = 0; i < getN(); i++)
+			mAssignment.add(null);
+		
+		mConfSets = new Vector<SortedSet<Variable>>();
+		
+		for (int i = 0; i < getN(); i++)
+			mConfSets.add(new TreeSet<Variable>());
+
+		mReductions = new Vector<Stack<Vector<Value>>>(getN());
+		mPastFc = new Vector<Stack<Variable>>(getN());
+		mFutureFc = new Vector<Stack<Variable>>(getN());
+		
+		for (int i = 0; i < getN(); i++){
 			
-			mReductions.add(new Stack<Vector<Integer>>());
+			mReductions.add(new Stack<Vector<Value>>());
 			
-			mPastFc.add(new Stack<Integer>());
-			mFutureFc.add(new Stack<Integer>());
+			mPastFc.add(new Stack<Variable>());
+			mFutureFc.add(new Stack<Variable>());
 		}
 	}
 	
-	public void solve(Problem problem) throws Exception{
+	public void solve(Vector<Variable> pVariables) throws Exception{
 		
-		init(problem);
+		init(pVariables);
 		solve();
 	}
 	
 	@Override
 	public void solve() throws Exception{
 		
-		if (UNINITIALIZED == mStatus)
+		if (UNINITIALIZED == getStatus())
 			throw new Exception("Please initialize the algorithm with a Problem");
-		
-		mProblem.initDataStructures();
-		
+
 		mConsistent = true;
 		
-		mStatus = UNKNOWN;
+		setStatus(UNKNOWN);
 		
 		int i = 0;
 		
-		while (UNKNOWN == mStatus){
+		while (UNKNOWN == getStatus()){
 			
 			if (mConsistent) i = label(i);
 			else i = unlabel(i);
 			
-			if (i >= mProblem.getN()){
-				
-				mStatus = SOLUTION;
-				mProblem.setSolved(true);
-			}
-			else if (-1 == i) mStatus = IMPOSSIBLE;
+			if (i >= getN())				
+				setStatus(SOLUTION);
+
+			else if (-1 == i) setStatus(IMPOSSIBLE);
 		}
 	}
 
@@ -102,24 +106,24 @@ public class FCCBJ implements CSPAlgorithm{
 		mConsistent = false;
 		boolean tExtansion = true;
 		
-		while  (!mCurrentDomain.get(i).isEmpty() && !mConsistent){
+		while  (!mCurrentDomains.get(i).isEmpty() && !mConsistent){
 
 			//Always going for the first
-			mProblem.setVi(i, mCurrentDomain.get(i).firstElement());
+			mAssignment.set(i, mCurrentDomains.get(i).firstElement());
 			
 			mConsistent = true;	
 			tExtansion = true;
 			
 			int j;
 			
-			for(j = i + 1; j < mProblem.getN() && mConsistent; j++){
+			for(j = i + 1; j < getN() && mConsistent; j++){
 				mConsistent = checkForward(i, j);
 			}
 			
 			if(!mConsistent){
 				undoAssignment(i, j);
 			}
-			else tExtansion = labelExtansion(i);
+			else tExtansion = true;
 			
 			if(!tExtansion){
 				
@@ -151,8 +155,8 @@ public class FCCBJ implements CSPAlgorithm{
 		}
 				
 		undoReductions(h);
-		mCurrentDomain.get(h).remove(mProblem.getV().get(h));
-		mConsistent = !mCurrentDomain.get(h).isEmpty();
+		mCurrentDomains.get(h).remove(mAssignment.get(h));
+		mConsistent = !mCurrentDomains.get(h).isEmpty();
 		
 		return h;
 	}
@@ -163,67 +167,62 @@ public class FCCBJ implements CSPAlgorithm{
 			
 		if (!mPastFc.get(i).isEmpty()){
 		
-			for(Integer tX :mPastFc.get(i)){
+			for(Variable variable : mPastFc.get(i)){
+				
+				int tX = mVariables.indexOf(variable);
 				
 				if (tX > tMax) tMax = tX;
 			}
 		}
 
-		if(!mConfSets.get(i).isEmpty() && tMax < mConfSets.get(i).last())
-			tMax = mConfSets.get(i).last();
+		if(!mConfSets.get(i).isEmpty() && tMax < mVariables.indexOf(mConfSets.get(i).last()))
+			tMax = mVariables.indexOf(mConfSets.get(i).last());
 
 		return tMax;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void restoreCurrentDomain(int i) {
-		mCurrentDomain.set(i, (Vector<Integer>)mProblem.getDomain().get(i).clone());
-	}
-	
 	private void undoAssignment(int i, int j) {
 		
-		mCurrentDomain.get(i).remove(0);//Hard coded 0 
+		mCurrentDomains.get(i).remove(0);//Hard coded 0 
 		undoReductions(i);
 		mConfSets.get(i).addAll(mPastFc.get(j-1));
 	}
 	
-	protected boolean labelExtansion(int i) {
-		return true;
-	}
-	
 	public boolean checkForward(int i, int j){
 
-		Vector<Integer> tReduction = new Vector<Integer>();
+		Vector<Value> tReduction = new Vector<Value>();
 
-		int size = mCurrentDomain.get(j).size();
+		int size = mCurrentDomains.get(j).size();
 
 		for (int k = 0; k < size; k++){
 
-			mProblem.getV().set(j, mCurrentDomain.get(j).get(k));
+			mAssignment.set(j, mCurrentDomains.get(j).get(k));
 
-			if(!mProblem.check(i, mProblem.getV().get(i), j, mProblem.getV().get(j)))
-				tReduction.add(mProblem.getV().get(j));
+			if(mAssignment.get(i).isOverlap(mAssignment.get(j)))
+				tReduction.add(mAssignment.get(j));
 		}
 
 		if (!tReduction.isEmpty()){
 
-			mCurrentDomain.get(j).removeAll(tReduction);
+			mCurrentDomains.get(j).removeAll(tReduction);
 			mReductions.get(j).push(tReduction);
-			mFutureFc.get(i).push(j);
-			mPastFc.get(j).push(i);
+			mFutureFc.get(i).push(mVariables.get(j));
+			mPastFc.get(j).push(mVariables.get(i));
 		}
 
-		return !mCurrentDomain.get(j).isEmpty();	
+		return !mCurrentDomains.get(j).isEmpty();	
 	}
 
 	public void undoReductions(int i){
 
-		Vector<Integer> tReduction = null;
+		Vector<Value> tReduction = null;
 
-		for (Integer j: mFutureFc.get(i)){
+		for (Variable variable: mFutureFc.get(i)){
 
+			int j = mVariables.indexOf(variable);
+			
 			tReduction = mReductions.get(j).pop();
-			mCurrentDomain.get(j).addAll(tReduction);
+			mCurrentDomains.get(j).addAll(tReduction);
 			mPastFc.get(j).pop();
 		}
 
@@ -234,8 +233,24 @@ public class FCCBJ implements CSPAlgorithm{
 
 		restoreCurrentDomain(i);
 
-		for (Vector<Integer> tReduction : mReductions.get(i)) {
-			mCurrentDomain.get(i).removeAll(tReduction);
+		for (Vector<Value> tReduction : mReductions.get(i)) {
+			mCurrentDomains.get(i).removeAll(tReduction);
 		}
+	}
+	
+	public void restoreCurrentDomain(int i) {
+		mCurrentDomains.set(i, mVariables.get(i).getDomain());
+	}
+
+	private int getN() {
+		return mN;
+	}
+	
+	public int getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(int status) {
+		mStatus = status;
 	}
 }
