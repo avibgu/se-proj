@@ -8,35 +8,41 @@ import simulator.Location;
 
 public class LocationMonitor implements Runnable{
 	
-	protected boolean _dontStop;
-	protected Entity _entity;
-	protected Location _lastKnownLocation;
-	protected final long _refreshRate = 3;
-	protected Vector<Observer> _observers;
+	protected boolean			mDontStop;
+	protected Entity			mEntity;
+	protected Location			mLastKnownLocation;
+	protected final long		mRefreshRate = 3;
+	protected Vector<Observer>	mObservers;
 	
-	public LocationMonitor(Entity entity, Vector<Observer> observers){
-		_entity = entity;
-		_lastKnownLocation = _entity.getLocation();
-		_dontStop = true;
-		_observers = observers;
+	public LocationMonitor(Entity pEntity, Vector<Observer> pObservers){
+		mEntity = pEntity;
+		mLastKnownLocation = mEntity.getLocation();
+		mDontStop = true;
+		mObservers = pObservers;
 	}
+	
 	@Override
 	public void run() {
-		while (_dontStop){
-			Location entityLocation = _entity.getLocation();
-			if(entityLocation != null &&(_lastKnownLocation.getLatitude() != entityLocation.getLatitude() || _lastKnownLocation.getLongitude() != entityLocation.getLongitude())){
-					//TODO send to relevant agents in the current activity
+		
+		while (mDontStop){
+			
+			Location entityLocation = mEntity.getLocation();
+			
+			if(entityLocation != null &&(mLastKnownLocation.getLatitude() != entityLocation.getLatitude() || mLastKnownLocation.getLongitude() != entityLocation.getLongitude())){
+					
+				//TODO send to relevant agents in the current activity
 					//((Agent)entity).getCurrentActivity(); 
-					synchronized (_observers) {
-						for (Observer ob : _observers) {
-							ob.update(_entity, null);
+					synchronized (mObservers) {
+						for (Observer ob : mObservers) {
+							ob.update(mEntity, null);
 						}
 					}
-					_lastKnownLocation = entityLocation;
+					
+					mLastKnownLocation = entityLocation;
 			}
 			
 			try {
-				Thread.sleep(_refreshRate * 1000);
+				Thread.sleep(mRefreshRate * 1000);
 			} catch (InterruptedException e) {
 				stop();
 			}
@@ -44,7 +50,7 @@ public class LocationMonitor implements Runnable{
 	}
 	
 	public void stop() {
-		_dontStop = false;
+		mDontStop = false;
 	}
 	
 }

@@ -2,6 +2,7 @@ package algorithm;
 
 import java.util.Date;
 
+@Deprecated
 public class TimeConstreint implements Constraint{
 
 	protected Date mStartTime = null;

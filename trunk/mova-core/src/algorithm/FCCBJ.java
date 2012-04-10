@@ -5,7 +5,7 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-public class FCCBJ {
+public class FCCBJ implements CSPAlgorithm{
 
 	protected static final int UNINITIALIZED	= -1;
 	protected static final int INITIALIZED		= 0;
@@ -69,6 +69,7 @@ public class FCCBJ {
 		solve();
 	}
 	
+	@Override
 	public void solve() throws Exception{
 		
 		if (UNINITIALIZED == mStatus)

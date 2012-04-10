@@ -6,6 +6,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
+@Deprecated
 public class DisCBJ {
 
 	protected SortedSet<Constraint> mFullDomain = null;

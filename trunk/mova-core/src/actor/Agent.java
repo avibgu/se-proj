@@ -163,8 +163,8 @@ public class Agent extends Entity implements Runnable {
 	// From Here: Getters & Setters
 	
 	
-	public void setCurrentActivity(Activity activity) {
-		mCurrentActivity = activity;
+	public void setCurrentActivity(Activity pActivity) {
+		mCurrentActivity = pActivity;
 	}
 	
 	public Vector<Activity> getActivities() {
