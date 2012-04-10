@@ -36,54 +36,54 @@ public class ActivityMonitor implements Runnable {
 	@Override
 	public void run() {
 
-		int numOfTopPriorityActivities;
-		int numOfActivitiesBeforeThisOne;
-
-		while (mDontStop) {
-
-			numOfTopPriorityActivities = 0;
-			numOfActivitiesBeforeThisOne = 0;
-			
-			mAgent.getReadLock().lock();
-			
-			for (Activity activity : mAgent.getActivities()) {
-
-				synchronized (activity) {
-
+//		int numOfTopPriorityActivities;
+//		int numOfActivitiesBeforeThisOne;
+//
+//		while (mDontStop) {
+//
+//			numOfTopPriorityActivities = 0;
+//			numOfActivitiesBeforeThisOne = 0;
+//			
+//			mAgent.getReadLock().lock();
+//			
+//			for (Activity activity : mAgent.getActivities()) {
+//
+//				synchronized (activity) {
+//
 //					if (activity.isTopPriority())
 //						numOfTopPriorityActivities++;
-	
-					if (isThisActivityChangedItsPriority(activity))
-						mAgent.activityChangedHisPriority(activity);
-	
-					numOfActivitiesBeforeThisOne++;
-					
-					if (areWeGoingToMissThisActivity(activity, numOfActivitiesBeforeThisOne))
-						mAgent.goigToMissThisActivity(activity);
-				}
-			}
-			
-			mAgent.getReadLock().unlock();
-
-			if (numOfTopPriorityActivities > NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED)
-				mAgent.tooManyTopPriorityActivities(numOfTopPriorityActivities
-						- NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED);
-
-			waitSomeTime();
-		}
+//	
+//					if (isThisActivityChangedItsPriority(activity))
+//						mAgent.activityChangedHisPriority(activity);
+//	
+//					numOfActivitiesBeforeThisOne++;
+//					
+//					if (areWeGoingToMissThisActivity(activity, numOfActivitiesBeforeThisOne))
+//						mAgent.goigToMissThisActivity(activity);
+//				}
+//			}
+//			
+//			mAgent.getReadLock().unlock();
+//
+//			if (numOfTopPriorityActivities > NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED)
+//				mAgent.tooManyTopPriorityActivities(numOfTopPriorityActivities
+//						- NUM_OF_TOP_PRIORITY_ACTIVITIES_ALLOWED);
+//
+//			waitSomeTime();
+//		}
 	}
 
-	protected boolean areWeGoingToMissThisActivity(Activity activity, int numOfActivitiesBeforeThisOne) {
-
-		if (mAgent.getCurrentActivity().equals(activity))
-			return false;
-		
-		long now = new Date().getTime();
-		
-		long expectedTime = mAgent.getAverageTimePerActivity() * (1 + numOfActivitiesBeforeThisOne);
-		
-		return now + expectedTime > activity.getEndTime().getTime();
-	}
+//	protected boolean areWeGoingToMissThisActivity(Activity activity, int numOfActivitiesBeforeThisOne) {
+//
+//		if (mAgent.getCurrentActivity().equals(activity))
+//			return false;
+//		
+//		long now = new Date().getTime();
+//		
+//		long expectedTime = mAgent.getAverageTimePerActivity() * (1 + numOfActivitiesBeforeThisOne);
+//		
+//		return now + expectedTime > activity.getEndTime().getTime();
+//	}
 
 	protected boolean isThisActivityChangedItsPriority(Activity activity) {
 
