@@ -250,7 +250,7 @@ public class FCCBJ implements CSPAlgorithm{
 		return mStatus;
 	}
 
-	public void setStatus(int status) {
-		mStatus = status;
+	public void setStatus(int pStatus) {
+		mStatus = pStatus;
 	}
 }
