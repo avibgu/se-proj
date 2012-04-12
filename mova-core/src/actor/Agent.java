@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import algorithm.Coordinator;
+
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
@@ -22,6 +24,8 @@ public class Agent extends Entity implements Runnable {
 	protected Activity					mCurrentActivity;
 	protected String					mRegistrationId;
 	
+	protected Coordinator				mCoordinator;
+	
 	// The list of known locations of the items.
 	protected Vector<Item> 				mItems;
 	
@@ -36,6 +40,8 @@ public class Agent extends Entity implements Runnable {
 		mDontStop = true;
 		mCurrentActivity = null;
 		mRegistrationId = "";
+		
+		mCoordinator = new Coordinator();
 		
 		mItems = new Vector<Item>();
 		mMyItems = new Vector<Item>();
