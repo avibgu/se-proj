@@ -27,9 +27,10 @@ public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
 	public static final String SENDER_PW = "movaC2DM";
-	private final static C2dmController instance = new C2dmController();
-	public int counter = 0;
-	private DBHandler db=DBHandler.getInstance();
+	private static final C2dmController instance = new C2dmController();
+	
+	public int			mCounter	= 0;
+	private DBHandler	mDb		= DBHandler.getInstance();
 	
 	private C2dmController() {
 		// TODO Auto-generated constructor stub
@@ -41,24 +42,27 @@ public class C2dmController {
 	
 	@PUT
 	@Path("/saveRegistrationId")
-	public void saveRegistrationId(String jsonObject){
+	public void saveRegistrationId(String pJsonObject){
 		JsonParser jp = new JsonParser();
-		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		JsonObject j = (JsonObject) jp.parse(pJsonObject);
 		String registrationId = j.get("registrationId").getAsString();
 		String agentId = j.get("agentId").getAsString();
-		db.insertAgent(agentId, new AgentType("COORDINATOR"), true, "127.0.0.1", registrationId);
+		mDb.insertAgent(agentId, new AgentType("COORDINATOR"), true, "127.0.0.1", registrationId);
 		System.out.println(registrationId);
 	}
 	
-	public void sendMessageToDevice(String collapseKey,String message,JsonArray agentIds){
-		String authToken = getAutoToken();
+	public void sendMessageToDevice(String pCollapseKey,String pMessage,JsonArray pAgentIds){
 		
+		String authToken = getAutoToken();
         URL url;
+        
 		try {
-			for (int i=0; i<agentIds.size() ; ++i){
+			
+			for (int i = 0; i < pAgentIds.size(); ++i){
+				
 				// Find the regisration id
 				
-				String regId = db.getAgentRegistrationId(agentIds.get(i).getAsString());
+				String regId = mDb.getAgentRegistrationId(pAgentIds.get(i).getAsString());
 
 				url = new URL("https://android.apis.google.com/c2dm/send");
 				HttpsURLConnection.setDefaultHostnameVerifier(new CustomizedHostnameVerifier()); 
@@ -69,8 +73,8 @@ public class C2dmController {
 		
 		        StringBuilder buf = new StringBuilder();
 		        buf.append("registration_id").append("=").append((URLEncoder.encode(regId, "UTF-8")));
-		        buf.append("&collapse_key").append("=").append((URLEncoder.encode(collapseKey, "UTF-8")));
-		        buf.append("&data.message").append("=").append((URLEncoder.encode(message, "UTF-8")));
+		        buf.append("&collapse_key").append("=").append((URLEncoder.encode(pCollapseKey, "UTF-8")));
+		        buf.append("&data.message").append("=").append((URLEncoder.encode(pMessage, "UTF-8")));
 		        
 		        request.setRequestMethod("POST");
 		        request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -83,10 +87,13 @@ public class C2dmController {
 		        
 		        BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		        buf = new StringBuilder();
+		        
 		        String inputLine;
+		        
 		        while ((inputLine = in.readLine()) != null) {
 		            buf.append(inputLine);
 		        }
+		        
 		        post.close();
 		        in.close();
 		
@@ -115,6 +122,7 @@ public class C2dmController {
 	}
 
 	private static String getAutoToken() {
+		
 			String authToken=null;
 		    System.out.println("asking C2DM server for auth token...");
 	        
@@ -179,7 +187,7 @@ public class C2dmController {
 	}
 	
 	private static class CustomizedHostnameVerifier implements HostnameVerifier {
-		public boolean verify(String hostname, SSLSession session) {
+		public boolean verify(String pHostname, SSLSession pSession) {
 			return true;
 		}
 	}
