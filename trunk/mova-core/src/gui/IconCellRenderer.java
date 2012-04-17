@@ -35,11 +35,11 @@ public class IconCellRenderer  implements TableCellRenderer{
 
         cell.setBackground(new Color(0,0,0,0));
 
-        if(isAgent(value))
+        if(isAgent((String)value))
             cell.setIcon(_agentIcon);
         else if(isSensor((String)value))
              cell.setIcon(_sensorIcon);
-        else if(isItem(value))
+        else if(isItem((String)value))
              cell.setIcon(_itemIcon);
         else
             cell.setText((String)value);
@@ -53,38 +53,25 @@ public class IconCellRenderer  implements TableCellRenderer{
         return cell;
     }
 
-//    private boolean isAgent(String value) {
-//        try{
-//            @SuppressWarnings("unused")
-//			AgentType type = AgentType.valueOf((String)value);
-//            return true;
-//        }
-//        catch(IllegalArgumentException e){
-//            return false;
-//        }
-//    }
-    
-    private boolean isAgent(Object value) {
-        return value instanceof AgentType || value instanceof Agent;
+    private boolean isAgent(String value) {
+        if(value.contains("COORDINATOR") || value.contains("SECURITY_OFFICER") || value.contains("SECRETARY") || 
+        		value.contains("NETWORK_MANAGER") || value.contains("SOUND_MANAGER"))
+        	return true;
+        else
+        	return false;
     }
 
     private boolean isSensor(String value) {
         return value.contains("Sensor");
     }
 
-//    private boolean isItem(String value) {
-//        try{
-//            @SuppressWarnings("unused")
-//			ItemType type = ItemType.valueOf((String)value);
-//            return true;
-//        }
-//        catch(IllegalArgumentException e){
-//            return false;
-//        }
-//    }
-
-    private boolean isItem(Object value) {
-    	return value instanceof ItemType || value instanceof Item;
+    private boolean isItem(String value) {
+    	if(value.contains("BOARD") || value.contains("LAPTOP") || value.contains("MOUSE") || 
+        		value.contains("CABLE") || value.contains("SPEAKER") || value.contains("STAND") ||
+        		value.contains("LAZER_CURSOR"))
+        	return true;
+        else
+        	return false;
     }
     
 //    private void colorCells(String value, JLabel cell, JTable table, int row, int column) {

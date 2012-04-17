@@ -33,6 +33,10 @@ public class AgentType {
 		return ((AgentType)pOther).getType().equals(mType);
 	}
 	
+	public String toString(){
+		return mType;
+	}
+	
 	@Deprecated
 	public static String[] values() {
 		return new String[]{COORDINATOR,SECURITY_OFFICER,SECRETARY,NETWORK_MANAGER,LOGISTIC_MANAGER,SOUND_MANAGER,RFID};
