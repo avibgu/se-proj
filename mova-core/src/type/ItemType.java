@@ -37,6 +37,10 @@ public class ItemType {
 		return ((ItemType)pOther).getType().equals(mType);
 	}
 	
+	public String toString(){
+		return mType;
+	}
+	
 	@Deprecated
 	public static String[] values() {
 		return new String[]{PROJECTOR,LAPTOP,MOUSE,CABLE,CHAIR,SPEAKER,STAND,BOARD,LAZER_CURSOR,BOARD_PEN,ERASER};
