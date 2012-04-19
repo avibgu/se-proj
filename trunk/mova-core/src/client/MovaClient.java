@@ -51,8 +51,8 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	/**
 	 * @param pType the type of item to find
@@ -169,5 +169,21 @@ public class MovaClient {
 				//MediaType.APPLICATION_JSON).put(j.toString());
 		
 		//return "AAAA";
+	}
+	
+	/**
+	 * Adds the activity to the system
+	 * @param pActivity the activity to add
+	 */
+	public void addActivity(Activity pActivity){
+		JsonObject j = new JsonObject();
+		String jAc = mMj.activityToJson(pActivity);
+		j.addProperty("activity", mMj.activityToJson(pActivity));
+		
+		//ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/sendActivity");
+		//resource.put(j.toString());
+		mService.path("activities").path("addActivity")
+		.type(MediaType.APPLICATION_JSON).put(j.toString());
+		
 	}
 }
