@@ -27,7 +27,7 @@ public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
 	public static final String SENDER_PW = "movaC2DM";
-	private static final C2dmController instance = new C2dmController();
+	private static final C2dmController mInstance = new C2dmController();
 
 	public int mCounter = 0;
 	private DBHandler mDb = DBHandler.getInstance();
@@ -37,7 +37,7 @@ public class C2dmController {
 	}
 
 	public static C2dmController getInstance() {
-		return instance;
+		return mInstance;
 	}
 
 	@PUT
