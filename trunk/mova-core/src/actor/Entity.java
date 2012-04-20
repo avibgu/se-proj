@@ -11,7 +11,7 @@ public class Entity extends Observable{
 	protected Location				mLocation;
 	protected Location				mOldLocation;
 	protected boolean				mLoggedIn;
-	private transient Location	mLastRepesentedLocation;
+	private transient Location		mLastRepesentedLocation;
 	private transient String		mRepresentation;
 	private transient boolean		mUpdated;
 	
