@@ -6,7 +6,7 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>item;activity;agent;c2dm</param-value>
+      <param-value>c2dm;resource</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

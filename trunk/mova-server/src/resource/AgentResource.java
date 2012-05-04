@@ -14,6 +14,8 @@ import utilities.MovaJson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import db.DBHandler;
+
 @Path("/agents")
 public class AgentResource {
 	
@@ -36,17 +38,15 @@ public class AgentResource {
 	@PUT
 	@Path("/registerAgent")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void registerAgent(@Context Request requestContext, String jsonObject){
+	public void registerAgent(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
-		String agentId = j.get("id").getAsString();
-		String jsonLocation = j.get("location").getAsString();
+		String jAgentId = j.get("id").getAsString();
+		String jType = j.get("type").getAsString();
+		boolean jLoggedIn = j.get("loggedIn").getAsBoolean();
+		String jRegistrationId = j.get("registrationId").getAsString();
 		
-		
-		MovaJson mj = new MovaJson();
-		Location location = mj.jsonToLocation(jsonLocation);
-		if(location != null){
-			
-		}
+		DBHandler db = DBHandler.getInstance();
+		db.insertAgent(jAgentId, jType, jLoggedIn, "", jRegistrationId);
 	}
 }

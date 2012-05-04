@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -15,7 +16,8 @@ import type.AgentType;
 public class DBHandler {
 	
 	private static String						mDbURL = "jdbc:derby://localhost:1527/ServerDB;create=true";
-    private static String						mTableName = "app.agents";
+    private static String						mAgentTableName = "app.agents";
+    private static String						mActivityTableName = "app.activities";
    
     // jdbc Connection
     
@@ -50,8 +52,8 @@ public class DBHandler {
         }
     }
 
-	public void insertAgent(String pAgentId, AgentType pType, Boolean pLoggedIn,
-			String pIp, String pRegistrationId) {
+	public void insertAgent(String pAgentId, String pType, Boolean pLoggedIn,
+			String pActivityId, String pRegistrationId) {
 		
 		mWrite.lock();
 		createConnection();
@@ -63,10 +65,35 @@ public class DBHandler {
 				logged = 't';
 			else
 				logged = 'f';
-			mStmt.execute("insert into " + mTableName + " values (" + "'"
-					+ pAgentId + "'" + "," + "'" + pType.toString() + "'" + ","
-					+ "'" + logged + "'" + "," + "'" + pIp + "'" + "," + "'"
+			mStmt.execute("insert into " + mAgentTableName + " values (" + "'"
+					+ pAgentId + "'" + "," + "'" + pType + "'" + ","
+					+ "'" + logged + "'" + "," + "'" + pActivityId + "'" + "," + "'"
 					+ pRegistrationId + "'" + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			sqlExcept.printStackTrace();
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void insertActivity(String pActivityId, String pName, String pDescription, String pType, String pStartTime,
+			String pEndTime, int pEstimatedTime) {
+		
+		mWrite.lock();
+		createConnection();
+		Timestamp startTime = Timestamp.valueOf(pStartTime);
+		Timestamp endTime = Timestamp.valueOf(pEndTime);
+		try {
+			mStmt = mConn.createStatement();
+
+			mStmt.execute("insert into " + mActivityTableName + " values (" + "'"
+					+ pActivityId + "'" + "," + "'" + pName + "'" + "," + "'" + pDescription 
+					+ "'" + "," + "'" + pType + "'" + "," + startTime + "," + endTime + 
+					"," + pEstimatedTime + ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
@@ -85,7 +112,7 @@ public class DBHandler {
 		
 		try {
 			mStmt = mConn.createStatement();
-			mStmt.execute("delete from " + mTableName + " WHERE AGENT_ID = "
+			mStmt.execute("delete from " + mAgentTableName + " WHERE AGENT_ID = "
 					+ "'" + pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
@@ -106,7 +133,7 @@ public class DBHandler {
 		try {
 			mStmt = mConn.createStatement();
 			ResultSet results = mStmt.executeQuery("select AGENT_ID from "
-					+ mTableName);
+					+ mAgentTableName);
 
 			while (results.next()) {
 				String id = results.getString(1);
@@ -125,7 +152,7 @@ public class DBHandler {
 		return agentIds;
 	}
 
-	public String getAgentIP(String pAgentId) {
+	public String getAgentActivityId(String pAgentId) {
 		
 		mRead.lock();
 		createConnection();
@@ -134,8 +161,8 @@ public class DBHandler {
 		
 		try {
 			mStmt = mConn.createStatement();
-			ResultSet results = mStmt.executeQuery("select IP from "
-					+ mTableName + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+			ResultSet results = mStmt.executeQuery("select ACTIVITY_ID from "
+					+ mAgentTableName + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			results.next();
 			ip = results.getString(1);
 
@@ -143,7 +170,7 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out
-					.println("database access error or no ip matches the agent id: "
+					.println("database access error, no activityId or no agent id in the system: "
 							+ pAgentId);
 		}
 		
@@ -164,7 +191,7 @@ public class DBHandler {
 		try {
 			mStmt = mConn.createStatement();
 			ResultSet results = mStmt.executeQuery("select AGENT_STATUS from "
-					+ mTableName + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+					+ mAgentTableName + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			results.next();
 			status = results.getString(1);
 
@@ -178,7 +205,7 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out
-					.println("database access error or no ip matches the agent id: "
+					.println("database access error or no agent id in the system: "
 							+ pAgentId);
 		}
 		
@@ -198,7 +225,7 @@ public class DBHandler {
 		try {
 			mStmt = mConn.createStatement();
 			ResultSet results = mStmt
-					.executeQuery("select REGISTRATION_ID from " + mTableName
+					.executeQuery("select REGISTRATION_ID from " + mAgentTableName
 							+ " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			results.next();
 			regristrationId = results.getString(1);
@@ -207,7 +234,7 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out
-					.println("database access error or no registrationId matches the agent id: "
+					.println("database access error, no registrationId, or no agent id in the system: "
 							+ pAgentId);
 		}
 		
@@ -229,7 +256,7 @@ public class DBHandler {
 				logged = 't';
 			else
 				logged = 'f';
-			mStmt.execute("update " + mTableName + " set AGENT_STATUS = " + "'"
+			mStmt.execute("update " + mAgentTableName + " set AGENT_STATUS = " + "'"
 					+ logged + "'" + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
@@ -240,14 +267,14 @@ public class DBHandler {
 		mWrite.unlock();
 	}
 
-	public void changeAgentIP(String pAgentId, String pNewIP) {
+	public void changeAgentActivityId(String pAgentId, String pActivityId) {
 		
 		mWrite.lock();
 		createConnection();
 		
 		try {
 			mStmt = mConn.createStatement();
-			mStmt.execute("update " + mTableName + " set IP = " + "'" + pNewIP
+			mStmt.execute("update " + mAgentTableName + " set ACTIVITY_ID = " + "'" + pActivityId
 					+ "'" + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
@@ -264,7 +291,7 @@ public class DBHandler {
 		
 		try {
 			mStmt = mConn.createStatement();
-			mStmt.execute("update " + mTableName + " set REGISTRATION_ID = "
+			mStmt.execute("update " + mAgentTableName + " set REGISTRATION_ID = "
 					+ "'" + pRegistrationID + "'" + " WHERE AGENT_ID = " + "'"
 					+ pAgentId + "'");
 			mStmt.close();
@@ -281,7 +308,7 @@ public class DBHandler {
 		createConnection();
 		try {
 			mStmt = mConn.createStatement();
-			mStmt.execute("delete from " + mTableName);
+			mStmt.execute("delete from " + mAgentTableName);
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			sqlExcept.printStackTrace();
