@@ -11,10 +11,16 @@ import java.net.URLEncoder;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import type.AgentType;
+import type.ItemType;
+import utilities.MovaJson;
+
+import actor.Activity;
+import actor.Agent;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -22,7 +28,6 @@ import com.google.gson.JsonParser;
 
 import db.DBHandler;
 
-@Path("/c2dm")
 public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
@@ -32,7 +37,7 @@ public class C2dmController {
 	public int mCounter = 0;
 	private DBHandler mDb = DBHandler.getInstance();
 
-	public C2dmController() {
+	private C2dmController() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -40,20 +45,8 @@ public class C2dmController {
 		return mInstance;
 	}
 
-	@PUT
-	@Path("/saveRegistrationId")
-	public void saveRegistrationId(String pJsonObject) {
-		JsonParser jp = new JsonParser();
-		JsonObject j = (JsonObject) jp.parse(pJsonObject);
-		String registrationId = j.get("registrationId").getAsString();
-		String agentId = j.get("agentId").getAsString();
-		mDb.insertAgent(agentId, new AgentType("COORDINATOR").getType(), true,
-				registrationId);
-		System.out.println(registrationId);
-	}
-
 	public void sendMessageToDevice(String pCollapseKey, String pMessage,
-			JsonArray pAgentIds) {
+			JsonArray pAgentIds, String pMessageType) {
 
 		String authToken = getAutoToken();
 		URL url;
@@ -83,6 +76,8 @@ public class C2dmController {
 						.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
 				buf.append("&data.message").append("=")
 						.append((URLEncoder.encode(pMessage, "UTF-8")));
+				buf.append("&data.messageType").append("=")
+				.append((URLEncoder.encode(pMessageType, "UTF-8")));
 
 				request.setRequestMethod("POST");
 				request.setRequestProperty("Content-Type",
@@ -209,6 +204,7 @@ public class C2dmController {
 			return null;
 		}
 	}
+	
 
 	private static class CustomizedHostnameVerifier implements HostnameVerifier {
 		public boolean verify(String pHostname, SSLSession pSession) {

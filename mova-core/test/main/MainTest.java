@@ -9,7 +9,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import client.MovaClient;
+
+import type.AgentType;
+import utilities.MovaJson;
+
 import actor.Activity;
+import actor.Agent;
 import actor.Manager;
 
 
@@ -41,4 +47,23 @@ public class MainTest {
 		
 		manager.startApplication();
 	}
+	
+	@Test
+	public void testCreateAgent(){
+		Agent agent = new Agent(new AgentType(AgentType.COORDINATOR));
+		agent.setRegistrationId("64638947389430gfdgdfg");
+		new MovaClient().registerAgent(agent);
+	}
+	
+	@Test
+	public void testAddAgent(){
+		Activity activity = new Activity("TestActivity");
+		new MovaClient().addActivity(activity);
+	}
+	
+	@Test
+	public void testPostponeActivity(){
+		new MovaClient().postponeActivity("gfdg4543", "44");
+	}
+	
 }
