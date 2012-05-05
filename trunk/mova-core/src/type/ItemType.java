@@ -2,17 +2,17 @@ package type;
 
 public class ItemType {
 	
-	public static final String PROJECTOR = "PROJECTOR";
-	public static final String LAPTOP = "LAPTOP";
-	public static final String MOUSE = "MOUSE";
-	public static final String CABLE = "CABLE";
-	public static final String CHAIR = "CHAIR";
-	public static final String SPEAKER = "SPEAKER";
-	public static final String STAND = "STAND";
-	public static final String BOARD = "BOARD";
-	public static final String LAZER_CURSOR = "LAZER_CURSOR";
-	public static final String BOARD_PEN = "BOARD_PEN";
-	public static final String ERASER = "ERASER";
+	public transient static final String PROJECTOR = "PROJECTOR";
+	public transient static final String LAPTOP = "LAPTOP";
+	public transient static final String MOUSE = "MOUSE";
+	public transient static final String CABLE = "CABLE";
+	public transient static final String CHAIR = "CHAIR";
+	public transient static final String SPEAKER = "SPEAKER";
+	public transient static final String STAND = "STAND";
+	public transient static final String BOARD = "BOARD";
+	public transient static final String LAZER_CURSOR = "LAZER_CURSOR";
+	public transient static final String BOARD_PEN = "BOARD_PEN";
+	public transient static final String ERASER = "ERASER";
 	
 	protected String mType;
 	

@@ -2,13 +2,13 @@ package type;
 
 public class AgentType {
 	
-	public static final String COORDINATOR = "COORDINATOR";
-	public static final String SECURITY_OFFICER = "SECURITY_OFFICER";
-	public static final String SECRETARY = "SECRETARY";
-	public static final String NETWORK_MANAGER = "NETWORK_MANAGER";
-	public static final String LOGISTIC_MANAGER = "LOGISTIC_MANAGER";
-	public static final String SOUND_MANAGER = "SOUND_MANAGER";
-	public static final String RFID = "RFID";
+	public transient static final String COORDINATOR = "COORDINATOR";
+	public transient static final String SECURITY_OFFICER = "SECURITY_OFFICER";
+	public transient static final String SECRETARY = "SECRETARY";
+	public transient static final String NETWORK_MANAGER = "NETWORK_MANAGER";
+	public transient static final String LOGISTIC_MANAGER = "LOGISTIC_MANAGER";
+	public transient static final String SOUND_MANAGER = "SOUND_MANAGER";
+	public transient static final String RFID = "RFID";
 	
 	protected String mType;
 	
