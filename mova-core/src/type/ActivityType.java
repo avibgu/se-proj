@@ -1,5 +1,6 @@
 package type;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class ActivityType {
 		mRequiredItems = pRequiredItems;
 	}
 	
-	public Activity getInstance(Date pStartTime, Date pEndTime, long pEstimateTime, Set<Activity> pRequiredActivities, String pDescription, String pName){
+	public Activity getInstance(Timestamp pStartTime, Timestamp pEndTime, long pEstimateTime, Set<String> pRequiredActivities, String pDescription, String pName){
 		return new Activity(mType, pStartTime, pEndTime, pEstimateTime, mRequiredAgents, mRequiredItems, pRequiredActivities, pDescription, pName);
 	}
 

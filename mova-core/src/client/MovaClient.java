@@ -108,7 +108,7 @@ public class MovaClient {
 		JsonObject j = new JsonObject();
 		j.addProperty("activity", mMj.activityToJson(pActivity));
 		j.addProperty("agentIds", mMj.agentsToJson(pAgentIds));
-		
+
 	//	_service.path("activities").path("sendActivity")
 	//		.type(MediaType.APPLICATION_JSON).put(j.toString());
 		

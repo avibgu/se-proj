@@ -11,8 +11,6 @@ import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import type.AgentType;
-
 public class DBHandler {
 	
 	private static String						mDbURL = "jdbc:derby://localhost:1527/ServerDB;create=true";
@@ -53,7 +51,7 @@ public class DBHandler {
     }
 
 	public void insertAgent(String pAgentId, String pType, Boolean pLoggedIn,
-			String pActivityId, String pRegistrationId) {
+			String pRegistrationId) {
 		
 		mWrite.lock();
 		createConnection();
@@ -67,7 +65,7 @@ public class DBHandler {
 				logged = 'f';
 			mStmt.execute("insert into " + mAgentTableName + " values (" + "'"
 					+ pAgentId + "'" + "," + "'" + pType + "'" + ","
-					+ "'" + logged + "'" + "," + "'" + pActivityId + "'" + "," + "'"
+					+ "'" + logged + "'" + "," + "'" + "" + "'" + "," + "'"
 					+ pRegistrationId + "'" + ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {

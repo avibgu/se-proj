@@ -32,7 +32,7 @@ public class C2dmController {
 	public int mCounter = 0;
 	private DBHandler mDb = DBHandler.getInstance();
 
-	private C2dmController() {
+	public C2dmController() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -47,8 +47,8 @@ public class C2dmController {
 		JsonObject j = (JsonObject) jp.parse(pJsonObject);
 		String registrationId = j.get("registrationId").getAsString();
 		String agentId = j.get("agentId").getAsString();
-		mDb.insertAgent(agentId, new AgentType("COORDINATOR"), true,
-				"127.0.0.1", registrationId);
+		mDb.insertAgent(agentId, new AgentType("COORDINATOR").getType(), true,
+				registrationId);
 		System.out.println(registrationId);
 	}
 

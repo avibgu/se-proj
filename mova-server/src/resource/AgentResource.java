@@ -47,6 +47,6 @@ public class AgentResource {
 		String jRegistrationId = j.get("registrationId").getAsString();
 		
 		DBHandler db = DBHandler.getInstance();
-		db.insertAgent(jAgentId, jType, jLoggedIn, "", jRegistrationId);
+		db.insertAgent(jAgentId, jType, jLoggedIn, jRegistrationId);
 	}
 }

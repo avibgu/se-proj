@@ -20,7 +20,8 @@ public class MovaJson {
 		gb.registerTypeAdapter(Location.class, new LocationSerializer());
 		gb.registerTypeAdapter(Item.class, new ItemDeserializer());
 		gb.registerTypeAdapter(Location.class, new LocationDeserializer());
-		//gb.registerTypeAdapter(Activity.class, new ActivitySerializer());
+		gb.registerTypeAdapter(Activity.class, new ActivitySerializer());
+		gb.registerTypeAdapter(Activity.class, new ActivityDeserializer());
 		
 		_gson = gb.create();
 	}

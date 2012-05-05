@@ -1,5 +1,7 @@
 package actor;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,10 +30,10 @@ public class Activity {
 //	protected Priority					mPriority;
 	
 	// The Lower bound time of this Activity
-	protected Date						mStartTime; 
+	protected Timestamp					mStartTime; 
 	
 	// The Upper bound time of this Activity
-	protected Date						mEndTime;
+	protected Timestamp					mEndTime;
 
 	// The time (in milliseconds) that we assume this Activity will takes
 	protected long						mEstimateTime;
@@ -43,13 +45,13 @@ public class Activity {
 	protected Map<ItemType,Integer>		mRequiredItems; 
 	
 	// the Activities which this Activity can be performed only after they finished
-	protected Set<Activity>				mRequiredActivities;
+	protected Set<String>				mRequiredActivityIds;
 	
 	// the Agents that assigned to this Activity
-	protected Set<Agent>				mParticipatingAgents;
+	protected Set<String>				mParticipatingAgentIds;
 	
 	// the Items that assigned to this Activity
-	protected Set<Item>					mParticipatingItems; 
+	protected Set<String>				mParticipatingItemIds; 
 	
 	// The Description of this Activity
 	protected String					mDescription;
@@ -61,27 +63,28 @@ public class Activity {
 		
 		long estimateTime = 1000 * 60 * 60 * 1;
 		
-		Date startTime = new Date();
-		Date endTime = new Date(startTime.getTime() + estimateTime * 5);
+		Timestamp startTime = new Timestamp(new Date().getTime());
+		Timestamp endTime = new Timestamp(startTime.getTime() + estimateTime * 5);
 		
 		Map<AgentType,Integer> requiredAgents = new HashMap<AgentType,Integer>();
 		requiredAgents.put(new AgentType("DEFAULT"), 1);
+		requiredAgents.put(new AgentType("BLA"), 1);
 		
 		Map<ItemType,Integer> requiredItems = new HashMap<ItemType,Integer>();
 		requiredItems.put(new ItemType("DEFAULT"), 1);
 		
 		init(	"DEFAULT", startTime,
 				endTime, estimateTime, requiredAgents, requiredItems,
-				new HashSet<Activity>(), "DEFAULT ACTIVITY", pName);
+				new HashSet<String>(), "DEFAULT ACTIVITY", pName);
 	}
 	
 	public Activity(	String					pType,
-						Date					pStartTime,
-						Date					pEndTime,
+						Timestamp				pStartTime,
+						Timestamp				pEndTime,
 						long					pEstimateTime,
 						Map<AgentType,Integer>	pRequiredAgents,
 						Map<ItemType, Integer>	pRequiredItems,
-						Set<Activity>			pRequiredActivities,
+						Set<String>				pRequiredActivities,
 						String					pDescription,
 						String					pName){
 		
@@ -91,12 +94,12 @@ public class Activity {
 	}
 
 	protected void init(	String					pType,
-							Date					pStartTime,
-							Date					pEndTime,
+							Timestamp				pStartTime,
+							Timestamp				pEndTime,
 							long					pEstimateTime,
 							Map<AgentType,Integer>	pRequiredAgents,
 							Map<ItemType, Integer>	pRequiredItems,
-							Set<Activity>			pRequiredActivities,
+							Set<String>				pRequiredActivities,
 							String					pDescription,
 							String					pName) {
 		
@@ -108,9 +111,9 @@ public class Activity {
 		mEstimateTime = pEstimateTime;
 		mRequiredAgents = pRequiredAgents;
 		mRequiredItems = pRequiredItems;
-		mRequiredActivities = pRequiredActivities;
-		mParticipatingAgents = new HashSet<Agent>();
-		mParticipatingItems = new HashSet<Item>(); 
+		mRequiredActivityIds = pRequiredActivities;
+		mParticipatingAgentIds = new HashSet<String>();
+		mParticipatingItemIds = new HashSet<String>(); 
 		mDescription = pDescription;
 		mName = pName;
 	}
@@ -139,19 +142,19 @@ public class Activity {
 		mState = pState;
 	}
 
-	public Date getStartTime() {
+	public Timestamp getStartTime() {
 		return mStartTime;
 	}
 
-	public void setStartTime(Date pStartTime) {
+	public void setStartTime(Timestamp pStartTime) {
 		mStartTime = pStartTime;
 	}
 
-	public Date getEndTime() {
+	public Timestamp getEndTime() {
 		return mEndTime;
 	}
 
-	public void setEndTime(Date pEndTime) {
+	public void setEndTime(Timestamp pEndTime) {
 		mEndTime = pEndTime;
 	}
 
@@ -179,12 +182,28 @@ public class Activity {
 		mRequiredItems = pRequiredItems;
 	}
 
-	public Set<Activity> getRequiredActivities() {
-		return mRequiredActivities;
+	public Set<String> getParticipatingAgentIds() {
+		return mParticipatingAgentIds;
 	}
 
-	public void setRequiredActivities(Set<Activity> pRequiredActivities) {
-		mRequiredActivities = pRequiredActivities;
+	public void setParticipatingAgentIds(Set<String> pParticipatingAgentIds) {
+		mParticipatingAgentIds = pParticipatingAgentIds;
+	}
+	
+	public Set<String> getParticipatingItemIds() {
+		return mParticipatingItemIds;
+	}
+
+	public void setParticipatingItemIds(Set<String> pParticipatingItemIds) {
+		mParticipatingItemIds = pParticipatingItemIds;
+	}
+	
+	public Set<String> getRequiredActivityIds() {
+		return mRequiredActivityIds;
+	}
+
+	public void setRequiredActivityIds(Set<String> pRequiredActivities) {
+		mRequiredActivityIds = pRequiredActivities;
 	}
 
 	public String getDescription() {
@@ -211,11 +230,11 @@ public class Activity {
 		mState = ActivityState.COMPLETED;
 	}
 	
-	public void assignAgents(Set<Agent> pAgents){
-		mParticipatingAgents = pAgents;
+	public void assignAgents(Set<String> pAgents){
+		mParticipatingAgentIds = pAgents;
 	}
 	
-	public void assignItems(Set<Item> pItems){
-		mParticipatingItems = pItems;
+	public void assignItems(Set<String> pItems){
+		mParticipatingItemIds = pItems;
 	}
 }
