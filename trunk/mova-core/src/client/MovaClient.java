@@ -144,31 +144,9 @@ public class MovaClient {
 	}
 	
 	public void registerAgent(Agent pAgent){
-		JsonObject j = new JsonObject();
-		j.addProperty("id", pAgent.getId());
-		j.addProperty("type", pAgent.getType().toString());
-		j.addProperty("loggedIn", pAgent.isLoggedIn());
-		j.addProperty("registrationId", pAgent.getRegistrationId());
-		
+		String j = mMj.agentToJson(pAgent);
 		mService.path("agents").path("registerAgent")
-		.type(MediaType.APPLICATION_JSON).put(j.toString());
-	}
-	
-	public void saveRegistrationId(String pRegistraionId, String pAgentId){
-		JsonObject j = new JsonObject();
-		j.addProperty("registrationId", pRegistraionId);
-		j.addProperty("agentId", pAgentId);
-		
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/c2dm/saveRegistrationId");
-		resource.put(j.toString());
-		
-		//_service.path("c2dm").path("saveRegistrationId/"+registraionId).accept(
-				//MediaType.APPLICATION_JSON).get(String.class);
-		
-		//_service.path("c2dm").path("saveRegistrationId").type(
-				//MediaType.APPLICATION_JSON).put(j.toString());
-		
-		//return "AAAA";
+		.type(MediaType.APPLICATION_JSON).put(j);
 	}
 	
 	/**
@@ -176,14 +154,25 @@ public class MovaClient {
 	 * @param pActivity the activity to add
 	 */
 	public void addActivity(Activity pActivity){
-		JsonObject j = new JsonObject();
 		String jAc = mMj.activityToJson(pActivity);
-		j.addProperty("activity", mMj.activityToJson(pActivity));
-		
-		//ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/sendActivity");
-		//resource.put(j.toString());
+
 		mService.path("activities").path("addActivity")
-		.type(MediaType.APPLICATION_JSON).put(j.toString());
-		
+		.type(MediaType.APPLICATION_JSON).put(jAc);
+	}
+	
+	public void postponeActivity(String activityId, String addedTime){
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		queryParams.add("activityId", activityId);
+		queryParams.add("addedTime", addedTime);
+		mService.path("activities/postponeActivity").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
+		.post();
+	}
+	
+	public void changeAgentStatus(String agentId, String newStatus){
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		queryParams.add("agentId", agentId);
+		queryParams.add("newStatus", newStatus);
+		mService.path("agents/changeAgentStatus").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
+		.post();
 	}
 }

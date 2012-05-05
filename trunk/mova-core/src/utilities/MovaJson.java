@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import simulator.Location;
 import actor.Activity;
+import actor.Agent;
 import actor.Item;
 
 import com.google.gson.Gson;
@@ -113,6 +114,22 @@ public class MovaJson {
 	 * @param json the JSON represented string of the activity
 	 * @return a deserialized Activity. Returns null if json is not a JSON Activity
 	 */
+	public Agent jsonToAgent(String json){
+		Agent a = null;
+		try{
+			a = _gson.fromJson(json, Agent.class);
+		}
+		catch(JsonSyntaxException e){
+			e.printStackTrace();
+			System.out.println("JsonToAgent failed");
+		}
+		return a;
+	}
+	
+	/**
+	 * @param json the JSON represented string of the activity
+	 * @return a deserialized Activity. Returns null if json is not a JSON Activity
+	 */
 	public Activity jsonToActivity(String json){
 		Activity a = null;
 		try{
@@ -151,5 +168,9 @@ public class MovaJson {
 	 */
 	public String agentsToJson(Vector<String> agents){
 		return _gson.toJson(agents);
+	}
+	
+	public String agentToJson(Agent agent){
+		return _gson.toJson(agent);
 	}
 }

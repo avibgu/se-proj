@@ -1,8 +1,10 @@
 package resource;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
@@ -11,6 +13,8 @@ import javax.ws.rs.core.Request;
 import simulator.Location;
 import utilities.MovaJson;
 
+import actor.Agent;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -18,6 +22,8 @@ import db.DBHandler;
 
 @Path("/agents")
 public class AgentResource {
+	
+	DBHandler db = DBHandler.getInstance();
 	
 	@PUT
 	@Path("/changeAgentLocation")
@@ -39,14 +45,20 @@ public class AgentResource {
 	@Path("/registerAgent")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void registerAgent(String jsonObject){
-		JsonParser jp = new JsonParser();
-		JsonObject j = (JsonObject) jp.parse(jsonObject);
-		String jAgentId = j.get("id").getAsString();
-		String jType = j.get("type").getAsString();
-		boolean jLoggedIn = j.get("loggedIn").getAsBoolean();
-		String jRegistrationId = j.get("registrationId").getAsString();
-		
-		DBHandler db = DBHandler.getInstance();
-		db.insertAgent(jAgentId, jType, jLoggedIn, jRegistrationId);
+		MovaJson mj = new MovaJson();
+		Agent agent = mj.jsonToAgent(jsonObject);
+//		db.insertAgent(agent.getId(), agent.getType().toString(), true,
+//				"", agent.getRegistrationId());
 	}
+	
+	@POST
+	@Path("/changeAgentStatus")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void changeAgentStatus(@QueryParam("agentId") String activityId,
+			 					  @QueryParam("newStatus") String addedTime){
+	
+			
+	}
+	
+	
 }
