@@ -7,18 +7,32 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
+
+import type.AgentType;
+import type.ItemType;
+
+import actor.Activity;
+import actor.Item;
+
 
 public class DBHandler {
 	
 	private static String						mDbURL = "jdbc:derby://localhost:1527/ServerDB;create=true";
     private static String						mAgentTableName = "app.agents";
+    private static String						mAgentTypeTableName = "app.agentTypes";
     private static String						mActivityTableName = "app.activities";
+    private static String						mActivityTypeTableName = "app.activitiesTypes";
+    private static String						mActivityTypeAgentsTableName = "app.activityTypeAgents";
+    private static String						mActivityTypeItemsTableName = "app.activityTypeItems";
+    private static String						mItemTableName = "app.items";
+    private static String						mItemTypeTableName = "app.itemTypes";
    
-    // jdbc Connection
-    
     private static Connection					mConn = null;
     private static Statement					mStmt = null;
     
@@ -37,7 +51,8 @@ public class DBHandler {
 
 		return mDbHandler;
 	}
-    
+
+//----------------------------Connection Handling----------------------------
     private static void createConnection(){
         
     	try{
@@ -49,7 +64,57 @@ public class DBHandler {
             e.printStackTrace();
         }
     }
+    
+	private void shutdown() {
+		try {
+			if (mStmt != null)
+				mStmt.close();
+			if (mConn != null) {
+				DriverManager.getConnection(mDbURL + ";shutdown=true");
+				mConn.close();
+			}
+		} catch (SQLException sqlExcept) {
+		}
+	}
 
+//----------------------------AgentTypes Table Handling----------------------------    
+    public void insertAgentType(String pName){
+    	mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mAgentTypeTableName + " values (" + "'" + pName + "'" + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertAgentType - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+    }
+    
+	public void deleteAgentType(String pName) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mAgentTypeTableName + " WHERE NAME = "
+					+ "'" + pName + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteAgentType - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+
+//----------------------------Agents Table Handling---------------------------- 
 	public void insertAgent(String pAgentId, String pType, Boolean pLoggedIn,
 			String pRegistrationId) {
 		
@@ -71,38 +136,13 @@ public class DBHandler {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
 		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
+			System.out.println("insertAgent - database access error");
 		}
 		
 		shutdown();
 		mWrite.unlock();
 	}
 	
-	public void insertActivity(String pActivityId, String pName, String pDescription, String pType, String pStartTime,
-			String pEndTime, int pEstimatedTime) {
-		
-		mWrite.lock();
-		createConnection();
-		Timestamp startTime = Timestamp.valueOf(pStartTime);
-		Timestamp endTime = Timestamp.valueOf(pEndTime);
-		try {
-			mStmt = mConn.createStatement();
-
-			mStmt.execute("insert into " + mActivityTableName + " values (" + "'"
-					+ pActivityId + "'" + "," + "'" + pName + "'" + "," + "'" + pDescription 
-					+ "'" + "," + "'" + pType + "'" + "," + startTime + "," + endTime + 
-					"," + pEstimatedTime + ")");
-			mStmt.close();
-		} catch (SQLIntegrityConstraintViolationException e) {
-			System.out.println(e.getMessage());
-		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
-		}
-		
-		shutdown();
-		mWrite.unlock();
-	}
-
 	public void deleteAgent(String pAgentId) {
 		
 		mWrite.lock();
@@ -114,13 +154,13 @@ public class DBHandler {
 					+ "'" + pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("database access error");
+			System.out.println("deleteAgent - database access error");
 		}
 		
 		shutdown();
 		mWrite.unlock();
 	}
-
+	
 	public Vector<String> getAgentIds() {
 		
 		mRead.lock();
@@ -140,8 +180,7 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out
-					.println("database access error or no agents in database");
+			System.out.println("getAgentIds - database access error or no agents in database");
 		}
 		
 		shutdown();
@@ -149,7 +188,7 @@ public class DBHandler {
 		
 		return agentIds;
 	}
-
+	
 	public String getAgentActivityId(String pAgentId) {
 		
 		mRead.lock();
@@ -168,7 +207,7 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out
-					.println("database access error, no activityId or no agent id in the system: "
+					.println("getAgentActivityId - database access error, no activityId or no agent id in the system: "
 							+ pAgentId);
 		}
 		
@@ -177,7 +216,7 @@ public class DBHandler {
 		
 		return ip;
 	}
-
+	
 	public boolean getAgentStatus(String pAgentId) {
 		
 		mRead.lock();
@@ -203,7 +242,7 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out
-					.println("database access error or no agent id in the system: "
+					.println("getAgentStatus - database access error or no agent id in the system: "
 							+ pAgentId);
 		}
 		
@@ -212,7 +251,7 @@ public class DBHandler {
 		
 		return stat;
 	}
-
+	
 	public String getAgentRegistrationId(String pAgentId) {
 		
 		mRead.lock();
@@ -231,9 +270,8 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out
-					.println("database access error, no registrationId, or no agent id in the system: "
-							+ pAgentId);
+			System.out.println("getAgentRegistrationId - database access error" +
+					", no registrationId, or no agent id in the system: " + pAgentId);
 		}
 		
 		shutdown();
@@ -258,7 +296,8 @@ public class DBHandler {
 					+ logged + "'" + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
+			System.out.println("changeAgentStatus - database access error" +
+					", no agent id in the system: " + pAgentId);
 		}
 		
 		shutdown();
@@ -276,7 +315,8 @@ public class DBHandler {
 					+ "'" + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
+			System.out.println("changeAgentActivityId - database access error" +
+					", no agent id or no activity id in the system: " + pAgentId + ", " + pActivityId);
 		}
 		shutdown();
 		mWrite.unlock();
@@ -294,7 +334,8 @@ public class DBHandler {
 					+ pAgentId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
+			System.out.println("changeAgentRegistrationID - database access error" +
+					", no agent id in the system: " + pAgentId);
 		}
 		
 		shutdown();
@@ -309,21 +350,276 @@ public class DBHandler {
 			mStmt.execute("delete from " + mAgentTableName);
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
+			System.out.println("deleteAllAgents - database access error");
 		}
 		shutdown();
 		mWrite.unlock();
 	}
-
-	private void shutdown() {
+	
+	public void setCurrentActivity(String pAgentId, String pActivityId) {
+		mWrite.lock();
+		createConnection();
 		try {
-			if (mStmt != null)
-				mStmt.close();
-			if (mConn != null) {
-				DriverManager.getConnection(mDbURL + ";shutdown=true");
-				mConn.close();
-			}
+			mStmt = mConn.createStatement();
+			mStmt.execute("update " + mAgentTableName + " set ACTIVITY_ID = " + "'"
+					+ pActivityId + "'" + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+			mStmt.close();
 		} catch (SQLException sqlExcept) {
+			System.out.println("setCurrentActivity - database access error");
 		}
+		shutdown();
+		mWrite.unlock();
+	}
+	
+
+//----------------------------ActivityTypes Table Handling----------------------------	
+    public void insertActivityType(String pName){
+    	mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mActivityTypeTableName + " values (" + "'" + pName + "'" + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertActivityType - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+    }
+    
+	public void deleteActivityType(String pName) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mActivityTypeTableName + " WHERE NAME = "
+					+ "'" + pName + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteActivityType - database access error " +
+					", no activity type in the system: " + pName);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+//----------------------------Activities Table Handling----------------------------	
+	
+	public void insertActivity(Activity activity) {
+		
+		mWrite.lock();
+		createConnection();
+		try {
+			mStmt = mConn.createStatement();
+
+			mStmt.execute("insert into " + mActivityTableName + " values (" + "'"
+					+ activity.getId() + "'" + "," + "'" + activity.getName() + "'" + "," + "'" + activity.getDescription() 
+					+ "'" + "," + "'" + activity.getType() + "'" + "," + activity.getStartTime() + "," + activity.getEndTime() + 
+					"," + activity.getEstimateTime() + ")");
+			mStmt.close();
+			
+			insertActivityTypeAgent(activity);
+			insertActivityTypeItem(activity);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertActivity - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void deleteActivity(String pActivityId) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mActivityTableName + " WHERE ACTIVITY_ID = "
+					+ "'" + pActivityId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteActivity - database access error" +
+					", no activity id in the system: " + pActivityId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+
+	public void updateActivityDeadline(String pActivityId, Timestamp newEndTime) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("update " + mActivityTableName + " set END_TIME = " + "'"
+					+ newEndTime + "'" + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("updateActivityDeadline - database access error" +
+					", no activity id in the system: " + pActivityId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+//----------------------------ActivityTypeAgents Table Handling----------------------------
+	private void insertActivityTypeAgent(Activity activity) {
+		Map<AgentType, Integer> requiredAgents = activity.getRequiredAgents();
+		for (Map.Entry<AgentType, Integer> requiredAgent : requiredAgents.entrySet()) {
+			try {
+				mStmt = mConn.createStatement();
+
+				mStmt.execute("insert into " + mActivityTypeAgentsTableName + " values (" + "'"
+						+ activity.getId() + "'" + "," + "'" + requiredAgent.getKey().getType() + "'" + "," 
+						+ requiredAgent.getValue().intValue() + ")");
+				mStmt.close();
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.out.println(e.getMessage());
+			} catch (SQLException sqlExcept) {
+				sqlExcept.printStackTrace();
+			}
+		}
+	}
+	
+//----------------------------ActivityTypeItems Table Handling----------------------------	
+	private void insertActivityTypeItem(Activity activity) {
+		Map<ItemType, Integer> requiredItems = activity.getRequiredItems();
+		for (Map.Entry<ItemType, Integer> requiredItem : requiredItems.entrySet()) {
+			try {
+				mStmt = mConn.createStatement();
+
+				mStmt.execute("insert into " + mActivityTypeItemsTableName + " values (" + "'"
+						+ activity.getId() + "'" + "," + "'" + requiredItem.getKey().getType() + "'" + "," 
+						+ requiredItem.getValue().intValue() + ")");
+				mStmt.close();
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.out.println(e.getMessage());
+			} catch (SQLException sqlExcept) {
+				sqlExcept.printStackTrace();
+			}
+		}
+	}
+	
+//----------------------------Items Table Handling----------------------------
+	public void insertItem(Item item) {
+		mWrite.lock();
+		createConnection();
+		try {
+			mStmt = mConn.createStatement();
+
+			mStmt.execute("insert into " + mItemTableName + " values (" + "'"
+					+ item.getId() + "'" + "," + "'" + item.getType().getType() + "'" + "," + "'" 
+					+ item.getState().toString() + "'" + "," + "'" + "" + "'" + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertItem - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void deleteItem(String pItemId) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mItemTableName + " WHERE ITEM_ID = "
+					+ "'" + pItemId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteItem - database access error" +
+					", no item id in the system: " + pItemId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void updateItemState(String pItemId, String newState) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("update " + mItemTableName + " set ITEM_STATE = " + "'"
+					+ newState + "'" + " WHERE ITEM_ID = " + "'" + pItemId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("updateItemState - database access error" +
+					", no item id in the system: " + pItemId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void setItemHolder(String pItemId, String pAgentId) {
+		mWrite.lock();
+		createConnection();
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("update " + mItemTableName + " set AGENT_ID = " + "'"
+					+ pAgentId + "'" + " WHERE ITEM_ID = " + "'" + pItemId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("setCurrentActivity - database access error");
+		}
+		shutdown();
+		mWrite.unlock();
+	}
+//----------------------------ItemTypes Table Handling----------------------------	
+    public void insertItemType(String pName){
+    	mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mItemTypeTableName + " values (" + "'" + pName + "'" + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertItemType - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+    }
+    
+	public void deleteItemType(String pName) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mItemTypeTableName + " WHERE NAME = "
+					+ "'" + pName + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteItemType - database access error " +
+					", no item type in the system: " + pName);
+		}
+		
+		shutdown();
+		mWrite.unlock();
 	}
 }
