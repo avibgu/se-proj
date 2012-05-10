@@ -21,13 +21,16 @@ public class Item extends Entity{
 	/**
 	 * Constructs an empty item. Type and state need to be set manually
 	 */
-	public Item(){}
+	public Item(){
+		mState = ItemState.AVAILABLE;
+	}
 	/**
 	 * Constructs an item with the given item type
 	 * @param pItemType the item type
 	 */
 	public Item(ItemType pItemType){
 		mType = pItemType;
+		mState = ItemState.AVAILABLE;
 	}
 	
 	/**
