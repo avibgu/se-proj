@@ -66,11 +66,11 @@ public class Activity {
 		Timestamp endTime = new Timestamp(startTime.getTime() + estimateTime * 5);
 		
 		Map<AgentType,Integer> requiredAgents = new HashMap<AgentType,Integer>();
-		requiredAgents.put(new AgentType("DEFAULT"), 1);
-		requiredAgents.put(new AgentType("BLA"), 1);
+		//requiredAgents.put(new AgentType("DEFAULT"), 1);
+		//requiredAgents.put(new AgentType("BLA"), 1);
 		
 		Map<ItemType,Integer> requiredItems = new HashMap<ItemType,Integer>();
-		requiredItems.put(new ItemType("DEFAULT"), 1);
+		//requiredItems.put(new ItemType("DEFAULT"), 1);
 		
 		init(	"DEFAULT", startTime,
 				endTime, estimateTime, requiredAgents, requiredItems,
