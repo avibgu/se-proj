@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import type.AgentType;
 import type.ItemType;
+import utilities.Location;
 
 public class NewDomain extends DefaultTableModel{
     

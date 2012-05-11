@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 
 
-import simulator.Location;
+import utilities.Location;
 import utilities.MovaJson;
 
 import actor.Agent;

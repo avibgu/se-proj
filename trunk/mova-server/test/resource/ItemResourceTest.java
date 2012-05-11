@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import actor.Item;
 
-import simulator.Location;
+import utilities.Location;
 import type.ItemType;
 
 import client.MovaClient;

@@ -2,7 +2,7 @@ package utilities;
 
 import java.lang.reflect.Type;
 
-import simulator.Location;
+import utilities.Location;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

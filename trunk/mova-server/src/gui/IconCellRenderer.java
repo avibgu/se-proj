@@ -8,11 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import actor.Agent;
-import actor.Item;
 import simulator.NewDomain;
-import type.AgentType;
-import type.ItemType;
 
 public class IconCellRenderer  implements TableCellRenderer{
     //private NewDomain _domain;

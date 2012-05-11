@@ -3,6 +3,8 @@ package simulator;
 import java.util.Observer;
 import java.util.Vector;
 
+import utilities.Location;
+
 import actor.Entity;
 import actor.SensorAgent;
 

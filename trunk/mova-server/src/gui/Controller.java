@@ -18,7 +18,7 @@ public class Controller {
     
     public Controller(NewDomain domain){
         _domain = domain;
-        _sim = new Simulator(_domain);
+        _sim = Simulator.getInstance(domain);
     }
 
     public void start() {
