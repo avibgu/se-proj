@@ -11,17 +11,18 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
-
+import state.ActivityState;
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
-
 import actor.Activity;
 import actor.Item;
 
-
+/**
+ * DBHandler is Singleton object that interacts with the system's database.
+ * It is referenced by the server's resources.
+ * It is responsible to hold the information of all the agents, items and activities in the system
+ */
 public class DBHandler {
 	
 	private static String						mDbURL = "jdbc:derby://localhost:1527/ServerDB;create=true";
@@ -44,7 +45,10 @@ public class DBHandler {
     private static DBHandler					mDbHandler = null;
     
     private DBHandler(){}
-    
+    /**
+     * Gets the DBHandler only instance
+     * @return the DBHandler only instance
+     */
 	public synchronized static DBHandler getInstance() {
 
 		if (mDbHandler == null)
@@ -185,6 +189,10 @@ public class DBHandler {
 		mWrite.unlock();
 	}
 	
+	/**
+	 * Gets all the agent ids currently in the system
+	 * @return the agent ids currently in the system
+	 */
 	public Vector<String> getAgentIds() {
 		
 		mRead.lock();
@@ -212,7 +220,11 @@ public class DBHandler {
 		
 		return agentIds;
 	}
-	
+	/**
+	 * Gets the activity id of the activity the agent is currently participating in
+	 * @param pAgentId the agent id of the wanted agent
+	 * @return activity id of the activity the agent is currently participating in
+	 */
 	public String getAgentActivityId(String pAgentId) {
 		
 		mRead.lock();
@@ -240,7 +252,12 @@ public class DBHandler {
 		
 		return ip;
 	}
-	
+	/**
+	 * Gets the agents current status: Logged in or Logged out
+	 * @pre the id pAgentId must be in the system.
+	 * @param pAgentId the agent id to search for
+	 * @return true of the agent is logged in, false otherwise
+	 */
 	public boolean getAgentStatus(String pAgentId) {
 		
 		mRead.lock();
@@ -275,7 +292,11 @@ public class DBHandler {
 		
 		return stat;
 	}
-	
+	/**
+	 * Gets the agent's c2dm registration id
+	 * @param pAgentId the agent id to search for
+	 * @return the agent's c2dm registration id
+	 */
 	public String getAgentRegistrationId(String pAgentId) {
 		
 		mRead.lock();
@@ -303,7 +324,12 @@ public class DBHandler {
 		
 		return regristrationId;
 	}
-
+	/**
+	 * Changes the agent's status
+	 * @pre the id pAgentId must be in the system.
+	 * @param pAgentId the agent id to changes its status
+	 * @param pLoggedIn the new agent status
+	 */
 	public void changeAgentStatus(String pAgentId, Boolean pLoggedIn) {
 		
 		mWrite.lock();
@@ -327,7 +353,13 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-
+	/**
+	 * Changes the agent's activity id
+	 * @pre the id pAgentId must be in the system.
+	 * the activity id pActivityId must be in the system.
+	 * @param pAgentId the agent id to change its activity id
+	 * @param pActivityId the new activity id
+	 */
 	public void changeAgentActivityId(String pAgentId, String pActivityId) {
 		
 		mWrite.lock();
@@ -345,7 +377,12 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-
+	/**
+	 * Changes the agent's registration id
+	 * @pre the id pAgentId must be in the system.
+	 * @param pAgentId the agent id to change its registration id
+	 * @param pRegistrationID the new registration id
+	 */
 	public void changeAgentRegistrationID(String pAgentId, String pRegistrationID) {
 		
 		mWrite.lock();
@@ -365,7 +402,9 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-
+	/**
+	 * Deletes all agent ids from the system
+	 */
 	public void deleteAllAgents() {
 		mWrite.lock();
 		createConnection();
@@ -379,25 +418,14 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
-	public void setCurrentActivity(String pAgentId, String pActivityId) {
-		mWrite.lock();
-		createConnection();
-		try {
-			mStmt = mConn.createStatement();
-			mStmt.execute("update " + mAgentTableName + " set ACTIVITY_ID = " + "'"
-					+ pActivityId + "'" + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
-			mStmt.close();
-		} catch (SQLException sqlExcept) {
-			System.out.println("setCurrentActivity - database access error");
-		}
-		shutdown();
-		mWrite.unlock();
-	}
-	
+
 
 //----------------------------ActivityTypes Table Handling----------------------------	
-    public void insertActivityType(String pName){
+    /**
+     * Inserts a new activity type
+     * @param pName the new activity type to insert
+     */
+	public void insertActivityType(String pName){
     	mWrite.lock();
 		createConnection();
 		
@@ -414,7 +442,10 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
     }
-    
+    /**
+     * Deletes an activity type
+     * @param pName the activity type to delete
+     */
 	public void deleteActivityType(String pName) {
 		
 		mWrite.lock();
@@ -433,7 +464,10 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Gets all the activity types in the system
+	 * @return all the activity types in the system
+	 */
 	public Vector<String> getActivityTypes() {
 		
 		mRead.lock();
@@ -454,7 +488,7 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("getAgentIds - database access error or no agents in database");
+			System.out.println("getActivityTypes - database access error or no activity types in database");
 		}
 		
 		shutdown();
@@ -463,7 +497,10 @@ public class DBHandler {
 		return activityTypes;
 	}
 //----------------------------Activities Table Handling----------------------------	
-	
+	/**
+	 * Inserts a new activity
+	 * @param activity the new activity to insert
+	 */
 	public void insertActivity(Activity activity) {
 		
 		mWrite.lock();
@@ -490,7 +527,11 @@ public class DBHandler {
 		insertActivityTypeAgent(activity);
 		insertActivityTypeItem(activity);
 	}
-	
+	/**
+	 * Deletes an activity from the system
+	 * @pre the id pActivityId must be in the system.
+	 * @param pActivityId the id of the activity to delete
+	 */
 	public void deleteActivity(String pActivityId) {
 		
 		mWrite.lock();
@@ -509,7 +550,12 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-
+	/**
+	 * Updates the activity deadline
+	 * @pre the id pActivityId must be in the system.
+	 * @param pActivityId the id of the activity to update
+	 * @param newEndTime the new deadline of the activity
+	 */
 	public void updateActivityDeadline(String pActivityId, Timestamp newEndTime) {
 		
 		mWrite.lock();
@@ -528,7 +574,33 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Updates the activity's state: IN_PROGRESS, COMPLETED or PENDING 
+	 * @param pActivityId the id of the activity to update it's state
+	 * @param newState the new activity state
+	 */
+	public void updateActivityState(String pActivityId, String newState) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("update " + mActivityTableName + " set ACTIVITY_STATE = " + "'"
+					+ newState + "'" + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("updateActivityState - database access error" +
+					", no item id in the system: " + pActivityId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	/**
+	 * Gets all the activity names in the system
+	 * @return all the activity names in the system
+	 */
 	public Vector<String> getActivityNames() {
 		
 		mRead.lock();
@@ -548,7 +620,7 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("getAgentIds - database access error or no agents in database");
+			System.out.println("getActivityNames - database access error or no agents in database");
 		}
 		
 		shutdown();
@@ -556,7 +628,12 @@ public class DBHandler {
 		
 		return activityNames;
 	}
-	
+	/**
+	 * Gets the activity's deadline
+	 * @pre the id pActivityId must be in the system.
+	 * @param pActivityId the id of the activity to search for
+	 * @return the activity's deadline
+	 */
 	public Timestamp getActivityDeadline(String pActivityId) {
 		
 		mRead.lock();
@@ -575,13 +652,46 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("getAgentIds - database access error or no agents in database");
+			System.out.println("getActivityDeadline - database access error or no agents in database");
 		}
 		
 		shutdown();
 		mRead.unlock();
 		
 		return deadline;
+	}
+	/**
+	 * Gets the activity state
+	 * @param pActivityId the id of the activity to search for
+	 * @return the activity state
+	 */
+	public ActivityState getActivityState(String pActivityId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		ActivityState state = null;
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select ACTIVITY_STATE from "
+					+ mActivityTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			results.next();
+			String stringState = results.getString(1);
+			
+			state = ActivityState.valueOf(stringState);
+			
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityState - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return state;
 	}
 	
 //----------------------------ActivityTypeAgents Table Handling----------------------------
@@ -635,6 +745,10 @@ public class DBHandler {
 	}
 	
 //----------------------------Items Table Handling----------------------------
+	/**
+	 * Inserts a new item
+	 * @param item the new item to insert
+	 */
 	public void insertItem(Item item) {
 		mWrite.lock();
 		createConnection();
@@ -654,7 +768,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Deletes an item from the system
+	 * @pre the id pItemId must be in the system.
+	 * @param pItemId the id of the item to delete
+	 */
 	public void deleteItem(String pItemId) {
 		
 		mWrite.lock();
@@ -673,7 +791,12 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Updates the item state: AVAILABLE, UNAVAILABLE or BUSY
+	 * @pre the id pItemId must be in the system.
+	 * @param pItemId the id of the item to update its state
+	 * @param newState the item state
+	 */
 	public void updateItemState(String pItemId, String newState) {
 		
 		mWrite.lock();
@@ -692,7 +815,12 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Gets the item's state
+	 * @pre the id pItemId must be in the system.
+	 * @param pItemId the id of the item to search for
+	 * @return the item's state
+	 */
 	public ItemState getItemState(String pItemId) {
 		
 		mRead.lock();
@@ -722,7 +850,13 @@ public class DBHandler {
 		
 		return state;
 	}
-	
+	/**
+	 * Sets the item with an id of the agent holding/using it
+	 * @pre the id pItemId must be in the system.
+	 * the id pAgentId must be in the system.
+	 * @param pItemId the id of the used item
+	 * @param pAgentId the id of the agent using the item
+	 */
 	public void setItemHolder(String pItemId, String pAgentId) {
 		mWrite.lock();
 		createConnection();
@@ -732,12 +866,17 @@ public class DBHandler {
 					+ pAgentId + "'" + " WHERE ITEM_ID = " + "'" + pItemId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("setCurrentActivity - database access error");
+			System.out.println("setItemHolder - database access error");
 		}
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Gets the id of the agent holding/using the item
+	 * @pre the id pItemId must be in the system.
+	 * @param pItemId the id of the item to search for
+	 * @return the id of the agent holding/using the item
+	 */
 	public String getItemHolder(String pItemId) {
 		
 		mRead.lock();
@@ -765,7 +904,10 @@ public class DBHandler {
 		
 		return agentId;
 	}
-	
+	/**
+	 * Gets all item ids in the system
+	 * @return all item ids in the system
+	 */
 	public Vector<String> getItemIds() {
 		
 		mRead.lock();
@@ -785,7 +927,7 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("getAgentIds - database access error or no agents in database");
+			System.out.println("getItemIds - database access error or no agents in database");
 		}
 		
 		shutdown();
@@ -794,7 +936,11 @@ public class DBHandler {
 		return itemIds;
 	}
 //----------------------------ItemTypes Table Handling----------------------------	
-    public void insertItemType(String pName){
+    /**
+     * Inserts a new item type
+     * @param pName the new item type
+     */
+	public void insertItemType(String pName){
     	mWrite.lock();
 		createConnection();
 		
@@ -811,7 +957,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
     }
-    
+	/**
+	 * Deletes an item type from the system
+	 * @pre the name pName must be in the system.
+	 * @param pName the item type to delete
+	 */
 	public void deleteItemType(String pName) {
 		
 		mWrite.lock();
@@ -830,7 +980,10 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Gets all the item types in the system
+	 * @return all the item types in the system
+	 */
 	public Vector<String> getItemTypes() {
 		
 		mRead.lock();
@@ -851,7 +1004,7 @@ public class DBHandler {
 			results.close();
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
-			System.out.println("getAgentIds - database access error or no agents in database");
+			System.out.println("getItemTypes - database access error or no item types in database");
 		}
 		
 		shutdown();
