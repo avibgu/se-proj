@@ -1,8 +1,6 @@
 package movaProj.agent;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import utilities.MovaJson;
 import actor.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -14,14 +12,17 @@ import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.util.Log;
 import client.MovaClient;
-import utilities.MovaJson;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 
 
 public class C2DMReceiver extends BroadcastReceiver
 {
 		private ActivityDataSource datasource;
-	
+		private static final int REGISTRATION_DIALOG = 0;
+		
 	    private static final String TAG = "C2DMReciever";
         public C2DMReceiver()
         {
@@ -42,6 +43,12 @@ public class C2DMReceiver extends BroadcastReceiver
     			Log.d("C2DM", "dmControl: registrationId = " + registrationId
     					+ ", error = " + error);
     			sendRegistrationIdToServer("test",registrationId,context);
+    			//start activity
+    	        Intent i = new Intent();
+    	        i.setClassName("movaProj.agent", "movaProj.agent.RegistrationDialogActivity");
+    	       	Bundle bundle = new Bundle();
+		   	    bundle.putString("registration_id", registrationId);
+		        context.startActivity(i.putExtras(bundle));
     		}
     		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
     			
@@ -94,13 +101,15 @@ public class C2DMReceiver extends BroadcastReceiver
         	String[] comments = new String[] { item.getId().toString(),item.getName(),item.getType().toString(),
         			"DESCRIPTION"};
 			// Save the new activity to the database
+        	// Save the new activity to the database
 			datasource.createActivity(item);
 	   }
+        
         
      // Better do this in an asynchronous thread
         public void sendRegistrationIdToServer(String deviceId, String registrationId,Context context) {
        		Log.d("C2DM", "Sending registration ID to my application server");
        		 
-    		new MovaClient().saveRegistrationId(registrationId,Secure.getString(context.getContentResolver(),Secure.ANDROID_ID) );
+    		//new MovaClient().saveRegistrationId(registrationId,Secure.getString(context.getContentResolver(),Secure.ANDROID_ID) );
         }
   }
