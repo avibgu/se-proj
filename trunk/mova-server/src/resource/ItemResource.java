@@ -11,24 +11,17 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
+import type.ItemType;
+import utilities.MovaJson;
+import actor.Item;
 import c2dm.C2dmController;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import utilities.Location;
 import db.DBHandler;
-
-import simulator.Location;
-import state.ItemState;
-import type.ItemType;
-import utilities.MovaJson;
-
-import actor.Item;
 
 @Path("/items")
 public class ItemResource {
