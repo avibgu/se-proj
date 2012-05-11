@@ -54,6 +54,7 @@ public class CreateActivity extends Activity implements OnClickListener,OnItemSe
 //			 newActivity.setPriority(severity);
 //			 newActivity.setType(activityType);
 			 //newActivity.setAgentType(agentType);
+			// newActivity.setAgentType(agentType);
 			 newActivity.setDescription(((EditText)findViewById(R.id.descriptionText)).getText().toString());
 			 Vector<String> agentIds = new Vector<String>();
 			 agentIds.add("dedda213fd5b8a00");

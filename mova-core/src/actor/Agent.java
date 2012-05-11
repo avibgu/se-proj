@@ -26,6 +26,7 @@ public class Agent extends Entity implements Runnable {
 	
 	protected Coordinator				mCoordinator;
 	
+
 	// The list of known locations of the items.
 	protected Vector<Item> 				mItems;
 	
@@ -189,6 +190,11 @@ public class Agent extends Entity implements Runnable {
 		return mRegistrationId;
 	}
 
+	public void setRegistrationId(String pRegistrationId) {
+		mRegistrationId = pRegistrationId;
+	}
+	
+	
 	//TODO: what to do with that??..
 
 //
