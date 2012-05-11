@@ -1,14 +1,13 @@
 package gui;
 
 import actor.Entity;
-import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import simulator.Door;
-import simulator.Location;
+import utilities.Location;
 import simulator.MovaMap;
 import simulator.NewDomain;
 import simulator.Room;

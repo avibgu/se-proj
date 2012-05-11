@@ -9,6 +9,8 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.Vector;
 
+import utilities.Location;
+
 public class MovaMap {
     private Map<String, Room> mRooms;
     private Map<Location, Door> mDoors;

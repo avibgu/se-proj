@@ -2,6 +2,8 @@
 
 package simulator;
 
+import utilities.Location;
+
 public class Door {
     Location mLocation;
     Room mRoom1;

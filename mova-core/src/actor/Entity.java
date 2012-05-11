@@ -3,7 +3,7 @@ package actor;
 import java.util.Observable;
 import java.util.UUID;
 
-import simulator.Location;
+import utilities.Location;
 
 public class Entity extends Observable{
 	

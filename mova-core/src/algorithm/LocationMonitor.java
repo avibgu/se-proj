@@ -4,7 +4,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import actor.Entity;
-import simulator.Location;
+import utilities.Location;
 
 public class LocationMonitor implements Runnable{
 	

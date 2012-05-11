@@ -2,7 +2,7 @@ package utilities;
 
 import java.lang.reflect.Type;
 
-import simulator.Location;
+import utilities.Location;
 import state.ItemState;
 import type.ItemType;
 

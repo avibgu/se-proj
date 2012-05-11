@@ -18,7 +18,7 @@ import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
-import simulator.Location;
+import utilities.Location;
 import state.ActivityState;
 import state.ItemState;
 import type.ItemType;

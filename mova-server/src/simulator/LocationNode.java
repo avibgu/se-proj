@@ -2,6 +2,8 @@ package simulator;
 
 import java.util.Vector;
 
+import utilities.Location;
+
 public class LocationNode {
     private Location mLocation;
     private boolean mMarked;

@@ -2,7 +2,7 @@ package utilities;
 
 import java.util.Vector;
 
-import simulator.Location;
+import utilities.Location;
 import actor.Activity;
 import actor.Agent;
 import actor.Item;

@@ -3,6 +3,8 @@ package simulator;
 import java.util.Random;
 import java.util.Vector;
 
+import utilities.Location;
+
 public class Room {
     private Vector<Location> _margins;
     private String _name;

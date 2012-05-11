@@ -15,7 +15,7 @@ import javax.ws.rs.QueryParam;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import simulator.Location;
+import utilities.Location;
 import state.ItemState;
 import type.ItemType;
 import utilities.MovaJson;

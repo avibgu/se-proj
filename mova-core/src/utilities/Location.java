@@ -1,4 +1,4 @@
-package simulator;
+package utilities;
 
 public class Location implements Cloneable{
 	private int mLatitude;

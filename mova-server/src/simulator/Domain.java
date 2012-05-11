@@ -11,6 +11,7 @@ import actor.Item;
 import actor.SensorAgent;
 import algorithm.LocationMonitor;
 import type.ItemType;
+import utilities.Location;
 
 public class Domain {
 
