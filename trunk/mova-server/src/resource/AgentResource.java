@@ -1,9 +1,11 @@
 package resource;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -47,17 +49,25 @@ public class AgentResource {
 	public void registerAgent(String jsonObject){
 		MovaJson mj = new MovaJson();
 		Agent agent = mj.jsonToAgent(jsonObject);
-//		db.insertAgent(agent.getId(), agent.getType().toString(), true,
-//				"", agent.getRegistrationId());
+		db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+	}
+	
+	@DELETE
+	@Path("/deleteAgent/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteAgent(@PathParam("id") String agentId){
+		db.deleteAgent(agentId);
 	}
 	
 	@POST
 	@Path("/changeAgentStatus")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void changeAgentStatus(@QueryParam("agentId") String activityId,
-			 					  @QueryParam("newStatus") String addedTime){
-	
+	public void changeAgentStatus(@QueryParam("agentId") String agentId,
+			 					  @QueryParam("newStatus") Boolean newStatus){
+			// Update DB
+			db.changeAgentStatus(agentId, newStatus);
 			
+			// Recalculate(???)
 	}
 	
 	

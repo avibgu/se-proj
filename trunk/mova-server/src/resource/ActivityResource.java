@@ -1,5 +1,7 @@
 package resource;
 
+import java.sql.Timestamp;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -52,9 +54,7 @@ public class ActivityResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addActivity(String jsonObject){
 		Activity activity = mj.jsonToActivity(jsonObject);
-		System.out.println("ASASAS");
-//		db.insertActivity(activity.getId(), activity.getName(), activity.getDescription(), 
-//				activity.getType(), activity.getStartTime().toString(), activity.getEndTime().toString(), (int)activity.getEstimateTime());
+		db.insertActivity(activity);
 		
 		// Recalculate?
 	}
@@ -63,9 +63,9 @@ public class ActivityResource {
 	@Path("/postponeActivity/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void postponeActivity(@QueryParam("activityId") String activityId,
-								 @QueryParam("addedTime") String addedTime){
+								 @QueryParam("newFinishTime") String newFinishTime){
 		
-		// Change in db.
+		db.updateActivityDeadline(activityId, Timestamp.valueOf(newFinishTime));
 		
 		// Recalculate.
 		
