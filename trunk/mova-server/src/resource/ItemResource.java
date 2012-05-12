@@ -96,4 +96,18 @@ public class ItemResource {
 			 					  @QueryParam("newStatus") String newStatus){
 		db.updateItemState(itemId, newStatus);
 	}
+	
+	@PUT
+	@Path("/createItemType")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void createItemType(String jsonObject){
+		db.insertItemType(jsonObject);
+	}
+	
+	@PUT
+	@Path("/deleteItemType")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteItemType(String jsonObject){
+		db.deleteItemType(jsonObject);
+	}
 }

@@ -70,4 +70,18 @@ public class ActivityResource {
 		// Recalculate.
 		
 	}
+	
+	@PUT
+	@Path("/createActivityType")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void createActivityType(String jsonObject){
+		db.insertActivityType(jsonObject);
+	}
+	
+	@PUT
+	@Path("/deleteActivityType")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteActivityType(String jsonObject){
+		db.deleteActivityType(jsonObject);
+	}
 }

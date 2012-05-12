@@ -202,7 +202,39 @@ public class MovaClient {
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
 		mService.path("agents/deleteAgent").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
-		.get(String.class);
+		.delete(String.class);
+	}
+	
+	// Static
+	
+	public void createAgentType(String type){
+		mService.path("agents").path("createAgentType")
+		.type(MediaType.APPLICATION_JSON).put(type);
+	}
+	
+	public void deleteAgentType(String type){
+		mService.path("agents").path("deleteAgentType")
+		.type(MediaType.APPLICATION_JSON).put(type);
+	}
+	
+	public void createItemType(String type){
+		mService.path("items").path("createItemType")
+		.type(MediaType.APPLICATION_JSON).put(type);
+	}
+	
+	public void deleteItemType(String type){
+		mService.path("items").path("deleteItemType")
+		.type(MediaType.APPLICATION_JSON).put(type);
+	}
+	
+	public void createActivityType(String type){
+		mService.path("activities").path("createActivityType")
+		.type(MediaType.APPLICATION_JSON).put(type);
+	}
+	
+	public void deleteActivityType(String type){
+		mService.path("activities").path("deleteActivityType")
+		.type(MediaType.APPLICATION_JSON).put(type);
 	}
 	
 }
