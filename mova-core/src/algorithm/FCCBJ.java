@@ -198,7 +198,7 @@ public class FCCBJ implements CSPAlgorithm{
 
 			mAssignment.set(j, mCurrentDomains.get(j).get(k));
 
-			if(mAssignment.get(i).isOverlap(mAssignment.get(j)))
+			if(mAssignment.get(i).areConflicting(mAssignment.get(j)))
 				tReduction.add(mAssignment.get(j));
 		}
 

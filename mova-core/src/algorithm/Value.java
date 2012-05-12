@@ -1,36 +1,89 @@
 package algorithm;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 
-import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
 public class Value {
 
-	private Date				mActualStartTime;
-	private Date				mActualEndTime;
-	private Map<Agent, Integer>	mRequiredAents;
-	private Map<Item, Integer>	mRequiredItems;
-	private Set<Activity>		mRequiredActivities;
+	private String		mActivitiyID;
+	private Date		mActualStartTime;
+	private Date		mActualEndTime;
+	private Set<Agent>	mRequiredAgents;
+	private Set<Item>	mRequiredItems;
+	private Set<String>	mRequiredActivities;
 
-	public Value(Date pActualStartTime, Date pActualEndTime,
-			Map<Agent, Integer> pRequiredAents,
-			Map<Item, Integer> pRequiredItems, Set<Activity> pRequiredActivities) {
+	public Value(String pActivitiyID, Date pActualStartTime,
+			Date pActualEndTime, Set<Agent> pRequiredAgents,
+			Set<Item> pRequiredItems, Set<String> pRequiredActivities) {
 
+		mActivitiyID = pActivitiyID;
 		mActualStartTime = pActualStartTime;
 		mActualEndTime = pActualEndTime;
-		mRequiredAents = pRequiredAents;
+		mRequiredAgents = pRequiredAgents;
 		mRequiredItems = pRequiredItems;
 		mRequiredActivities = pRequiredActivities;
 	}
 
 	// true - bad for us..
-	public boolean isOverlap(Value pOther) {
-		// TODO consider times... it's a complex task..
+	public boolean areConflicting(Value pOther) {
+
+		if (mActualStartTime.getTime() >= pOther.getActualEndTime().getTime()
+				|| mActualEndTime.getTime() <= pOther.getActualStartTime()
+						.getTime())
+			return arePreRequirmentsConflicting(pOther);
+
+		for (Agent agent : pOther.getRequiredAgents())
+			if (mRequiredAgents.contains(agent))
+				return true;
+
+		for (Item item : pOther.getRequiredItems())
+			if (mRequiredItems.contains(item))
+				return true;
+
+		return arePreRequirmentsConflicting(pOther);
+	}
+
+	// return true if one of the activities is required by the other activity
+	// and they are not in the proper order
+	private boolean arePreRequirmentsConflicting(Value pOther) {
+
+		if (mRequiredActivities.contains(pOther.getActivitiyID())
+				&& pOther.getActualEndTime().getTime() > mActualStartTime
+						.getTime())
+			return true;
+
+		if (pOther.getRequiredActivities().contains(mActivitiyID)
+				&& mActualEndTime.getTime() > pOther.getActualStartTime()
+						.getTime())
+			return true;
+
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Activitiy ID: " + mActivitiyID + "\n");
+		sb.append("Actual Start Time: " + mActualStartTime + "\n");
+		sb.append("Actual End Time: " + mActualEndTime + "\n");
+		sb.append("Required Aents: " + mRequiredAgents + "\n");
+		sb.append("Required Items: " + mRequiredItems + "\n");
+		sb.append("\nRequired Activities: " + mRequiredActivities + "\n");
+		
+		return sb.toString();
+	}
+
+	public String getActivitiyID() {
+		return mActivitiyID;
+	}
+
+	public void setActivitiyID(String pActivitiyID) {
+		mActivitiyID = pActivitiyID;
 	}
 
 	public Date getActualStartTime() {
@@ -41,35 +94,35 @@ public class Value {
 		this.mActualStartTime = pActualStartTime;
 	}
 
-	protected Date getActualEndTime() {
+	public Date getActualEndTime() {
 		return mActualEndTime;
 	}
 
-	protected void setActualEndTime(Date pActualEndTime) {
+	public void setActualEndTime(Date pActualEndTime) {
 		this.mActualEndTime = pActualEndTime;
 	}
 
-	public Map<Agent, Integer> getRequiredAents() {
-		return mRequiredAents;
+	public Set<Agent> getRequiredAgents() {
+		return mRequiredAgents;
 	}
 
-	public void setRequiredAents(Map<Agent, Integer> pRequiredAents) {
-		mRequiredAents = pRequiredAents;
+	public void setRequiredAgents(Set<Agent> pRequiredAgents) {
+		mRequiredAgents = pRequiredAgents;
 	}
 
-	public Map<Item, Integer> getRequiredItems() {
+	public Set<Item> getRequiredItems() {
 		return mRequiredItems;
 	}
 
-	public void setRequiredItems(Map<Item, Integer> pRequiredItems) {
+	public void setRequiredItems(Set<Item> pRequiredItems) {
 		mRequiredItems = pRequiredItems;
 	}
 
-	public Set<Activity> getRequiredActivities() {
+	public Set<String> getRequiredActivities() {
 		return mRequiredActivities;
 	}
 
-	public void setRequiredActivities(Set<Activity> pRequiredActivities) {
+	public void setRequiredActivities(Set<String> pRequiredActivities) {
 		mRequiredActivities = pRequiredActivities;
 	}
 }
