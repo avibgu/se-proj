@@ -2,9 +2,7 @@ package movaProj.agent;
 
 
 import java.util.List;
-import java.util.Vector;
 
-import client.MovaClient;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
