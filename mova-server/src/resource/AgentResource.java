@@ -70,5 +70,18 @@ public class AgentResource {
 			// Recalculate(???)
 	}
 	
+	@PUT
+	@Path("/createAgentType")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void createAgentType(String jsonObject){
+		db.insertAgentType(jsonObject);
+	}
+	
+	@PUT
+	@Path("/deleteAgentType")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteAgentType(String jsonObject){
+		db.deleteAgentType(jsonObject);
+	}
 	
 }

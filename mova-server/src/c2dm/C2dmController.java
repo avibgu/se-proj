@@ -17,7 +17,6 @@ import javax.ws.rs.Path;
 
 import type.AgentType;
 import type.ItemType;
-import utilities.MovaJson;
 
 import actor.Activity;
 import actor.Agent;
@@ -37,7 +36,7 @@ public class C2dmController {
 	public int mCounter = 0;
 	private DBHandler mDb = DBHandler.getInstance();
 
-	private C2dmController() {
+	public C2dmController() {
 		// TODO Auto-generated constructor stub
 	}
 
