@@ -173,4 +173,8 @@ public class MovaJson {
 	public String agentToJson(Agent agent){
 		return _gson.toJson(agent);
 	}
+	
+	public String createJsonObj(Object obj){
+		return _gson.toJson(obj);
+	}
 }
