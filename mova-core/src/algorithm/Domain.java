@@ -220,15 +220,6 @@ public class Domain implements Cloneable {
 		mEmpty = false;
 	}
 
-	//
-	// public Vector<Value> getValues() {
-	// return mValues;
-	// }
-	//
-	// public void setValues(Vector<Value> pValues) {
-	// mValues = pValues;
-	// }
-
 	@Override
 	protected Domain clone() {
 
@@ -241,11 +232,6 @@ public class Domain implements Cloneable {
 		// tValues.add(value);
 		//
 		// return new Domain(mActivity, tValues);
-	}
-
-	public int size() {
-		//TODO
-		return -1;
 	}
 
 	public boolean isEmpty() {
