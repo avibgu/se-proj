@@ -4,7 +4,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-public abstract class CBJ implements CSPAlgorithm{
+public abstract class CBJ implements CSPAlgorithm {
 
 	protected static final int UNINITIALIZED = -1;
 	protected static final int INITIALIZED = 0;
@@ -54,93 +54,96 @@ public abstract class CBJ implements CSPAlgorithm{
 			mConfSets.add(new TreeSet<Variable>());
 	}
 
-	public void solve(Vector<Variable> pVariables) throws Exception{
+	public void solve(Vector<Variable> pVariables) throws Exception {
 		init(pVariables);
 		solve();
 	}
-	
+
 	@Override
-	public void solve() throws Exception{
-		
+	public void solve() throws Exception {
+
 		if (UNINITIALIZED == getStatus())
-			throw new Exception("Please initialize the algorithm with a Problem");
+			throw new Exception(
+					"Please initialize the algorithm with a Problem");
 
 		mConsistent = true;
-		
+
 		setStatus(UNKNOWN);
-		
+
 		int i = 0;
-		
-		while (UNKNOWN == getStatus()){
-			
-			if (mConsistent) i = label(i);
-			else i = unlabel(i);
-			
-			if (i >= getN())				
+
+		while (UNKNOWN == getStatus()) {
+
+			if (mConsistent)
+				i = label(i);
+			else
+				i = unlabel(i);
+
+			if (i >= getN())
 				setStatus(SOLUTION);
 
-			else if (-1 == i) setStatus(IMPOSSIBLE);
+			else if (-1 == i)
+				setStatus(IMPOSSIBLE);
 		}
 	}
 
 	public int label(int i) {
-		
-		mConsistent = false;
-		
-		while  (!mCurrentDomains.get(i).isEmpty() && !mConsistent){
 
-			mConsistent = true;	
-			
-			//Always going for the first
+		mConsistent = false;
+
+		while (!mCurrentDomains.get(i).isEmpty() && !mConsistent) {
+
+			mConsistent = true;
+
+			// Always going for the first
 			mAssignment.set(i, mCurrentDomains.get(i).nextValue());
-			
+
 			int h;
-			
-			for(h = 0; h < i && mConsistent; h++)
-				mConsistent = !mAssignment.get(i).areConflicting(mAssignment.get(h));
-			
-			if(!mConsistent)
+
+			for (h = 0; h < i && mConsistent; h++)
+				mConsistent = !mAssignment.get(i).areConflicting(
+						mAssignment.get(h));
+
+			if (!mConsistent)
 				mConfSets.get(i).add(mVariables.get(h - 1));
 		}
 
 		return (mConsistent) ? i + 1 : i;
 	}
-	
+
 	public int unlabel(int i) {
 
 		int h = getHFromI(i);
-		
-		if (h < 0) return h;
-		
-		mConfSets.get(i).remove(mConfSets.get(i).last());	// removes h
-		mConfSets.get(h).addAll(mConfSets.get(i));
-		
 
-		
-	
-		for (int j = h + 1; j <= i; j++){
-			
+		if (h < 0)
+			return h;
+
+		mConfSets.get(i).remove(mConfSets.get(i).last()); // removes h
+		mConfSets.get(h).addAll(mConfSets.get(i));
+
+		for (int j = h + 1; j <= i; j++) {
+
 			mConfSets.get(j).clear();
 			mVariables.get(i).getDomain().resetIndexes();
 		}
 
 		mConsistent = !mCurrentDomains.get(h).isEmpty();
-		
+
 		return h;
 	}
-	
+
 	protected int getHFromI(int i) {
-		
+
 		if (mConfSets.get(i).isEmpty())
 			return -1;
-		
+
 		return mVariables.indexOf(mConfSets.get(i).last());
 	}
 
 	private int getN() {
 		return mN;
 	}
-	
+
 	public int getStatus() {
 		return mStatus;
 	}
