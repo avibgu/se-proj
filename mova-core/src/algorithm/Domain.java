@@ -1,7 +1,8 @@
 package algorithm;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import type.AgentType;
@@ -16,7 +17,10 @@ public class Domain implements Cloneable {
 	private static final long HOUR = 1000 * 60 * 60;
 
 	protected Activity mActivity;
-	protected Vector<Value> mValues;
+	protected Map<String, Value> mValues;
+
+	protected List<List<Agent>> mAgentsDB;
+	protected List<List<Item>> mItemsDB;
 
 	public Domain(Activity pActivity) {
 
@@ -24,38 +28,50 @@ public class Domain implements Cloneable {
 		initValues();
 	}
 
-	public Domain(Activity pActivity, Vector<Value> pValues) {
-
-		mActivity = pActivity;
-		mValues = pValues;
-	}
+	// public Domain(Activity pActivity, Vector<Value> pValues) {
+	//
+	// mActivity = pActivity;
+	// mValues = pValues;
+	// }
 
 	protected void initValues() {
 
-		setValues(new Vector<Value>());
+		// setValues(new Vector<Value>());
 
+		int numOfAgentsTypes = mActivity.getRequiredAgents().keySet().size();
+		int numOfItemsTypes = mActivity.getRequiredItems().keySet().size();
+
+		mAgentsDB = new ArrayList<List<Agent>>(numOfAgentsTypes);  
+		mItemsDB = new ArrayList<List<Item>>(numOfItemsTypes);
+		
 		for (AgentType agentType : mActivity.getRequiredAgents().keySet()) {
 
 			// Integer numOfrequiredAgents =
 			// mActivity.getRequiredAgents().get(agentType);
 
-			Vector<Agent> allAgentsOfThisType /* = get it from db */;
+			List<Agent> allAgentsOfThisType /* = get it from db */ = null;
 
-			for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
-
-				// Integer numOfrequiredItems =
-				// mActivity.getRequiredItems().get(itemType);
-
-				Vector<Item> allItemsOfThisType /* = get it from db */;
-
-				for (long i = mActivity.getStartTime().getTime(); i
-						+ mActivity.getEstimateTime() < mActivity.getEndTime()
-						.getTime(); i += HOUR) {
-
-//					 mValues.add(new Value(mActivity.getId(), new Date(i), new Date( i + mActivity.getEstimateTime()), ));
-				}
-			}
+			mAgentsDB.add(allAgentsOfThisType);
 		}
+
+		for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
+
+			// Integer numOfrequiredItems =
+			// mActivity.getRequiredItems().get(itemType);
+
+			Vector<Item> allItemsOfThisType /* = get it from db */ = null;
+
+			mItemsDB.add(allItemsOfThisType);
+		}
+		
+		for (long i = mActivity.getStartTime().getTime(); i
+				+ mActivity.getEstimateTime() < mActivity.getEndTime()
+				.getTime(); i += HOUR) {
+
+			// mValues.add(new Value(mActivity.getId(), new Date(i), new Date( i
+			// + mActivity.getEstimateTime()), ));
+		}
+
 	}
 
 	/*
@@ -73,23 +89,27 @@ public class Domain implements Cloneable {
 		return choose(total - 1, choose - 1) + choose(total - 1, choose);
 	}
 
-	public Vector<Value> getValues() {
-		return mValues;
-	}
-
-	public void setValues(Vector<Value> pValues) {
-		mValues = pValues;
-	}
+	//
+	// public Vector<Value> getValues() {
+	// return mValues;
+	// }
+	//
+	// public void setValues(Vector<Value> pValues) {
+	// mValues = pValues;
+	// }
 
 	@Override
 	protected Domain clone() {
 
-		Vector<Value> tValues = new Vector<Value>(mValues.size());
+		// TODO: ...
+		return null;
 
-		for (Value value : mValues)
-			tValues.add(value);
-
-		return new Domain(mActivity, tValues);
+		// Vector<Value> tValues = new Vector<Value>(mValues.size());
+		//
+		// for (Value value : mValues)
+		// tValues.add(value);
+		//
+		// return new Domain(mActivity, tValues);
 	}
 
 	public boolean isEmpty() {
@@ -97,11 +117,16 @@ public class Domain implements Cloneable {
 	}
 
 	public Value firstElement() {
-		return mValues.firstElement();
+
+		// TODO: return generated value which haven't been yet..
+		return null;
+
+		// return mValues.firstElement();
 	}
 
 	public void removeAll(Vector<Value> pValues) {
-		mValues.removeAll(pValues);
+		// TODO: ..
+		// mValues.removeAll(pValues);
 	}
 
 	public void remove(int pIndex) {
@@ -113,7 +138,8 @@ public class Domain implements Cloneable {
 	}
 
 	public void addAll(Vector<Value> pValues) {
-		mValues.addAll(pValues);
+		// TODO: ..
+		// mValues.addAll(pValues);
 	}
 
 	public int size() {
