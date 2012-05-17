@@ -5,6 +5,7 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
+@Deprecated
 public class FCCBJ implements CSPAlgorithm{
 
 	protected static final int UNINITIALIZED	= -1;
@@ -18,7 +19,7 @@ public class FCCBJ implements CSPAlgorithm{
 	protected int								mN;
 
 	protected Vector<Variable>					mVariables;
-	protected Vector<Domain>					mCurrentDomains;
+	protected Vector<OldDomain>					mCurrentDomains;
 	protected Vector<Value>						mAssignment;
 	
 	protected Vector<SortedSet<Variable>>		mConfSets;
@@ -43,10 +44,10 @@ public class FCCBJ implements CSPAlgorithm{
 		
 		mVariables = pVariables;
 		
-		mCurrentDomains = new Vector<Domain>();
+		mCurrentDomains = new Vector<OldDomain>();
 		
 		for (int i = 0; i < getN(); i++)
-			mCurrentDomains.add(mVariables.get(i).getDomain());
+//			mCurrentDomains.add(mVariables.get(i).getDomain()); TODO
 
 		mAssignment = new Vector<Value>();
 		
@@ -239,7 +240,7 @@ public class FCCBJ implements CSPAlgorithm{
 	}
 	
 	public void restoreCurrentDomain(int i) {
-		mCurrentDomains.set(i, mVariables.get(i).getDomain());
+//		mCurrentDomains.set(i, mVariables.get(i).getDomain());	TODO
 	}
 
 	private int getN() {
