@@ -1,9 +1,13 @@
 package algorithm;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import com.google.gson.internal.Pair;
 
 import type.AgentType;
 import type.ItemType;
@@ -22,6 +26,12 @@ public class Domain implements Cloneable {
 	protected List<List<Agent>> mAgentsDB;
 	protected List<List<Item>> mItemsDB;
 
+	protected List<List<Integer>> mAgentsIndexes;
+	protected List<List<Integer>> mItemsIndexes;
+
+	protected List<Pair<Date, Date>> mTimes;
+	protected Integer mTimesIndex;
+
 	public Domain(Activity pActivity) {
 
 		mActivity = pActivity;
@@ -36,59 +46,96 @@ public class Domain implements Cloneable {
 
 	protected void initValues() {
 
-		// setValues(new Vector<Value>());
+		mValues = new HashMap<String, Value>();
 
-		int numOfAgentsTypes = mActivity.getRequiredAgents().keySet().size();
-		int numOfItemsTypes = mActivity.getRequiredItems().keySet().size();
+		mAgentsDB = new ArrayList<List<Agent>>();
+		mAgentsIndexes = new ArrayList<List<Integer>>();
 
-		mAgentsDB = new ArrayList<List<Agent>>(numOfAgentsTypes);  
-		mItemsDB = new ArrayList<List<Item>>(numOfItemsTypes);
-		
 		for (AgentType agentType : mActivity.getRequiredAgents().keySet()) {
 
-			// Integer numOfrequiredAgents =
-			// mActivity.getRequiredAgents().get(agentType);
-
-			List<Agent> allAgentsOfThisType /* = get it from db */ = null;
+			List<Agent> allAgentsOfThisType /* = get it from db */= null;
 
 			mAgentsDB.add(allAgentsOfThisType);
+
+			List<Integer> tList = new ArrayList<Integer>();
+
+			Integer numOfrequiredAgents = mActivity.getRequiredAgents().get(
+					agentType);
+
+			for (int i = 0; i < numOfrequiredAgents; i++)
+				tList.add(new Integer(i));
+
+			mAgentsIndexes.add(tList);
 		}
+
+		mItemsDB = new ArrayList<List<Item>>(/* numOfItemsTypes */);
+		mItemsIndexes = new ArrayList<List<Integer>>();
 
 		for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
 
-			// Integer numOfrequiredItems =
-			// mActivity.getRequiredItems().get(itemType);
-
-			Vector<Item> allItemsOfThisType /* = get it from db */ = null;
+			Vector<Item> allItemsOfThisType /* = get it from db */= null;
 
 			mItemsDB.add(allItemsOfThisType);
+
+			List<Integer> tList = new ArrayList<Integer>();
+
+			Integer numOfrequiredItems = mActivity.getRequiredItems().get(
+					itemType);
+
+			for (int i = 0; i < numOfrequiredItems; i++)
+				tList.add(new Integer(i));
+
+			mAgentsIndexes.add(tList);
 		}
+
+		mTimes = new ArrayList<Pair<Date, Date>>();
+		mTimesIndex = 0;
 		
 		for (long i = mActivity.getStartTime().getTime(); i
 				+ mActivity.getEstimateTime() < mActivity.getEndTime()
 				.getTime(); i += HOUR) {
 
-			// mValues.add(new Value(mActivity.getId(), new Date(i), new Date( i
-			// + mActivity.getEstimateTime()), ));
+			mTimes.add(new Pair<Date, Date>(new Date(i), new Date(i
+					+ mActivity.getEstimateTime())));
+		}
+	}
+
+	public Value nextValue() {
+
+		String hashKey = getHashKeyOfCurrentIndexes();
+		
+		Value value = mValues.get(hashKey);
+		
+		if (null == value){
+			
+			value = constructValueFromIndexes();
+			mValues.put(hashKey, value);
 		}
 
+		incrementIndexes();
+		
+		return value;
+	}
+	
+	private void incrementIndexes() {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/*
-	 * (N choose K) = N! / (N-K)!K! (N choose K+1) = (N choose K) * (N-K)/(K+1)
-	 * (N choose 0) = 1 ????
-	 */
-	public long choose(long total, long choose) {
-
-		if (total < choose)
-			return 0;
-
-		if (choose == 0 || choose == total)
-			return 1;
-
-		return choose(total - 1, choose - 1) + choose(total - 1, choose);
+	private Value constructValueFromIndexes() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	private String getHashKeyOfCurrentIndexes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void resetIndexes(){
+		//TODO
+	}
+	
 	//
 	// public Vector<Value> getValues() {
 	// return mValues;
