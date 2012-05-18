@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 import org.junit.After;
 import org.junit.Before;
@@ -64,6 +65,16 @@ public class MainTest {
 	@Test
 	public void testPostponeActivity(){
 		new MovaClient().postponeActivity("gfdg4543", "44");
+	}
+	
+	@Test
+	public void testSendSchedule(){
+		Vector<Activity> schedule = new Vector<Activity>();
+		schedule.add(new Activity("Activity1"));
+		schedule.add(new Activity("Activity2"));
+		schedule.add(new Activity("Activity3"));
+		schedule.add(new Activity("Activity4"));
+		new MovaClient().sendSchedule(schedule, "1111");
 	}
 	
 }

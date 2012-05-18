@@ -1,5 +1,6 @@
 package utilities;
 
+import java.util.List;
 import java.util.Vector;
 
 import utilities.Location;
@@ -145,7 +146,7 @@ public class MovaJson {
 	 * @param json the JSON represented string of the activity array
 	 * @return a vector of deserialized activities. Returns an empty vector if json is not a JSON vector activities
 	 */
-	public Vector<Activity> jsonToActivities(String json){
+	public List<Activity> jsonToActivities(String json){
 		Vector<Activity> activities = new Vector<Activity>();
 		Activity[] activityArray = null;
 		try{

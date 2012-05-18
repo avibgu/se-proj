@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import client.MovaClient;
+
 import algorithm.Coordinator;
 
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
+import utilities.Location;
 
 
 public class Agent extends Entity implements Runnable {
@@ -25,6 +28,7 @@ public class Agent extends Entity implements Runnable {
 	protected String					mRegistrationId;
 	
 	protected Coordinator				mCoordinator;
+	protected boolean					mIsLoggedIn;
 	
 
 	// The list of known locations of the items.
@@ -46,6 +50,7 @@ public class Agent extends Entity implements Runnable {
 		
 		mItems = new Vector<Item>();
 		mMyItems = new Vector<Item>();
+		mIsLoggedIn = true;
 	}
 	
 	
@@ -178,6 +183,10 @@ public class Agent extends Entity implements Runnable {
 		return mActivitiesToPerform;
 	}
 	
+	public void setActivities(Vector<Activity> activities) {
+		mActivitiesToPerform = activities;
+	}
+	
 	public Activity getCurrentActivity() {
 		return mCurrentActivity;
 	}
@@ -194,54 +203,42 @@ public class Agent extends Entity implements Runnable {
 		mRegistrationId = pRegistrationId;
 	}
 	
+	public void addActivity(Activity pActivity){
+		new MovaClient().addActivity(pActivity);
+	}
 	
-	//TODO: what to do with that??..
+	public Activity getFirstActivity(){
+		return mActivitiesToPerform.get(0);
+	}
+	
+	public void setLoggedIn(boolean isLoggedIn){
+		mIsLoggedIn = isLoggedIn;
+	}
+	
+	public void cleanCurrentActivities(){
+		mCurrentActivity = null;
+	}
+	
+	public Location findItemLocation(String pItemId){
+		for (Item item : mItems){
+			if (item.getId().equals(pItemId)){
+				return item.getLocation();
+			}
+		}
+		return null;
+	}
+	
+	public Item getItemFromTable(String pItemId){
+		for (Item item : mItems){
+			if (item.getId().equals(pItemId)){
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public void foundNewItem(String pItemId, Location pLocation){
+		new MovaClient().distributeItemLocation(pItemId, pLocation);
+	}
 
-//
-//	/**
-//	 * @param itemType the item type to find
-//	 * @return the closest item to the entity, 
-//	 * or null if there is no item inside the domain
-//	 */
-//	@Deprecated
-//	private Location findClosestItem(ItemType itemType) {
-//		
-//		Location entityLocation = getLocation();//TODO Should be changed to android getLastKnownLocation(String provider) in LocationManager class
-//		Location closestItem = new Location(-1, -1);
-//		
-//		double closestLocation = Double.MAX_VALUE;
-//		
-//		synchronized (items) {
-//			
-//			for (Item it : items) {
-//				
-//				Location itemLocation = it.getLocation();
-//				
-//				double distance = calcDistance(entityLocation, itemLocation);//TODO should be changed to android "distanceTo(Location dest)" in Location Class
-//				
-//				if(distance >= 0 && distance < closestLocation){
-//					
-//					closestLocation = distance;
-//					closestItem = itemLocation;
-//				}
-//			}
-//		}
-//		
-//		if(closestItem.getLatitude() != -1)
-//			return closestItem;
-//		
-//		return null;
-//	}
-//	
-//	@Deprecated
-//	private double calcDistance(Location entityLocation, Location location) {
-//		
-//		if(entityLocation != null && location != null){
-//			
-//			double latitudeDiff = entityLocation.getLatitude() - location.getLatitude();
-//			double longitudeDiff = entityLocation.getLongitude() - location.getLongitude();
-//			return Math.sqrt(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff);
-//		}
-//		return -1;
-//	}
 }
