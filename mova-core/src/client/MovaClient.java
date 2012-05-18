@@ -51,8 +51,8 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
-		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -87,8 +87,11 @@ public class MovaClient {
 		j.addProperty("id", pItemId);
 		j.addProperty("location", mMj.locationToJson(pLocation));
 		
-		mService.path("items").path("distributeItemLocation")
-			.type(MediaType.APPLICATION_JSON).put(j.toString());
+//		mService.path("items").path("distributeItemLocation")
+//			.type(MediaType.APPLICATION_JSON).put(j.toString());
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/distributeItemLocation");
+		resource.put(j.toString());
+		
 	}
 	
 	/**
@@ -100,16 +103,20 @@ public class MovaClient {
 		j.addProperty("id", pItemId);
 		j.addProperty("state", pState.toString());
 		
-		mService.path("items").path("distributeItemState")
-			.type(MediaType.APPLICATION_JSON).put(j.toString());
+//		mService.path("items").path("distributeItemState")
+//			.type(MediaType.APPLICATION_JSON).put(j.toString());
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/distributeItemState");
+		resource.put(j.toString());
 	}
 	
 	public void changeItemStatus(String itemId, String newStatus){
-		MultivaluedMap queryParams = new MultivaluedMapImpl();
-		queryParams.add("itemId", itemId);
-		queryParams.add("newStatus", newStatus);
-		mService.path("items/changeItemStatus").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
-		.post();
+		JsonObject j = new JsonObject();
+		j.addProperty("itemId", itemId);
+		j.addProperty("newStatus", newStatus);
+//		mService.path("items/changeItemStatus").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
+//		.post();
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/changeItemStatus");
+		resource.put(j.toString());
 	}
 	
 	public void deleteItem(String itemId){
@@ -132,6 +139,20 @@ public class MovaClient {
 
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/sendActivity");
 		resource.put(j.toString());
+		
+	}
+	
+	/**
+	 * @param pActivities the schedule to send.
+	 * @param pAgentId The agent id who should get the schedule.
+	 */
+	public void sendSchedule(Vector<Activity> pActivities, String pAgentId){
+		JsonObject j = new JsonObject();
+		j.addProperty("activities", mMj.createJsonObj(pActivities));
+		j.addProperty("agentId", mMj.createJsonObj(pAgentId));
+
+		mService.path("activities").path("sendScheduledActivities")
+		.type(MediaType.APPLICATION_JSON).post(j.toString());
 		
 	}
 	
@@ -163,7 +184,7 @@ public class MovaClient {
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("activityId", activityId);
 		queryParams.add("addedTime", newFinishTime);
-		mService.path("activities/postponeActivity").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
+		mService.path("activities").path("postponeActivity").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
 		.post();
 	}
 	
@@ -185,8 +206,10 @@ public class MovaClient {
 	
 	public void registerAgent(Agent pAgent){
 		String j = mMj.agentToJson(pAgent);
-		mService.path("agents").path("registerAgent")
-		.type(MediaType.APPLICATION_JSON).put(j);
+		//mService.path("agents").path("registerAgent").put(j);
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/registerAgent");
+		resource.put(j.toString());
+		
 	}
 	
 	
@@ -194,14 +217,14 @@ public class MovaClient {
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
 		queryParams.add("newStatus", newStatus);
-		mService.path("agents/changeAgentStatus").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
+		mService.path("agents").path("changeAgentStatus").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
 		.post();
 	}
 	
 	public void deleteAgent(String agentId){
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
-		mService.path("agents/deleteAgent").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
+		mService.path("agents").path("deleteAgent").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
 		.delete(String.class);
 	}
 	

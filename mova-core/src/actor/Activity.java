@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import client.MovaClient;
+
 import state.ActivityState;
 import type.AgentType;
 import type.ItemType;
@@ -236,4 +238,12 @@ public class Activity {
 	public void assignItems(Set<String> pItems){
 		mParticipatingItemIds = pItems;
 	}
+	
+	public void postponeActivity(long addedTime){
+		long addedTimeInMilliseconds = addedTime * 60000;
+		mEstimateTime = mEstimateTime + addedTime;
+		mEndTime.setTime(mEndTime.getTime() + addedTimeInMilliseconds);
+		new MovaClient().postponeActivity(mId, mEndTime.toString());
+	}
+	
 }

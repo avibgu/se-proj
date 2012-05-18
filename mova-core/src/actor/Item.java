@@ -1,5 +1,6 @@
 package actor;
 
+import client.MovaClient;
 import state.ItemState;
 import type.ItemType;
 /**
@@ -75,6 +76,7 @@ public class Item extends Entity{
 	public void markAsBusy() {
 		synchronized (mState) {
 			mState = ItemState.BUSY;
+			new MovaClient().changeItemStatus(mId, ItemState.BUSY.toString());
 		}
 	}
 	/**
@@ -83,6 +85,8 @@ public class Item extends Entity{
 	public void markAsAvailable() {
 		synchronized (mState) {
 			mState = ItemState.AVAILABLE;
+			new MovaClient().changeItemStatus(mId, ItemState.AVAILABLE.toString());
 		}
 	}
+	
 }
