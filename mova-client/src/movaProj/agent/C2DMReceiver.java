@@ -1,8 +1,12 @@
 package movaProj.agent;
 
+import java.util.List;
+
+import type.AgentType;
 import type.MessageType;
 import utilities.MovaJson;
 import actor.Activity;
+import actor.Agent;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,13 +14,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings.Secure;
 import android.util.Log;
+
 import client.MovaClient;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 
 
 public class C2DMReceiver extends BroadcastReceiver
@@ -27,9 +30,7 @@ public class C2DMReceiver extends BroadcastReceiver
 	    private static final String TAG = "C2DMReciever";
         public C2DMReceiver()
         {
-        	
            	super();
-                
         }
         
         @Override
@@ -53,7 +54,6 @@ public class C2DMReceiver extends BroadcastReceiver
 		        context.startActivity(i.putExtras(bundle));
     		}
     		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
-    			
     			handleMessage(context,intent);
     		}
     	}
@@ -69,23 +69,49 @@ public class C2DMReceiver extends BroadcastReceiver
 		         
 		         switch (messageType){
 		         	case DELETE_ITEM:
-		         		
+		         		deleteItem(context, intent, message);
 		         		break;
 		         	case DISTRIBUTE_ITEM_LOCATION:
-		         		
+		         		distributeItemLocation(context, intent, message);
 		         		break;
 		         	case DISTRIBUTE_ITEM_STATE:
-		         		
+		         		distributeItemState(context, intent, message);
 		         		break;
-		         	case SEND_ACTIVITY:
-		         		sendActivity(context, intent, message);
+		         	case SEND_SCHEDULE:
+		         		sendSchedule(context, intent, message);
 		         		break;
 		         }
-	                     
-		   	}
+	       	}
         }
                      
- 		public void sendActivity(Context context, Intent intent,String message){
+ 		private void distributeItemState(Context context, Intent intent,
+				String message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void distributeItemLocation(Context context, Intent intent,
+				String message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void deleteItem(Context context, Intent intent, String message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void sendSchedule(Context context, Intent intent, String message) {
+			JsonParser jp = new JsonParser();
+      		String j = jp.parse(message).getAsString();
+      	
+            List<Activity> schedule = new MovaJson().jsonToActivities(j);
+            datasource = new ActivityDataSource(context);
+      		datasource.open();
+            datasource.createSchedule(schedule);
+		}
+
+		public void sendActivity(Context context, Intent intent,String message){
 			JsonParser jp = new JsonParser();
       		JsonObject j = (JsonObject) jp.parse(message);
       	
@@ -114,12 +140,13 @@ public class C2DMReceiver extends BroadcastReceiver
           	// Add the message to the activities list
 		}
 
-     
-        
-     // Better do this in an asynchronous thread
+		// Better do this in an asynchronous thread
         public void sendRegistrationIdToServer(String deviceId, String registrationId,Context context) {
        		Log.d("C2DM", "Sending registration ID to my application server");
-       		 
-    		//new MovaClient().saveRegistrationId(registrationId,Secure.getString(context.getContentResolver(),Secure.ANDROID_ID) );
+       		// Create Agent and send to server
+       		      		
+       		Agent agent = new Agent(new AgentType(AgentType.COORDINATOR));
+       		agent.setRegistrationId(registrationId);
+       		new MovaClient().registerAgent(agent);
         }
   }
