@@ -2,8 +2,11 @@ package movaProj.agent;
 
 import java.util.Vector;
 
+import client.MovaClient;
+
 import type.ActivityType;
 import type.AgentType;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import client.MovaClient;
 
 public class CreateActivity extends Activity implements OnClickListener,OnItemSelectedListener {
 //	  private Priority severity = Priority.URGENT;

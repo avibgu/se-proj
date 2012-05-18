@@ -5,8 +5,9 @@ import java.util.List;
 import type.AgentType;
 import type.MessageType;
 import utilities.MovaJson;
-import actor.Activity;
+
 import actor.Agent;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -47,11 +48,11 @@ public class C2DMReceiver extends BroadcastReceiver
     					+ ", error = " + error);
     			sendRegistrationIdToServer("test",registrationId,context);
     			//start activity
-    	        Intent i = new Intent();
-    	        i.setClassName("movaProj.agent", "movaProj.agent.RegistrationDialogActivity");
-    	       	Bundle bundle = new Bundle();
-		   	    bundle.putString("registration_id", registrationId);
-		        context.startActivity(i.putExtras(bundle));
+//    	        Intent i = new Intent();
+//    	        i.setClassName("movaProj.agent", "movaProj.agent.RegistrationDialogActivity");
+//    	       	Bundle bundle = new Bundle();
+//		   	    bundle.putString("registration_id", registrationId);
+//		        context.startActivity(i.putExtras(bundle));
     		}
     		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
     			handleMessage(context,intent);
@@ -105,7 +106,7 @@ public class C2DMReceiver extends BroadcastReceiver
 			JsonParser jp = new JsonParser();
       		String j = jp.parse(message).getAsString();
       	
-            List<Activity> schedule = new MovaJson().jsonToActivities(j);
+            List<actor.Activity> schedule = new MovaJson().jsonToActivities(j);
             datasource = new ActivityDataSource(context);
       		datasource.open();
             datasource.createSchedule(schedule);
@@ -115,7 +116,7 @@ public class C2DMReceiver extends BroadcastReceiver
 			JsonParser jp = new JsonParser();
       		JsonObject j = (JsonObject) jp.parse(message);
       	
-            Activity activity = new MovaJson().jsonToActivity(j.get("activity").getAsString());
+      		actor.Activity activity = new MovaJson().jsonToActivity(j.get("activity").getAsString());
             datasource = new ActivityDataSource(context);
       		datasource.open();
             datasource.createActivity(activity);

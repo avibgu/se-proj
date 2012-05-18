@@ -3,9 +3,7 @@ package movaProj.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-import type.ActivityType;
-import type.AgentType;
-import actor.Activity;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -31,7 +29,7 @@ public class ActivityDataSource {
 			dbHelper.close();
 		}
 
-		public Activity createActivity(Activity movaAct) {
+		public actor.Activity createActivity(actor.Activity movaAct) {
 			ContentValues cv = new ContentValues();
 		    cv.put(DatabaseHelper.activityColName, movaAct.getName());
 		    cv.put(DatabaseHelper.activityColType, movaAct.getType().toString());
@@ -45,7 +43,7 @@ public class ActivityDataSource {
 			return cursorToMovaActivity(cursor);
 		}
 		
-		public void createSchedule(List<Activity> movaSched) {
+		public void createSchedule(List<actor.Activity> movaSched) {
 			removeOldSchedule();
 			for (int i=0; i<movaSched.size() ; ++i){
 				ContentValues cv = new ContentValues();
@@ -67,13 +65,13 @@ public class ActivityDataSource {
 			database.delete(DatabaseHelper.scheduleTable, null, null);			
 		}
 
-		public List<Activity> getAllActivities() {
-			List<Activity> activities = new ArrayList<Activity>();
+		public List<actor.Activity> getAllActivities() {
+			List<actor.Activity> activities = new ArrayList<actor.Activity>();
 			Cursor cursor = database.query(DatabaseHelper.activityTable,
 					allColumns, null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Activity comment = cursorToMovaActivity(cursor);
+				actor.Activity comment = cursorToMovaActivity(cursor);
 				activities.add(comment);
 				cursor.moveToNext();
 			}
@@ -82,13 +80,13 @@ public class ActivityDataSource {
 			return activities;
 		}
 
-		public List<Activity> getSchedule() {
-			List<Activity> schedule = new ArrayList<Activity>();
+		public List<actor.Activity> getSchedule() {
+			List<actor.Activity> schedule = new ArrayList<actor.Activity>();
 			Cursor cursor = database.query(DatabaseHelper.scheduleTable,
 					allColumns, null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Activity activity = cursorToMovaActivity(cursor);
+				actor.Activity activity = cursorToMovaActivity(cursor);
 				schedule.add(activity);
 				cursor.moveToNext();
 			}
@@ -97,8 +95,8 @@ public class ActivityDataSource {
 			return schedule;
 		}
 		
-		private Activity cursorToMovaActivity(Cursor cursor) {
-			Activity ans = new Activity("");
+		private actor.Activity cursorToMovaActivity(Cursor cursor) {
+			actor.Activity ans = new actor.Activity("");
 			ans.setId(cursor.getString(0));
 			ans.setName(cursor.getString(1));
 //			ans.setType(ActivityType.CONFERENCE_REGISTRATION);
