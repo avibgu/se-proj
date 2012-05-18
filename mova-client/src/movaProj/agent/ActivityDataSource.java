@@ -13,11 +13,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class ActivityDataSource {
-	// Database fields
+		// Database fields
 		private SQLiteDatabase database;
 		private DatabaseHelper dbHelper;
-		private String[] allColumns = { DatabaseHelper.colID,
-				DatabaseHelper.colName,DatabaseHelper.colType , DatabaseHelper.colDescription,  DatabaseHelper.colSeverity};
+		private String[] allColumns = { DatabaseHelper.activityColID,
+				DatabaseHelper.activityColName,DatabaseHelper.activityColType , DatabaseHelper.activityColDescription};
 
 		public ActivityDataSource(Context context) {
 			dbHelper = new DatabaseHelper(context);
@@ -33,19 +33,28 @@ public class ActivityDataSource {
 
 		public Activity createActivity(Activity movaAct) {
 			ContentValues cv = new ContentValues();
-			//cv.put(DatabaseHelper.colID, 1);
-		    cv.put(DatabaseHelper.colName, movaAct.getName());
-		    cv.put(DatabaseHelper.colType, movaAct.getType().toString());
-		    cv.put(DatabaseHelper.colDescription, "fdfsdf fsd f");
-		    cv.put(DatabaseHelper.colSeverity, "URGENT");
-			long insertId = database.insert(DatabaseHelper.activityTable, null,cv);
-			// To show how to query
+		    cv.put(DatabaseHelper.activityColName, movaAct.getName());
+		    cv.put(DatabaseHelper.activityColType, movaAct.getType().toString());
+		    cv.put(DatabaseHelper.activityColDescription, "fdfsdf fsd f");
+		   	long insertId = database.insert(DatabaseHelper.activityTable, null,cv);
+		
 			Cursor cursor = database.query(DatabaseHelper.activityTable,
-					allColumns, DatabaseHelper.colID + " = " + insertId, null,
+					allColumns, DatabaseHelper.activityColID + " = " + insertId, null,
 					null, null, null);
 			cursor.moveToFirst();
 			return cursorToMovaActivity(cursor);
 		}
+		
+		public void createSchedule(List<Activity> movaSched) {
+			removeOldSchedule();
+			for (int i=0; i<movaSched.size() ; ++i){
+				ContentValues cv = new ContentValues();
+				cv.put(DatabaseHelper.scheduleIndexIdCol, i);
+				cv.put(DatabaseHelper.scheduleActivityIdCol, movaSched.get(i).getId());
+			   	database.insert(DatabaseHelper.scheduleTable, null,cv);
+			}
+		}
+		
 
 		/*public void deleteComment(Comment comment) {
 			long id = comment.getId();
@@ -54,21 +63,40 @@ public class ActivityDataSource {
 					+ " = " + id, null);
 		}*/
 
-		public List<Activity> getAllComments() {
-			List<Activity> comments = new ArrayList<Activity>();
+		private void removeOldSchedule() {
+			database.delete(DatabaseHelper.scheduleTable, null, null);			
+		}
+
+		public List<Activity> getAllActivities() {
+			List<Activity> activities = new ArrayList<Activity>();
 			Cursor cursor = database.query(DatabaseHelper.activityTable,
 					allColumns, null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				Activity comment = cursorToMovaActivity(cursor);
-				comments.add(comment);
+				activities.add(comment);
 				cursor.moveToNext();
 			}
 			// Make sure to close the cursor
 			cursor.close();
-			return comments;
+			return activities;
 		}
 
+		public List<Activity> getSchedule() {
+			List<Activity> schedule = new ArrayList<Activity>();
+			Cursor cursor = database.query(DatabaseHelper.scheduleTable,
+					allColumns, null, null, null, null, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Activity activity = cursorToMovaActivity(cursor);
+				schedule.add(activity);
+				cursor.moveToNext();
+			}
+			// Make sure to close the cursor
+			cursor.close();
+			return schedule;
+		}
+		
 		private Activity cursorToMovaActivity(Cursor cursor) {
 			Activity ans = new Activity("");
 			ans.setId(cursor.getString(0));
