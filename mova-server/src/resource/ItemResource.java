@@ -15,11 +15,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import type.ItemType;
+import type.MessageType;
 import utilities.MovaJson;
 import actor.Item;
 import c2dm.C2dmController;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import db.DBHandler;
 
@@ -55,18 +58,10 @@ public class ItemResource {
 	@Path("/distributeItemLocation")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void distributeItemLocation(String jsonObject){
-		
-//		JsonParser jp = new JsonParser();
-//		JsonObject j = (JsonObject) jp.parse(jsonObject);
-//		String id = j.get("id").getAsString(); 
-//		String jsonLocation = j.get("location").getAsString();
-//		
-//		MovaJson mj = new MovaJson();
-//		Location location = mj.jsonToLocation(jsonLocation);
-//		if(location != null){
-		JsonArray ids = new JsonArray();
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,ids,"DISTRIBUTE_ITEM_LOCATION");
-//		}
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String agentId = j.get("agentId").getAsString();
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentId,MessageType.DISTRIBUTE_ITEM_LOCATION);
 	}
 	
 
@@ -75,7 +70,8 @@ public class ItemResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void distributeItemState(String jsonObject){
 		JsonArray ids = new JsonArray();
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,ids,"DISTRIBUTE_ITEM_STATE");
+		String agentId = "SSS";
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentId,MessageType.DISTRIBUTE_ITEM_STATE);
 	}
 	
 	@DELETE
@@ -83,17 +79,17 @@ public class ItemResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteItem(@PathParam("id") String itemId){
 		db.deleteItem(itemId);
-		// Distribute to the agents
-		JsonArray ids = new JsonArray();
+		// Distribute to ALL agents
+		String agentId = "AAAA";
 		String jsonObject = new MovaJson().createJsonObj(itemId);
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,ids,"DELETE_ITEM");
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentId,MessageType.DELETE_ITEM);
 	}
 	
-	@POST
+	@PUT
 	@Path("/changeItemStatus")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void changeItemStatus(@QueryParam("itemId") String itemId,
 			 					  @QueryParam("newStatus") String newStatus){
+		//String agentId = j.get("agentId").getAsString();
 		db.updateItemState(itemId, newStatus);
 	}
 	
