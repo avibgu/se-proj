@@ -49,7 +49,7 @@ public class MovaAgentActivity extends Activity implements OnClickListener{
     	 		datasource = new ActivityDataSource(this);
     			datasource.open();
 
-    			 List<actor.Activity> values = datasource.getAllComments();
+    			 List<actor.Activity> values = datasource.getAllActivities();
     			 actor.Activity item = values.get(0);
 	   	 		 Intent i2 = new Intent(MovaAgentActivity.this, MovaActivityDetails.class);
 		   	 	 Bundle bundle = new Bundle();
