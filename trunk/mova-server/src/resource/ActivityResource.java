@@ -10,6 +10,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import state.ActivityState;
+import type.MessageType;
 import utilities.MovaJson;
 import actor.Activity;
 import c2dm.C2dmController;
@@ -28,14 +29,26 @@ public class ActivityResource {
 	
 	@PUT
 	@Path("/sendActivity")
-	//@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public void sendActivity(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		JsonObject jsonActivity = (JsonObject) jp.parse(j.get("activity").getAsString());
-		JsonArray jsonIds = (JsonArray) jp.parse(j.get("agentIds").getAsString());
+		String jsonIds = j.get("agentIds").getAsString();
 		
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds,"SEND_ACTIVITY");
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds,MessageType.SEND_ACTIVITY);
+	}
+	
+	@POST
+	@Path("/sendScheduledActivities")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void sendScheduledActivities(String jsonObject){
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String jsonActivities =  j.get("activities").getAsString();
+		String jsonId = j.get("agentId").getAsString();
+		
+		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonId,MessageType.SEND_SCHEDULE);
 	}
 	
 	@PUT
@@ -46,7 +59,7 @@ public class ActivityResource {
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String id = j.get("activityId").getAsString(); 
 		ActivityState state = ActivityState.valueOf(j.get("state").getAsString());
-		//add c2dm code here
+		db.updateActivityState(id, state.toString());
 	}
 	
 	@PUT
@@ -60,7 +73,7 @@ public class ActivityResource {
 	}
 	
 	@POST
-	@Path("/postponeActivity/")
+	@Path("/postponeActivity/{activityId}/{newFinishTime}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void postponeActivity(@QueryParam("activityId") String activityId,
 								 @QueryParam("newFinishTime") String newFinishTime){
