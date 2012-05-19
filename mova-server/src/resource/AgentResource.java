@@ -9,6 +9,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import simulator.Simulator;
 import utilities.Location;
 import utilities.MovaJson;
 import actor.Agent;
@@ -22,6 +23,7 @@ import db.DBHandler;
 public class AgentResource {
 	
 	DBHandler db = DBHandler.getInstance();
+	Simulator simulator = Simulator.getInstance(null);
 	
 	@PUT
 	@Path("/changeAgentLocation")
@@ -35,7 +37,7 @@ public class AgentResource {
 		MovaJson mj = new MovaJson();
 		Location location = mj.jsonToLocation(jsonLocation);
 		if(location != null){
-			
+			simulator.changeAgentLocationMessage(agentId, location);
 		}
 	}
 	
