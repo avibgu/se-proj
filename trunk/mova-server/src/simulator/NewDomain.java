@@ -517,12 +517,16 @@ public class NewDomain extends DefaultTableModel{
                 String third = "at " + dateFormat.format(date);
                 String message = first + second + " " + third + '\n';
 
-                for (Observer ob : _observers) {
-                    ob.update(null, message);
-                }
+                addMessage(message);
             }
             entity.update();
             //fireTableDataChanged();
+        }
+    }
+    
+    public void addMessage(String message){
+    	for (Observer ob : _observers) {
+            ob.update(null, message);
         }
     }
 }

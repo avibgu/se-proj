@@ -693,6 +693,37 @@ public class DBHandler {
 		
 		return state;
 	}
+	/**
+	 * Gets the activity name
+	 * @param pActivityId the activity to search for
+	 * @return the activity name
+	 */
+	public String getActivityName(String pActivityId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		String name = "";
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select NAME from "
+					+ mActivityTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			results.next();
+			name = results.getString(1);
+			
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityName - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return name;
+	}
 	
 //----------------------------ActivityTypeAgents Table Handling----------------------------
 	private void insertActivityTypeAgent(Activity activity) {

@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import simulator.Simulator;
 import state.ActivityState;
 import type.MessageType;
 import utilities.MovaJson;
@@ -26,6 +27,7 @@ public class ActivityResource {
 	
 	DBHandler db = DBHandler.getInstance();
 	MovaJson mj = new MovaJson();
+	Simulator simulator = Simulator.getInstance(null);
 	
 	@PUT
 	@Path("/sendActivity")
