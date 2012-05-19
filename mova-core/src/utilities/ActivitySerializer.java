@@ -34,7 +34,7 @@ public class ActivitySerializer implements JsonSerializer<Activity>{
 		for (Map.Entry<AgentType, Integer> agentType : activity.getRequiredAgents().entrySet()) {
 			AgentType type = agentType.getKey();
 		    Integer num = agentType.getValue();
-		    JsonPrimitive jType = new JsonPrimitive(type.getType());
+		    JsonPrimitive jType = new JsonPrimitive(type.toString());
 		    JsonPrimitive jNum = new JsonPrimitive(num);
 		    requiredAgents.add(jType);
 		    requiredAgents.add(jNum);
