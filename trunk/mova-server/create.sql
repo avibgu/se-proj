@@ -64,3 +64,39 @@ CREATE TABLE app.activityTypeAgents  (
   FOREIGN KEY (agent_type) 
   REFERENCES app.agentTypes(name) ON DELETE CASCADE
 );
+
+CREATE TABLE app.activityAgents  (
+	activity_id VARCHAR(50),
+	agent_id VARCHAR(50),
+	PRIMARY KEY (activity_id, agent_id),
+  	FOREIGN KEY (activity_id) 
+  	REFERENCES app.activities(activity_id) ON DELETE CASCADE,
+  	FOREIGN KEY (agent_id) 
+  	REFERENCES app.agents(agent_id) ON DELETE CASCADE
+);
+
+CREATE TABLE app.activityItems  (
+	activity_id VARCHAR(50),
+	item_id VARCHAR(50),
+	PRIMARY KEY (activity_id, item_id),
+  	FOREIGN KEY (activity_id) 
+  	REFERENCES app.activities(activity_id) ON DELETE CASCADE,
+  	FOREIGN KEY (item_id) 
+  	REFERENCES app.items(item_id) ON DELETE CASCADE
+);
+
+CREATE TABLE app.agentLocations  (
+	agent_id VARCHAR(50) PRIMARY KEY,
+	latitude INTEGER,
+	longitude INTEGER,
+	FOREIGN KEY (agent_id) 
+  	REFERENCES app.agents(agent_id) ON DELETE CASCADE
+);
+
+CREATE TABLE app.itemLocations  (
+	item_id VARCHAR(50) PRIMARY KEY,
+	latitude INTEGER,
+	longitude INTEGER,
+	FOREIGN KEY (item_id) 
+  	REFERENCES app.items(item_id) ON DELETE CASCADE
+);

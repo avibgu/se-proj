@@ -24,6 +24,7 @@ public class Simulator {
 	private static Vector<Vector<Entity>> _entities;
 	private static Map<String, Agent> mAgents;
 	private static Simulator mSimulator = null;
+	private static DBHandler db;
 	
 	private Simulator(){
 		_entities = _domain.getEntities();
@@ -31,8 +32,9 @@ public class Simulator {
 		_items = _entities.elementAt(1);
 		_sensorAgents = _entities.elementAt(2);
 		mAgents = new HashMap<String, Agent>();
+		db = DBHandler.getInstance();
 		for (Entity agent : _agents) {
-			//mAgents.put(agent.ge, value)
+			mAgents.put(agent.getId(), (Agent) agent);
 		}
 	}
 	
@@ -56,7 +58,6 @@ public class Simulator {
 	//public void registerAgent
 	
 	public void changeActivityStatusMessage(String pId, ActivityState pState){
-		DBHandler db = DBHandler.getInstance();
 		String name = db.getActivityName(pId);
 		String message = "The activity \"" + name + "\"" + " status changed to " + pState;
 		_domain.addMessage(message);
@@ -68,14 +69,14 @@ public class Simulator {
 	}
 	
 	public void postponeActivityMessage(String activityId, String newEndTime){
-		DBHandler db = DBHandler.getInstance();
 		String name = db.getActivityName(activityId);
 		String message = "The activity \"" + name + "\"" + " was postponed to " + newEndTime;
 		_domain.addMessage(message);
 	}
 	
 	public void changeAgentLocationMessage(String pId, Location pNewLocation){
-		
+		Location oldLocation = db.getAgentLocation(pId);
+		//_domain.walkAgent(_agents, from, to)
 	}
 	
 	public void changeAgentStatus(String agentId, String newStatus){

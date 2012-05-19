@@ -17,12 +17,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import actor.Activity;
+import actor.Agent;
 import actor.Item;
 
 import state.ActivityState;
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
+import utilities.Location;
 
 /**
  * @author Shai Cantor
@@ -64,7 +66,7 @@ public class DBHandlerTest1 {
 	@Test
 	public void testDeleteAgent() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		_db.deleteAgent("20");
 		Vector<String> agentIds = _db.getAgentIds();
 		assertEquals(0, agentIds.size());
@@ -77,8 +79,8 @@ public class DBHandlerTest1 {
 	@Test
 	public void testGetAgentIds() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
-		_db.insertAgent("21", new AgentType("COORDINATOR").getType(), true, "546");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		_db.insertAgent("21", new AgentType("COORDINATOR").toString(), true, "546");
 		Vector<String> ids = _db.getAgentIds();
 		assertEquals(2, ids.size());
 		String registrationId1 = _db.getAgentRegistrationId("20");
@@ -96,7 +98,7 @@ public class DBHandlerTest1 {
 	@Test
 	public void testGetAgentActivityId() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		_db.insertActivityType("BLA");
 		Activity ac = new Activity("hey");
 		ac.setType("BLA");
@@ -116,7 +118,7 @@ public class DBHandlerTest1 {
 	@Test
 	public void testGetAgentStatus() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		boolean status = _db.getAgentStatus("20");
 		assertEquals(true, status);
 		_db.changeAgentStatus("20", false);
@@ -132,7 +134,7 @@ public class DBHandlerTest1 {
 	@Test
 	public void testGetAgentRegistrationId() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		String regId = _db.getAgentRegistrationId("20");
 		assertEquals("345345", regId);
 		_db.deleteAgent("20");
@@ -145,7 +147,7 @@ public class DBHandlerTest1 {
 	@Test
 	public void testChangeAgentActivityId() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		_db.changeAgentActivityId("20", "1111");
 		String activityId1 = _db.getAgentActivityId("20");
 		assertEquals("1111", activityId1);
@@ -159,7 +161,7 @@ public class DBHandlerTest1 {
 	@Test
 	public void testChangeAgentRegistrationID() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		_db.changeAgentRegistrationID("20", "3333");
 		String regId = _db.getAgentRegistrationId("20");
 		assertEquals("3333", regId);
@@ -173,8 +175,8 @@ public class DBHandlerTest1 {
 	@Test
 	public void testDeleteAllAgents() {
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
-		_db.insertAgent("21", new AgentType("COORDINATOR").getType(), true, "546");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		_db.insertAgent("21", new AgentType("COORDINATOR").toString(), true, "546");
 		_db.deleteAllAgents();
 		Vector<String> ids = _db.getAgentIds();
 		assertEquals(0, ids.size());
@@ -335,7 +337,7 @@ public class DBHandlerTest1 {
 		_db.insertItem(item);
 		
 		_db.insertAgentType("COORDINATOR");
-		_db.insertAgent("20", new AgentType("COORDINATOR").getType(), true, "345345");
+		_db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
 		
 		_db.setItemHolder(item.getId(), "20");
 		String agentID = _db.getItemHolder(item.getId());
@@ -369,6 +371,162 @@ public class DBHandlerTest1 {
 		_db.deleteItemType("Stand");
 		itemTypes = _db.getItemTypes();
 		assertEquals(0, itemTypes.size());
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#getActivityAgentIds(String)}.
+	 */
+	@Test
+	public void testGetActivityAgentIds(){
+		Activity ac = new Activity("Hey");
+		ac.setType("BLA");
+		_db.insertActivityType("BLA");
+		_db.insertActivity(ac);
+		
+		AgentType type = new AgentType("COORDINATOR");
+		Agent agent1 = new Agent(type);
+		Agent agent2 = new Agent(type);
+		_db.insertAgentType("COORDINATOR");
+		_db.insertAgent(agent1.getId(), agent1.getType().toString(), true, "1212");
+		_db.insertAgent(agent2.getId(), agent2.getType().toString(), true, "1313");
+		
+		_db.insertActivityAgent(ac.getId(), agent1.getId());
+		_db.insertActivityAgent(ac.getId(), agent2.getId());
+		
+		Vector<String> agentIds = _db.getActivityAgentIds(ac.getId());
+		
+		assertEquals(2, agentIds.size());
+		
+		_db.deleteActivity(ac.getId());
+		_db.deleteActivityType(ac.getType());
+		
+		_db.deleteAgent(agent1.getId());
+		_db.deleteAgent(agent2.getId());
+		_db.deleteAgentType(type.toString());
+	}
+
+	/**
+	 * Test method for {@link db.DBHandler#getActivityItemIds(String)}.
+	 */
+	@Test
+	public void testGetActivityItemIds(){
+		Activity ac = new Activity("Hey");
+		ac.setType("BLA");
+		_db.insertActivityType("BLA");
+		_db.insertActivity(ac);
+		
+		ItemType type = new ItemType("STAND");
+		Item item1 = new Item(type);
+		Item item2 = new Item(type);
+		_db.insertItemType(type.toString());
+		_db.insertItem(item1);
+		_db.insertItem(item2);
+		
+		_db.insertActivityItem(ac.getId(), item1.getId());
+		_db.insertActivityItem(ac.getId(), item2.getId());
+		
+		Vector<String> itemIds = _db.getActivityItemIds(ac.getId());
+		
+		assertEquals(2, itemIds.size());
+		
+		_db.deleteActivity(ac.getId());
+		_db.deleteActivityType(ac.getType());
+		
+		_db.deleteItem(item1.getId());
+		_db.deleteItem(item2.getId());
+		_db.deleteItemType(type.toString());
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#updateAgentLocation(String, utilities.Location)}.
+	 */
+	@Test
+	public void testUpdateAgentLocation(){
+		AgentType type = new AgentType("COORDINATOR");
+		Agent agent1 = new Agent(type);
+		Location location = new Location(3, 4);
+		agent1.setLocation(location);
+		_db.insertAgentType(type.toString());
+		_db.insertAgent(agent1.getId(), agent1.getType().toString(), true, "1212");
+		
+		_db.insertAgentLocation(agent1.getId(), location);
+		assertEquals(4, _db.getAgentLocation(agent1.getId()).getLatitude());
+		assertEquals(3, _db.getAgentLocation(agent1.getId()).getLongitude());
+		
+		_db.updateAgentLocation(agent1.getId(), new Location(1, 1));
+		assertEquals(1, _db.getAgentLocation(agent1.getId()).getLatitude());
+		assertEquals(1, _db.getAgentLocation(agent1.getId()).getLongitude());
+		_db.deleteAgentLocation(agent1.getId());
+		
+		_db.deleteAgent(agent1.getId());
+		_db.deleteAgentType(type.toString());
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#deleteAgentLocation(String)}.
+	 */
+	@Test
+	public void testDeleteAgentLocation(){
+		AgentType type = new AgentType("COORDINATOR");
+		Agent agent1 = new Agent(type);
+		Location location = new Location(3, 3);
+		agent1.setLocation(location);
+		_db.insertAgentType(type.toString());
+		_db.insertAgent(agent1.getId(), agent1.getType().toString(), true, "1212");
+		
+		_db.insertAgentLocation(agent1.getId(), location);
+		assertNotNull(_db.getAgentLocation(agent1.getId()));
+		_db.deleteAgentLocation(agent1.getId());
+		assertNull(_db.getAgentLocation(agent1.getId()));
+		
+		_db.deleteAgent(agent1.getId());
+		_db.deleteAgentType(type.toString());
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#updateItemLocation(String, Location)}.
+	 */
+	@Test
+	public void testUpdateItemLocation(){
+		ItemType type = new ItemType("STAND");
+		Item item1 = new Item(type);
+		Location location = new Location(3, 4);
+		item1.setLocation(location);
+		_db.insertItemType(type.toString());
+		_db.insertItem(item1);
+		
+		_db.insertItemLocation(item1.getId(), location);
+		assertEquals(4, _db.getItemLocation(item1.getId()).getLatitude());
+		assertEquals(3, _db.getItemLocation(item1.getId()).getLongitude());
+		
+		_db.updateItemLocation(item1.getId(), new Location(1, 1));
+		assertEquals(1, _db.getItemLocation(item1.getId()).getLatitude());
+		assertEquals(1, _db.getItemLocation(item1.getId()).getLongitude());
+		_db.deleteItemLocation(item1.getId());
+		
+		_db.deleteItem(item1.getId());
+		_db.deleteItemType(type.toString());
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#deleteItemLocation(String)}.
+	 */
+	@Test
+	public void testDeleteItemLocation(){
+		ItemType type = new ItemType("STAND");
+		Item item1 = new Item(type);
+		Location location = new Location(3, 4);
+		item1.setLocation(location);
+		_db.insertItemType(type.toString());
+		_db.insertItem(item1);
+		
+		_db.insertItemLocation(item1.getId(), location);
+		assertNotNull(_db.getItemLocation(item1.getId()));
+		_db.deleteItemLocation(item1.getId());
+		assertNull(_db.getItemLocation(item1.getId()));
+		
+		_db.deleteItem(item1.getId());
+		_db.deleteItemType(type.toString());
 	}
 
 }

@@ -15,6 +15,7 @@ import state.ActivityState;
 import state.ItemState;
 import type.AgentType;
 import type.ItemType;
+import utilities.Location;
 import actor.Activity;
 import actor.Item;
 
@@ -34,6 +35,10 @@ public class DBHandler {
     private static String						mActivityTypeItemsTableName = "app.activityTypeItems";
     private static String						mItemTableName = "app.items";
     private static String						mItemTypeTableName = "app.itemTypes";
+    private static String						mActivityAgentsTableName = "app.activityAgents";
+    private static String						mActivityItemsTableName = "app.activityItems";
+    private static String						mAgentLocationsTableName = "app.agentLocations";
+    private static String						mItemLocationsTableName = "app.itemLocations";
    
     private static Connection					mConn = null;
     private static Statement					mStmt = null;
@@ -736,7 +741,7 @@ public class DBHandler {
 				mStmt = mConn.createStatement();
 
 				mStmt.execute("insert into " + mActivityTypeAgentsTableName + " values (" + "'"
-						+ activity.getId() + "'" + "," + "'" + requiredAgent.getKey().getType() + "'" + "," 
+						+ activity.getId() + "'" + "," + "'" + requiredAgent.getKey().toString() + "'" + "," 
 						+ requiredAgent.getValue().intValue() + ")");
 				mStmt.close();
 			} catch (SQLIntegrityConstraintViolationException e) {
@@ -1043,4 +1048,306 @@ public class DBHandler {
 		
 		return itemTypes;
 	}
+	
+//	----------------------------ActivityAgents Table Handling----------------------------
+	public void insertActivityAgent(String pActivityId, String pAgentId){
+    	mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mActivityAgentsTableName + " values (" + "'" + pActivityId + "'" + "," + "'" + pAgentId + "'"+ ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertActivityAgent - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+    }
+	
+	public void deleteActivityAgent(String pActivityId, String pAgentId){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mActivityAgentsTableName + " WHERE ACTIVITY_ID = "
+					+ "'" + pActivityId + "'" + " AND " + "AGENT_ID = " + "'" + pAgentId + "'");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteActivityAgent - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public Vector<String> getActivityAgentIds(String pActivityId){
+		mRead.lock();
+		createConnection();
+		
+		Vector<String> activityAgentIds = new Vector<String>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select AGENT_ID from "
+					+ mActivityAgentsTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			while (results.next()) {
+				String id = results.getString(1);
+				activityAgentIds.add(id);
+			}
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityAgentIds - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return activityAgentIds;
+	}
+	
+//	----------------------------ActivityItems Table Handling----------------------------
+	public void insertActivityItem(String pActivityId, String pItemId){
+    	mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mActivityItemsTableName + " values (" + "'" + pActivityId + "'" + "," + "'" + pItemId + "'"+ ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertActivityItem - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+    }
+	
+	public void deleteActivityItem(String pActivityId, String pItemId){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mActivityItemsTableName + " WHERE ACTIVITY_ID = "
+					+ "'" + pActivityId + "'" + " AND " + "ITEM_ID = " + "'" + pItemId + "'");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteActivityItem - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public Vector<String> getActivityItemIds(String pActivityId){
+		mRead.lock();
+		createConnection();
+		
+		Vector<String> activityItemIds = new Vector<String>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select ITEM_ID from "
+					+ mActivityItemsTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			while (results.next()) {
+				String id = results.getString(1);
+				activityItemIds.add(id);
+			}
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityItemIds - database access error or no items in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return activityItemIds;
+	}
+	
+//	----------------------------AgentLocations Table Handling----------------------------
+	public void insertAgentLocation(String pAgentId, Location location){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mAgentLocationsTableName + " values (" + "'" + pAgentId + "'" + "," + location.getLatitude() 
+					+ "," + location.getLongitude() + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertAgentLocation - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void updateAgentLocation(String pAgentId, Location newLocation){
+		mWrite.lock();
+		createConnection();
+		if(newLocation != null){
+			try {
+				mStmt = mConn.createStatement();
+				mStmt.execute("update " + mAgentLocationsTableName + " set LATITUDE = " + newLocation.getLatitude()
+						+ " , " + "LONGITUDE = " + newLocation.getLongitude() +  " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+				mStmt.close();
+			} catch (SQLException sqlExcept) {
+				System.out.println("updateAgentLocation - database access error" +
+						", no agent id in the system: " + pAgentId);
+			}
+		}
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void deleteAgentLocation(String pAgentId){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mAgentLocationsTableName + " WHERE AGENT_ID = "
+					+ "'" + pAgentId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteAgentLocation - database access error" +
+					", no agent id in the system: " + pAgentId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public Location getAgentLocation(String pAgentId){
+		mRead.lock();
+		createConnection();
+		
+		Location location = null;
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mAgentLocationsTableName + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+			results.next();
+			int latitude = results.getInt("LATITUDE");
+			int longitude = results.getInt("LONGITUDE");
+
+			location = new Location(longitude, latitude);
+
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out
+					.println("getAgentLocation - database access error or no agent id in the system: "
+							+ pAgentId);
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return location;
+	}
+//	----------------------------ItemLocations Table Handling----------------------------	
+	public void insertItemLocation(String pItemId, Location location){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mItemLocationsTableName + " values (" + "'" + pItemId + "'" + "," + location.getLatitude() 
+					+ "," + location.getLongitude() + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertItemLocation - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void updateItemLocation(String pItemId, Location newLocation){
+		mWrite.lock();
+		createConnection();
+		if(newLocation != null){
+			try {
+				mStmt = mConn.createStatement();
+				mStmt.execute("update " + mItemLocationsTableName + " set LATITUDE = " + newLocation.getLatitude()
+						+ " , " + "LONGITUDE = " + newLocation.getLongitude() +  " WHERE ITEM_ID = " + "'" + pItemId + "'");
+				mStmt.close();
+			} catch (SQLException sqlExcept) {
+				System.out.println("updateItemLocation - database access error" +
+						", no item id in the system: " + pItemId);
+			}
+		}
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public void deleteItemLocation(String pItemId){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mItemLocationsTableName + " WHERE ITEM_ID = "
+					+ "'" + pItemId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteItemLocation - database access error" +
+					", no agent id in the system: " + pItemId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	public Location getItemLocation(String pItemId){
+		mRead.lock();
+		createConnection();
+		
+		Location location = null;
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mItemLocationsTableName + " WHERE ITEM_ID = " + "'" + pItemId + "'");
+			results.next();
+			int latitude = results.getInt("LATITUDE");
+			int longitude = results.getInt("LONGITUDE");
+
+			location = new Location(longitude, latitude);
+
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out
+					.println("getItemLocation - database access error or no item id in the system: "
+							+ pItemId);
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return location;
+	}
+	
 }
