@@ -113,8 +113,6 @@ public class Domain implements Cloneable {
 		}
 		
 		mEmpty = false;
-		
-		resetIndexes();
 	}
 
 	private Vector<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
@@ -228,8 +226,23 @@ public class Domain implements Cloneable {
 				mActivity.getRequiredActivityIds());
 	}
 
-	private String getHashKeyOfCurrentIndexes() {
-		// TODO Auto-generated method stub
+	public String getHashKeyOfCurrentIndexes() {
+
+//		StringBuilder sb = new StringBuilder();
+//		
+//		for (int i = 0; i < mAgentsIndexes.size(); i++)
+//			for (int j = 0; j < mAgentsIndexes.get(i).size(); j++)
+//				sb.append(mAgentsIndexes.get(i).get(j) + ":");
+//		
+//		for (int i = 0; i < mItemsIndexes.size(); i++)
+//			for (int j = 0; j < mItemsIndexes.get(i).size(); j++)
+//				sb.append(mItemsIndexes.get(i).get(j) + ":");
+//		
+//		sb.append(mTimesIndex);
+//		
+//		return sb.toString();
+		
+		//TODO
 		return null;
 	}
 
