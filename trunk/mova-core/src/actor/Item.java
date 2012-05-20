@@ -89,4 +89,18 @@ public class Item extends Entity{
 		}
 	}
 	
+	
+	@Override
+	public boolean equals(Object pObj) {
+		
+		if (!(pObj instanceof Item))
+			return false;
+			
+		return mId.equals(((Item)pObj).getId());
+	}
+	
+	@Override
+	public String toString() {
+		return "Item-" + mId;
+	}
 }
