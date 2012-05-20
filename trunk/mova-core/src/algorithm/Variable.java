@@ -14,7 +14,8 @@ public class Variable {
 	}
 	
 	public Domain getDomain() {
-		return (Domain) mDomain.clone();
+//		return (Domain) mDomain.clone(); TODO
+		return mDomain;
 	}
 
 	@Override
