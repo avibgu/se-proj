@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
@@ -559,6 +560,13 @@ public class DBHandler {
 		
 		insertActivityTypeAgent(activity);
 		insertActivityTypeItem(activity);
+		for (String participatingAgentId : activity.getParticipatingAgentIds()) {
+			insertActivityAgent(activity.getId(), participatingAgentId);
+		}
+		for (String participatingItemId : activity.getParticipatingItemIds()) {
+			insertActivityItem(activity.getId(), participatingItemId);
+		}
+		
 	}
 	/**
 	 * Deletes an activity from the system
@@ -1140,6 +1148,58 @@ public class DBHandler {
 		mRead.unlock();
 		
 		return activityAgentIds;
+	}
+	
+	public Vector<Activity> getAgentSchedule(String pAgentId){
+		mRead.lock();
+		createConnection();
+		
+		Vector<Activity> schedule = new Vector<Activity>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mActivityAgentsTableName + "," + mActivityTableName 
+					+ " WHERE " + mActivityAgentsTableName + ".ACTIVITY_ID = " 
+					+ mActivityTableName + ".ACTIVITY_ID AND " 
+					+ mActivityAgentsTableName + ".AGENT_ID = " + "'" + pAgentId + "'"
+					+ " ORDER BY START_TIME ASC");
+
+			while (results.next()) {
+				String activityId = results.getString("ACTIVITY_ID");
+				String name = results.getString("NAME");
+				String description = results.getString("DESCRIPTION");
+				String activityType = results.getString("ACTIVITY_TYPE");
+				String activityState = results.getString("ACTIVITY_STATE");
+				Timestamp startTime = results.getTimestamp("START_TIME");
+				Timestamp endTime = results.getTimestamp("END_TIME");
+				int estimatedTime = results.getInt("ESTIMATE_TIME");
+				Activity activity = new Activity(name);
+				activity.setId(activityId);
+				activity.setDescription(description);
+				activity.setType(activityType);
+				activity.setState(ActivityState.valueOf(activityState));
+				activity.setStartTime(startTime);
+				activity.setEndTime(endTime);
+				activity.setEstimateTime(estimatedTime);
+				
+				schedule.add(activity);
+			}
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getAgentSchedule - database access error or no agent id in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		for (Activity activity : schedule) {
+			Vector<String> activityAgentIds = getActivityAgentIds(activity.getId());
+			Vector<String> activityItemsIds = getActivityItemIds(activity.getId());
+			activity.setParticipatingAgentIds(new HashSet<String>(activityAgentIds));
+			activity.setParticipatingItemIds(new HashSet<String>(activityItemsIds));
+		}
+		return schedule;
 	}
 	
 //	----------------------------ActivityItems Table Handling----------------------------
