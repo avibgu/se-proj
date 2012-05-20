@@ -73,6 +73,7 @@ public class DomainTest {
 		domain.nextValue();
 		domain.nextValue();
 		domain.nextValue();
-		domain.nextValue();
+		
+		domain.resetIndexes();
 	}
 }
