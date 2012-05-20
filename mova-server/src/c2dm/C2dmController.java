@@ -7,20 +7,11 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Vector;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
-
-import type.AgentType;
-import type.ItemType;
-
-import actor.Activity;
-import actor.Agent;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import type.MessageType;
 import db.DBHandler;
@@ -43,18 +34,22 @@ public class C2dmController {
 	}
 
 	public void sendMessageToDevice(String pCollapseKey, String pMessage,
-			String pAgentId, MessageType pMessageType) {
+			Vector<String> pAgentsIds, MessageType pMessageType) {
 
 		String authToken = getAutoToken();
 		URL url;
-
+		
 		try {
+			
+			if (pAgentsIds == null){ // Get all agents ids.
+				pAgentsIds = mDb.getAgentIds();
+			}
+			
+			for (String agentId : pAgentsIds) {
 
-			//for (int i = 0; i < pAgentIds.size(); ++i) {
+				// Find the registration id
 
-				// Find the regisration id
-
-				String regId = mDb.getAgentRegistrationId(pAgentId);
+				String regId = mDb.getAgentRegistrationId(agentId);
 
 				url = new URL("https://android.apis.google.com/c2dm/send");
 				HttpsURLConnection
@@ -101,12 +96,8 @@ public class C2dmController {
 				post.close();
 				in.close();
 
-				// _log.info("response from C2DM server:\n" + buf.toString());
-
 				int code = request.getResponseCode();
-				// _log.info("response code: " + request.getResponseCode());
-				// _log.info("response message: " +
-				// request.getResponseMessage());
+
 				if (code == 200) {
 					// TODO: check for an error and if so, handle
 
@@ -117,7 +108,7 @@ public class C2dmController {
 				} else if (code == 401) {
 					// TODO: get a new auth token
 				}
-		//	}
+			}
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

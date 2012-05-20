@@ -1,6 +1,10 @@
-package movaProj.agent;
+package movaProj.sampleApplication;
 
 import java.util.Vector;
+
+import movaProj.agent.R;
+import movaProj.agent.R.id;
+import movaProj.agent.R.layout;
 
 import client.MovaClient;
 

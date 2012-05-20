@@ -12,5 +12,7 @@
     <string name="showActivities">My Activities</string>
     <string name="nextActivity">Show my next activity</string>
     <string name="description_new">Description:</string>
+    <string name="insertAgentType">Please insert the Agent Type:</string>
+    <string name="scheduleList">Show my schedule</string>
 
 </resources>

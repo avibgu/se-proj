@@ -1,13 +1,11 @@
 package resource;
 
 import java.sql.Timestamp;
+import java.util.Vector;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import simulator.Simulator;
 import state.ActivityState;
@@ -16,7 +14,6 @@ import utilities.MovaJson;
 import actor.Activity;
 import c2dm.C2dmController;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -31,31 +28,28 @@ public class ActivityResource {
 	
 	@PUT
 	@Path("/sendActivity")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void sendActivity(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		JsonObject jsonActivity = (JsonObject) jp.parse(j.get("activity").getAsString());
-		String jsonIds = j.get("agentIds").getAsString();
+		Vector<String> jsonIds = null;
 		
 		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds,MessageType.SEND_ACTIVITY);
 	}
 	
 	@POST
 	@Path("/sendScheduledActivities")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void sendScheduledActivities(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String jsonActivities =  j.get("activities").getAsString();
-		String jsonId = j.get("agentId").getAsString();
+		Vector<String> jsonIds = null;
 		
-		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonId,MessageType.SEND_SCHEDULE);
+		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.SEND_SCHEDULE);
 	}
 	
 	@PUT
 	@Path("/changeActivityStatus")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void changeActivityStatus(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
@@ -66,7 +60,6 @@ public class ActivityResource {
 	
 	@PUT
 	@Path("/addActivity")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void addActivity(String jsonObject){
 		Activity activity = mj.jsonToActivity(jsonObject);
 		db.insertActivity(activity);
@@ -74,12 +67,13 @@ public class ActivityResource {
 		// Recalculate?
 	}
 	
-	@POST
-	@Path("/postponeActivity/{activityId}/{newFinishTime}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void postponeActivity(@QueryParam("activityId") String activityId,
-								 @QueryParam("newFinishTime") String newFinishTime){
-		
+	@PUT
+	@Path("/postponeActivity")
+	public void postponeActivity(String jsonObject){
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String activityId = j.get("activityId").getAsString(); 
+		String newFinishTime = j.get("newFinishTime").getAsString();
 		db.updateActivityDeadline(activityId, Timestamp.valueOf(newFinishTime));
 		
 		// Recalculate.
@@ -88,14 +82,12 @@ public class ActivityResource {
 	
 	@PUT
 	@Path("/createActivityType")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void createActivityType(String jsonObject){
 		db.insertActivityType(jsonObject);
 	}
 	
 	@PUT
 	@Path("/deleteActivityType")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteActivityType(String jsonObject){
 		db.deleteActivityType(jsonObject);
 	}
