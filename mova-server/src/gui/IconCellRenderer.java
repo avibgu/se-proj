@@ -50,8 +50,9 @@ public class IconCellRenderer  implements TableCellRenderer{
     }
 
     private boolean isAgent(String value) {
-        if(value.contains("COORDINATOR") || value.contains("SECURITY_OFFICER") || value.contains("SECRETARY") || 
-        		value.contains("NETWORK_MANAGER") || value.contains("SOUND_MANAGER"))
+//        if(value.contains("COORDINATOR") || value.contains("SECURITY_OFFICER") || value.contains("SECRETARY") || 
+//        		value.contains("NETWORK_MANAGER") || value.contains("SOUND_MANAGER"))
+    	if(value.contains("Agent"))
         	return true;
         else
         	return false;
@@ -62,9 +63,10 @@ public class IconCellRenderer  implements TableCellRenderer{
     }
 
     private boolean isItem(String value) {
-    	if(value.contains("BOARD") || value.contains("LAPTOP") || value.contains("MOUSE") || 
-        		value.contains("CABLE") || value.contains("SPEAKER") || value.contains("STAND") ||
-        		value.contains("LAZER_CURSOR"))
+//    	if(value.contains("BOARD") || value.contains("LAPTOP") || value.contains("MOUSE") || 
+//        		value.contains("CABLE") || value.contains("SPEAKER") || value.contains("STAND") ||
+//        		value.contains("LAZER_CURSOR"))
+    	if(value.contains("Item"))
         	return true;
         else
         	return false;

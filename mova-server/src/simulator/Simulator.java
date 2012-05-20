@@ -67,7 +67,7 @@ public class Simulator {
 			
 			String message = "An new " + type + " agent registered to the system"; 
 			_domain.addMessage(message);
-			_domain.setValueAt(type, agent.getLocation().getLongitude(), agent.getLocation().getLatitude());
+			_domain.setValueAt(agent.toString(), agent.getLocation().getLongitude(), agent.getLocation().getLatitude());
 			
 			agentIndex++;
 		}
