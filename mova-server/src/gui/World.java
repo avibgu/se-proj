@@ -87,7 +87,7 @@ public class World extends javax.swing.JFrame implements Observer{
 
         messageArea.setColumns(20);
         messageArea.setEditable(false);
-        messageArea.setFont(new java.awt.Font("Calibri", 0, 14));
+        messageArea.setFont(new java.awt.Font("Calibri", 0, 10));
         messageArea.setRows(5);
         messageArea.setText("Messages\n");
         jScrollPane2.setViewportView(messageArea);

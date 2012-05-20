@@ -37,29 +37,31 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
     protected Object doInBackground() throws Exception {
         Room fromRoom = _movaMap.getRoom(_from);
         Room toRoom = _movaMap.getRoom(_to);
-        if(fromRoom.getName().equals(toRoom.getName())){
-            Stack<Location> path = _movaMap.calculateShortestPath(_from, _to);
-            Location oldLocation = _from;
-            while(path.size() > 0){
-                Location newLocation = path.pop();
-                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
-				Thread.sleep(800);
-                oldLocation = newLocation;
-            }
-            doneWalkingMessage();
-        }
-        else{
-            Location roomDoor = findClosestRoomDoor(_from, fromRoom);
-            walkAgentToClosestDoor(_entity, _from, roomDoor);
-            Stack<Location> path = _movaMap.calculateShortestPath(roomDoor, _to);
-            Location oldLocation = roomDoor;
-            while(path.size() > 0){
-                Location newLocation = path.pop();
-                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
-				Thread.sleep(800);
-                oldLocation = newLocation;
-            }
-            doneWalkingMessage();
+        if(fromRoom != null && toRoom != null){
+	        if(fromRoom.getName().equals(toRoom.getName())){
+	            Stack<Location> path = _movaMap.calculateShortestPath(_from, _to);
+	            Location oldLocation = _from;
+	            while(path.size() > 0){
+	                Location newLocation = path.pop();
+	                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+					Thread.sleep(800);
+	                oldLocation = newLocation;
+	            }
+	            doneWalkingMessage();
+	        }
+	        else{
+	            Location roomDoor = findClosestRoomDoor(_from, fromRoom);
+	            walkAgentToClosestDoor(_entity, _from, roomDoor);
+	            Stack<Location> path = _movaMap.calculateShortestPath(roomDoor, _to);
+	            Location oldLocation = roomDoor;
+	            while(path.size() > 0){
+	                Location newLocation = path.pop();
+	                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+					Thread.sleep(800);
+	                oldLocation = newLocation;
+	            }
+	            doneWalkingMessage();
+	        }
         }
         return null;
     }
