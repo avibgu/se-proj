@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" > >
+
+    <TextView
+        android:id="@+id/insertAgentTypeLabel"
+        android:text="@string/insertAgentType"
+        android:layout_height="100dp"
+        android:textSize="22dp"
+        android:layout_width="match_parent"
+        android:paddingTop="30dp"
+        android:paddingLeft="10dp">
+
+        <requestFocus />
+    </TextView>
+
+    <Spinner
+        android:id="@+id/insertAgentTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" 
+        android:paddingTop="80dp">
+
+        <Button
+            android:id="@+id/agentTypeButton"
+            android:layout_width="59dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="OK" />
+
+    </LinearLayout>
+
+</LinearLayout>
