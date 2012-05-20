@@ -53,10 +53,10 @@ public class Simulator {
 	}
 	
 	public void start() {
-		Agent agent = (Agent)_agents.elementAt(0);
-		Location oldLocation = agent.getLocation();
-        Location newLocation = new Location(2, 24);
-        _domain.walkAgent(agent, oldLocation, newLocation);
+//		Agent agent = (Agent)_agents.elementAt(0);
+//		Location oldLocation = agent.getLocation();
+//        Location newLocation = new Location(2, 24);
+//        _domain.walkAgent(agent, oldLocation, newLocation);
 	}
 	
 	public void registerAgentMessage(String pId){
@@ -97,6 +97,7 @@ public class Simulator {
 		Location oldLocation = db.getAgentLocation(pId);
 		Agent agent = mAgents.get(pId);
 		_domain.walkAgent(agent, oldLocation, pNewLocation);
+		db.updateAgentLocation(pId, pNewLocation);
 	}
 	
 	public void changeAgentStatus(String agentId, String newStatus){
