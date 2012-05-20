@@ -22,6 +22,7 @@ import actor.Item;
 
 import state.ActivityState;
 import state.ItemState;
+import type.ActivityType;
 import type.AgentType;
 import type.ItemType;
 import utilities.Location;
@@ -527,6 +528,58 @@ public class DBHandlerTest1 {
 		
 		_db.deleteItem(item1.getId());
 		_db.deleteItemType(type.toString());
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#getAgentSchedule(String)}.
+	 */
+	@Test
+	public void testGetAgentSchedule(){
+		AgentType agentType = new AgentType("COORDINATOR");
+		Agent agent = new Agent(agentType);
+		_db.insertAgentType(agentType.toString());
+		_db.insertAgent(agent.getId(), agent.getType().toString(), true, "1212");
+		
+		ActivityType activityType1 = new ActivityType("Lunch");
+		ActivityType activityType2 = new ActivityType("Presentation");
+		Activity activity1 = new Activity("Hey1");
+		activity1.setType(activityType1.getType());
+		Set<String> participatingAgentIds1 = new HashSet<String>();
+		participatingAgentIds1.add(agent.getId());
+		activity1.setParticipatingAgentIds(participatingAgentIds1);
+		
+		Activity activity2 = new Activity("Hey2");
+		activity2.setType(activityType2.getType());
+		Set<String> participatingAgentIds2 = new HashSet<String>();
+		participatingAgentIds2.add(agent.getId());
+		activity2.setParticipatingAgentIds(participatingAgentIds2);
+
+		_db.insertActivityType(activityType1.getType());
+		_db.insertActivityType(activityType2.getType());
+		_db.insertActivity(activity1);
+		_db.insertActivity(activity2);
+		
+		Vector<Activity> agentActivities = _db.getAgentSchedule(agent.getId());
+		assertEquals(2, agentActivities.size());
+		
+		Activity serverActivity = agentActivities.elementAt(0);
+		assertEquals(activity1.getId(), serverActivity.getId());
+		assertEquals(activity1.getName(), serverActivity.getName());
+		assertEquals(activity1.getDescription(), serverActivity.getDescription());
+		assertEquals(activity1.getType(), serverActivity.getType());
+		assertEquals(activity1.getState(), serverActivity.getState());
+		assertEquals(activity1.getStartTime(), serverActivity.getStartTime());
+		assertEquals(activity1.getEndTime(), serverActivity.getEndTime());
+		assertEquals(activity1.getEstimateTime(), serverActivity.getEstimateTime());
+		assertArrayEquals(activity1.getParticipatingAgentIds().toArray(), serverActivity.getParticipatingAgentIds().toArray());
+		assertArrayEquals(activity1.getParticipatingItemIds().toArray(), serverActivity.getParticipatingItemIds().toArray());
+		
+		_db.deleteActivity(activity1.getId());
+		_db.deleteActivity(activity2.getId());
+		_db.deleteActivityType(activityType1.getType());
+		_db.deleteActivityType(activityType2.getType());
+		_db.deleteAgent(agent.getId());
+		_db.deleteAgentType(agent.getType().toString());
 	}
 
 }

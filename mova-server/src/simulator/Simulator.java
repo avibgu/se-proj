@@ -37,9 +37,6 @@ public class Simulator {
 		_sensorAgents = _entities.elementAt(2);
 		mAgents = new HashMap<String, Agent>();
 		db = DBHandler.getInstance();
-//		for (Entity agent : _agents) {
-//			mAgents.put(agent.getId(), (Agent) agent);
-//		}
 	}
 	
 	public synchronized static Simulator getInstance(NewDomain domain){
