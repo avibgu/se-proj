@@ -4,7 +4,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-public abstract class CBJ implements CSPAlgorithm {
+public class CBJ implements CSPAlgorithm {
 
 	protected static final int UNINITIALIZED = -1;
 	protected static final int INITIALIZED = 0;

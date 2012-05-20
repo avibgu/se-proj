@@ -45,11 +45,15 @@ public class Domain implements Cloneable {
 		initValues();
 	}
 
-	// public Domain(Activity pActivity, Vector<Value> pValues) {
-	//
-	// mActivity = pActivity;
-	// mValues = pValues;
-	// }
+	public Domain(Activity pActivity, Map<String, Value> pValues,
+			List<List<Agent>> pAgents, List<List<Item>> pItems,
+			List<List<Integer>> pAgentsIndexes,
+			List<List<Integer>> pItemsIndexes, List<Pair<Date, Date>> pTimes,
+			Integer pTimesIndex, List<Integer> pAgentsSizes,
+			List<Integer> pItemsSizes, boolean pEmpty) {
+
+		// TODO Auto-generated constructor stub
+	}
 
 	protected void initValues() {
 
@@ -94,7 +98,7 @@ public class Domain implements Cloneable {
 					itemType);
 
 			mItemsSizes.add(allItemsOfThisType.size());
-			
+
 			for (int i = 0; i < numOfrequiredItems; i++)
 				tList.add(new Integer(i));
 
@@ -111,32 +115,32 @@ public class Domain implements Cloneable {
 			mTimes.add(new Pair<Date, Date>(new Date(i), new Date(i
 					+ mActivity.getEstimateTime())));
 		}
-		
+
 		mEmpty = false;
 	}
 
 	private Vector<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
 		// TODO Auto-generated method stub
-		
+
 		Vector<Item> items = new Vector<Item>();
-		
+
 		items.add(new Item(pItemType));
 		items.add(new Item(pItemType));
 		items.add(new Item(pItemType));
 		items.add(new Item(pItemType));
-		
+
 		return items;
 	}
 
 	private List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
 		// TODO Auto-generated method stub
-		
+
 		Vector<Agent> agents = new Vector<Agent>();
-		
+
 		agents.add(new Agent(pAgentType));
 		agents.add(new Agent(pAgentType));
 		agents.add(new Agent(pAgentType));
-		
+
 		return agents;
 	}
 
@@ -228,21 +232,21 @@ public class Domain implements Cloneable {
 
 	public String getHashKeyOfCurrentIndexes() {
 
-//		StringBuilder sb = new StringBuilder();
-//		
-//		for (int i = 0; i < mAgentsIndexes.size(); i++)
-//			for (int j = 0; j < mAgentsIndexes.get(i).size(); j++)
-//				sb.append(mAgentsIndexes.get(i).get(j) + ":");
-//		
-//		for (int i = 0; i < mItemsIndexes.size(); i++)
-//			for (int j = 0; j < mItemsIndexes.get(i).size(); j++)
-//				sb.append(mItemsIndexes.get(i).get(j) + ":");
-//		
-//		sb.append(mTimesIndex);
-//		
-//		return sb.toString();
-		
-		//TODO
+		// StringBuilder sb = new StringBuilder();
+		//
+		// for (int i = 0; i < mAgentsIndexes.size(); i++)
+		// for (int j = 0; j < mAgentsIndexes.get(i).size(); j++)
+		// sb.append(mAgentsIndexes.get(i).get(j) + ":");
+		//
+		// for (int i = 0; i < mItemsIndexes.size(); i++)
+		// for (int j = 0; j < mItemsIndexes.get(i).size(); j++)
+		// sb.append(mItemsIndexes.get(i).get(j) + ":");
+		//
+		// sb.append(mTimesIndex);
+		//
+		// return sb.toString();
+
+		// TODO
 		return null;
 	}
 
@@ -251,28 +255,42 @@ public class Domain implements Cloneable {
 		for (int i = 0; i < mAgentsIndexes.size(); i++)
 			for (int j = 0; j < mAgentsIndexes.get(i).size(); j++)
 				mAgentsIndexes.get(i).set(j, j);
-		
+
 		for (int i = 0; i < mItemsIndexes.size(); i++)
 			for (int j = 0; j < mItemsIndexes.get(i).size(); j++)
 				mItemsIndexes.get(i).set(j, j);
-		
+
 		mTimesIndex = 0;
-		
+
 		mEmpty = false;
 	}
 
 	@Override
 	protected Domain clone() {
 
-		// TODO: ...
+		// TODO
 		return null;
-
-		// Vector<Value> tValues = new Vector<Value>(mValues.size());
-		//
-		// for (Value value : mValues)
-		// tValues.add(value);
-		//
-		// return new Domain(mActivity, tValues);
+		
+//		Map<String, Value> values = new HashMap<String, Value>();
+//		
+//		for (String key : mValues.keySet())
+//			values.put(key, values.get(key).clone());
+//
+//		List<List<Agent>> agents = ;
+//		List<List<Item>> items;
+//
+//		List<List<Integer>> agentsIndexes;
+//		List<List<Integer>> itemsIndexes;
+//
+//		List<Pair<Date, Date>> times;
+//		Integer timesIndex;
+//
+//		List<Integer> agentsSizes;
+//		List<Integer> itemsSizes;
+//
+//		return new Domain(mActivity, values, agents, items, agentsIndexes,
+//				itemsIndexes, times, timesIndex, agentsSizes, itemsSizes,
+//				mEmpty);
 	}
 
 	public boolean isEmpty() {
