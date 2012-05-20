@@ -2,7 +2,7 @@ package algorithm;
 
 import actor.Activity;
 
-public class Variable {
+public class Variable implements Comparable<Variable>{
 
 	protected Activity	mActivity;
 	protected Domain	mDomain;
@@ -25,5 +25,11 @@ public class Variable {
 			return false;
 		
 		return ((Variable)pOther).mActivity.equals(mActivity);
+	}
+
+	@Override
+	public int compareTo(Variable pO) {
+		// TODO Auto-generated method stub
+		return mActivity.compareTo(mActivity);
 	}
 }
