@@ -246,4 +246,7 @@ public class Activity {
 		new MovaClient().postponeActivity(mId, mEndTime.toString());
 	}
 	
+	public int compareTo(Activity pActivity) {
+		return mId.equals(pActivity.getId()) ? 0 : -1;
+	}
 }
