@@ -1,5 +1,7 @@
 package resource;
 
+import java.util.Vector;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -10,9 +12,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import simulator.Simulator;
+import type.MessageType;
 import utilities.Location;
 import utilities.MovaJson;
 import actor.Agent;
+
+import c2dm.C2dmController;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -27,7 +32,6 @@ public class AgentResource {
 	
 	@PUT
 	@Path("/changeAgentLocation")
-	//@Consumes(MediaType.APPLICATION_JSON)
 	public void changeAgentLocation(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
@@ -49,37 +53,42 @@ public class AgentResource {
 		Agent agent = mj.jsonToAgent(jsonObject);
 		db.insertAgentType(agent.getType().toString());
 		db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+		Vector<String> agentsIds = new Vector<String>();
+		agentsIds.add(agent.getId());
+		boolean ans = db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+		if (ans){
+			C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsIds,MessageType.REGISTER_SUCCESS);
+		}else{
+			C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsIds,MessageType.REGISTER_FAILED);
+		}
 		simulator.registerAgentMessage(agent.getId());
 	}
 	
 	@DELETE
 	@Path("/deleteAgent/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteAgent(@PathParam("id") String agentId){
 		db.deleteAgent(agentId);
 	}
 	
 	@POST
 	@Path("/changeAgentStatus")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void changeAgentStatus(@QueryParam("agentId") String agentId,
-			 					  @QueryParam("newStatus") Boolean newStatus){
-			// Update DB
-			db.changeAgentStatus(agentId, newStatus);
-			
-			// Recalculate(???)
+	public void changeAgentStatus(String jsonObject){
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String agentId = j.get("agentId").getAsString();
+		Boolean newStatus = j.get("newStatus").getAsBoolean();
+		// Update DB
+		db.changeAgentStatus(agentId, newStatus);
 	}
 	
 	@PUT
 	@Path("/createAgentType")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void createAgentType(String jsonObject){
 		db.insertAgentType(jsonObject);
 	}
 	
 	@PUT
 	@Path("/deleteAgentType")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteAgentType(String jsonObject){
 		db.deleteAgentType(jsonObject);
 	}

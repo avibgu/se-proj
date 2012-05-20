@@ -7,23 +7,23 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
+import org.restlet.resource.ClientResource;
+
+import state.ActivityState;
+import state.ItemState;
+import type.ItemType;
+import utilities.Location;
+import utilities.MovaJson;
+import actor.Activity;
+import actor.Agent;
+import actor.Item;
+
 import com.google.gson.JsonObject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-
-import actor.Activity;
-import actor.Agent;
-import actor.Item;
-
-import utilities.Location;
-import state.ActivityState;
-import state.ItemState;
-import type.ItemType;
-import utilities.MovaJson;
-import org.restlet.resource.ClientResource;
 
 /**
  * 
@@ -51,7 +51,8 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+//		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
@@ -118,7 +119,7 @@ public class MovaClient {
 	public void deleteItem(String itemId){
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteItem");
 		resource.getReference().addQueryParameter("itemId", itemId);
-		resource.delete();
+		resource.get();
 	}
 	
 	// ACTIVITY

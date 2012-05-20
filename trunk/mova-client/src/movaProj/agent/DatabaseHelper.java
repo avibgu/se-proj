@@ -1,12 +1,14 @@
 package movaProj.agent;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	static final String dbName="movaDB";
 	
+		
 	// Activities
 	static final String activityTable="Activity";
 	static final String activityColID="Id";
@@ -43,7 +45,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	// ItemType
 	static final String itemTypeTable="ItemType";
-	static final String itemTypeColName="Name";
+	static final String itemTypeColName="ItemName";
+	static final String itemLatitudeCol="ItemLatitude";
+	static final String itemLongitudeCol="ItemLongitude";
+	
 	
 	// AgentType
 	static final String agentTypeTable="AgentType";
@@ -87,7 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		  
 		  db.execSQL("CREATE TABLE "+activityTypeTable+" ("+activityTypeColName+ " TEXT primary key )" );
 		  
-		  db.execSQL("CREATE TABLE "+itemTypeTable+" ("+itemTypeColName+ " TEXT primary key )" );
+		  db.execSQL("CREATE TABLE "+itemTypeTable+" ("+itemTypeColName+ " TEXT primary key ," + itemLatitudeCol + " INTEGER ," + itemLongitudeCol + " INTEGER)" );
 		  
 		  db.execSQL("CREATE TABLE "+agentTypeTable+" ("+agentTypeColName+ " TEXT primary key )" );
 
@@ -96,7 +101,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		  
 		  db.execSQL("CREATE TABLE "+activityTypeAgentsTable+" ("+activityTypeAgentsColActivityId+ " TEXT , "
 				  + activityTypeAgentsColAgentType + " TEXT , " + activityTypeAgentsColNumberOfAgents + " INTEGER )" );
-
+		  
+		  
 	}
 
 	@Override
@@ -111,7 +117,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + activityTypeItemsTable);
 		db.execSQL("DROP TABLE IF EXISTS " + activityTypeAgentsTable);
 		onCreate(db);
-		
 	}
 	
 	

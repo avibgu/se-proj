@@ -144,9 +144,10 @@ public class DBHandler {
      * @param pLoggedIn the agent boolean status
      * @param pRegistrationId the agent c2dm registration id
      */
-    public void insertAgent(String pAgentId, String pType, Boolean pLoggedIn,
+    public boolean insertAgent(String pAgentId, String pType, Boolean pLoggedIn,
 			String pRegistrationId) {
 		
+    	boolean ans = true;
 		mWrite.lock();
 		createConnection();
 		
@@ -164,12 +165,15 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			ans=false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertAgent - database access error");
+			ans=false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return ans;
 	}
 	
     /**

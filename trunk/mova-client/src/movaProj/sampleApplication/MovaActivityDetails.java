@@ -1,5 +1,8 @@
-package movaProj.agent;
+package movaProj.sampleApplication;
 
+import movaProj.agent.R;
+import movaProj.agent.R.id;
+import movaProj.agent.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
