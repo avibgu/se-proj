@@ -241,4 +241,17 @@ public class Agent extends Entity implements Runnable {
 		new MovaClient().distributeItemLocation(pItemId, pLocation);
 	}
 
+	@Override
+	public boolean equals(Object pObj) {
+
+		if (!(pObj instanceof Agent))
+			return false;
+			
+		return mId.equals(((Agent)pObj).getId());
+	}
+	
+	@Override
+	public String toString() {
+		return "Agent-" + mId;
+	}
 }
