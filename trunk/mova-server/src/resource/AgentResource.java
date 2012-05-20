@@ -27,7 +27,7 @@ public class AgentResource {
 	
 	@PUT
 	@Path("/changeAgentLocation")
-	@Consumes(MediaType.APPLICATION_JSON)
+	//@Consumes(MediaType.APPLICATION_JSON)
 	public void changeAgentLocation(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
@@ -47,7 +47,9 @@ public class AgentResource {
 	public void registerAgent(String jsonObject){
 		MovaJson mj = new MovaJson();
 		Agent agent = mj.jsonToAgent(jsonObject);
+		db.insertAgentType(agent.getType().toString());
 		db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+		simulator.registerAgentMessage(agent.getId());
 	}
 	
 	@DELETE

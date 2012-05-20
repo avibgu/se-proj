@@ -329,6 +329,34 @@ public class DBHandler {
 		
 		return regristrationId;
 	}
+	
+	public String getAgentType(String pAgentId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		String type = "";
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt
+					.executeQuery("select AGENT_TYPE from " + mAgentTableName
+							+ " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+			results.next();
+			type = results.getString(1);
+
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getAgentType - database access error" +
+					", no agent type, or no agent id in the system: " + pAgentId);
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return type;
+	}
 	/**
 	 * Changes the agent's status
 	 * @pre the id pAgentId must be in the system.

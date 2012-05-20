@@ -1,6 +1,10 @@
 package gui;
 
 import actor.Entity;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -42,6 +46,7 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
 				Thread.sleep(800);
                 oldLocation = newLocation;
             }
+            doneWalkingMessage();
         }
         else{
             Location roomDoor = findClosestRoomDoor(_from, fromRoom);
@@ -54,6 +59,7 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
 				Thread.sleep(800);
                 oldLocation = newLocation;
             }
+            doneWalkingMessage();
         }
         return null;
     }
@@ -93,5 +99,17 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
             return closestDoor.getLocation();
         else
             return null;
+    }
+    
+    private void doneWalkingMessage(){
+    	String first = _entity.toString() + " moved from (" + _from.getLongitude() + "," + _from.getLatitude() + ") to (";
+        String second = _to.getLongitude() + "," + _to.getLatitude() + ")";
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        String third = " at " + dateFormat.format(date);
+        String message = first + second + third;
+        
+        _domain.addMessage(message);
     }
 }
