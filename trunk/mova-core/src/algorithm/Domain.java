@@ -61,7 +61,7 @@ public class Domain implements Cloneable {
 
 		for (AgentType agentType : mActivity.getRequiredAgents().keySet()) {
 
-			List<Agent> allAgentsOfThisType /* = get it from db */= null;
+			List<Agent> allAgentsOfThisType = getAllAgentsOfThisTypeFromDB(agentType);
 
 			mAgents.add(allAgentsOfThisType);
 
@@ -70,7 +70,7 @@ public class Domain implements Cloneable {
 			Integer numOfrequiredAgents = mActivity.getRequiredAgents().get(
 					agentType);
 
-			mAgentsSizes.add(numOfrequiredAgents);
+			mAgentsSizes.add(allAgentsOfThisType.size());
 
 			for (int i = 0; i < numOfrequiredAgents; i++)
 				tList.add(new Integer(i));
@@ -84,7 +84,7 @@ public class Domain implements Cloneable {
 
 		for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
 
-			Vector<Item> allItemsOfThisType /* = get it from db */= null;
+			Vector<Item> allItemsOfThisType = getAllItemsOfThisTypeFromDB(itemType);
 
 			mItems.add(allItemsOfThisType);
 
@@ -93,11 +93,12 @@ public class Domain implements Cloneable {
 			Integer numOfrequiredItems = mActivity.getRequiredItems().get(
 					itemType);
 
-			mItemsSizes.add(numOfrequiredItems);
+			mItemsSizes.add(allItemsOfThisType.size());
+			
 			for (int i = 0; i < numOfrequiredItems; i++)
 				tList.add(new Integer(i));
 
-			mAgentsIndexes.add(tList);
+			mItemsIndexes.add(tList);
 		}
 
 		mTimes = new ArrayList<Pair<Date, Date>>();
@@ -112,6 +113,33 @@ public class Domain implements Cloneable {
 		}
 		
 		mEmpty = false;
+		
+		resetIndexes();
+	}
+
+	private Vector<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
+		// TODO Auto-generated method stub
+		
+		Vector<Item> items = new Vector<Item>();
+		
+		items.add(new Item(pItemType));
+		items.add(new Item(pItemType));
+		items.add(new Item(pItemType));
+		items.add(new Item(pItemType));
+		
+		return items;
+	}
+
+	private List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
+		// TODO Auto-generated method stub
+		
+		Vector<Agent> agents = new Vector<Agent>();
+		
+		agents.add(new Agent(pAgentType));
+		agents.add(new Agent(pAgentType));
+		agents.add(new Agent(pAgentType));
+		
+		return agents;
 	}
 
 	public Value nextValue() {
@@ -162,9 +190,9 @@ public class Domain implements Cloneable {
 
 			int numOfIndexes = pEntitiesIndexes.get(i).size();
 
-			for (int j = numOfIndexes - 1; i >= 0 && !incremented; j--) {
+			for (int j = numOfIndexes - 1; j >= 0 && !incremented; j--) {
 
-				if (pEntitiesIndexes.get(i).get(j) + (numOfIndexes - 1 - j) < lastIndex) {
+				if (pEntitiesIndexes.get(i).get(j) + (numOfIndexes - 1 - j) <= lastIndex) {
 
 					int newIndexValue = pEntitiesIndexes.get(i).get(j) + 1;
 
