@@ -135,6 +135,33 @@ public class DBHandler {
 		mWrite.unlock();
 	}
 	
+	public Vector<String> getAgentTypes() {
+		
+		mRead.lock();
+		createConnection();
+		
+		Vector<String> agentTypes = new Vector<String>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select NAME from "
+					+ mAgentTypeTableName);
+
+			while (results.next()) {
+				String name = results.getString(1);
+				agentTypes.add(name);
+			}
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getAgentTypes - database access error or no agent types in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return agentTypes;
+	}
 	
 //----------------------------Agents Table Handling---------------------------- 
     /**

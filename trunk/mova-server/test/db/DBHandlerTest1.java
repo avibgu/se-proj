@@ -61,6 +61,17 @@ public class DBHandlerTest1 {
 		_db.deleteAgentType("COORDINATOR");
 	}
 
+	@Test
+	public void testGetAgentTypes() {
+		_db.insertAgentType("COORDINATOR");
+		_db.insertAgentType("SOUND_MANAGER");
+		Vector<String> types = _db.getAgentTypes();
+		assertEquals("COORDINATOR", types.elementAt(0));
+		assertEquals("SOUND_MANAGER", types.elementAt(1));
+		_db.deleteAgentType("COORDINATOR");
+		_db.deleteAgentType("SOUND_MANAGER");
+	}
+	
 	/**
 	 * Test method for {@link db.DBHandler#deleteAgent(java.lang.String)}.
 	 */

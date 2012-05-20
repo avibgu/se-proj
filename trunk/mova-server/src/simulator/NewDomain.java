@@ -329,11 +329,11 @@ public class NewDomain extends DefaultTableModel{
         networkManagerAgent.setRepresentation(networkManagerAgent.getType().toString());
         SoundManagerAgent.setRepresentation(SoundManagerAgent.getType().toString());
 
-        Location coordinatorAgentLocation = new Location(13, 12); _locations[13][12] = coordinatorAgent.toString();
-        Location securitOfficerAgentLocation = new Location(9, 3); _locations[9][3] = securityOfficerAgent.toString();
-        Location secretaryAgentLocation = new Location(13, 27); _locations[13][27] = secretaryAgent.toString();
-        Location networkManagerAgentLocation = new Location(4, 14); _locations[4][14] = networkManagerAgent.toString();
-        Location SoundManagerAgentLocation = new Location(10, 27); _locations[10][27] = SoundManagerAgent.toString();
+        Location coordinatorAgentLocation = new Location(13, 12); _locations[13][12] = "";
+        Location securitOfficerAgentLocation = new Location(9, 3); _locations[9][3] = "";
+        Location secretaryAgentLocation = new Location(13, 27); _locations[13][27] = "";
+        Location networkManagerAgentLocation = new Location(4, 14); _locations[4][14] = "";
+        Location SoundManagerAgentLocation = new Location(10, 27); _locations[10][27] = "";
 
         coordinatorAgent.setRepLocation(coordinatorAgentLocation);
         securityOfficerAgent.setRepLocation(securitOfficerAgentLocation);
@@ -413,10 +413,10 @@ public class NewDomain extends DefaultTableModel{
 		rfidAgent3.setRepresentation("Sensor 3");
 		rfidAgent4.setRepresentation("Sensor 4");
 
-		Location rfidAgent1Location = new Location(10, 10); _locations[10][10] = rfidAgent1.toString();
-		Location rfidAgent2Location = new Location(11, 24); _locations[11][24] = rfidAgent2.toString();
-		Location rfidAgent3Location = new Location(8, 21); _locations[8][21] = rfidAgent3.toString();
-		Location rfidAgent4Location = new Location(3, 21); _locations[3][21] = rfidAgent4.toString();
+		Location rfidAgent1Location = new Location(10, 10); _locations[10][10] = "Sensor 1";
+		Location rfidAgent2Location = new Location(11, 24); _locations[11][24] = "Sensor 2";
+		Location rfidAgent3Location = new Location(8, 21); _locations[8][21] = "Sensor 3";
+		Location rfidAgent4Location = new Location(3, 21); _locations[3][21] = "Sensor 4";
 
 		rfidAgent1.setRepLocation(rfidAgent1Location);
 		rfidAgent2.setRepLocation(rfidAgent2Location);
