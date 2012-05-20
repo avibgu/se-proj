@@ -119,29 +119,35 @@ public class Domain implements Cloneable {
 		mEmpty = false;
 	}
 
+	static Vector<Item> sItems = new Vector<Item>();
+	
 	private Vector<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
 		// TODO Auto-generated method stub
 
-		Vector<Item> items = new Vector<Item>();
+		if (sItems.size() == 0){
 
-		items.add(new Item(pItemType));
-		items.add(new Item(pItemType));
-		items.add(new Item(pItemType));
-		items.add(new Item(pItemType));
+			sItems.add(new Item(pItemType));
+			sItems.add(new Item(pItemType));
+			sItems.add(new Item(pItemType));
+			sItems.add(new Item(pItemType));
+		}
 
-		return items;
+		return sItems;
 	}
 
+	static Vector<Agent> sAgents = new Vector<Agent>();
+	
 	private List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
 		// TODO Auto-generated method stub
 
-		Vector<Agent> agents = new Vector<Agent>();
-
-		agents.add(new Agent(pAgentType));
-		agents.add(new Agent(pAgentType));
-		agents.add(new Agent(pAgentType));
-
-		return agents;
+		if (sAgents.size() == 0){
+			
+			sAgents.add(new Agent(pAgentType));
+			sAgents.add(new Agent(pAgentType));
+			sAgents.add(new Agent(pAgentType));
+		}
+		
+		return sAgents;
 	}
 
 	public Value nextValue() {
