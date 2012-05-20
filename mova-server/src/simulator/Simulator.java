@@ -1,5 +1,8 @@
 package simulator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -25,6 +28,7 @@ public class Simulator {
 	private static Map<String, Agent> mAgents;
 	private static Simulator mSimulator = null;
 	private static DBHandler db;
+	private static int agentIndex = 0;
 	
 	private Simulator(){
 		_entities = _domain.getEntities();
@@ -33,9 +37,9 @@ public class Simulator {
 		_sensorAgents = _entities.elementAt(2);
 		mAgents = new HashMap<String, Agent>();
 		db = DBHandler.getInstance();
-		for (Entity agent : _agents) {
-			mAgents.put(agent.getId(), (Agent) agent);
-		}
+//		for (Entity agent : _agents) {
+//			mAgents.put(agent.getId(), (Agent) agent);
+//		}
 	}
 	
 	public synchronized static Simulator getInstance(NewDomain domain){
@@ -55,7 +59,22 @@ public class Simulator {
         _domain.walkAgent(agent, oldLocation, newLocation);
 	}
 	
-	//public void registerAgent
+	public void registerAgentMessage(String pId){
+		if(agentIndex < _agents.size()){
+			Agent agent = (Agent) _agents.elementAt(agentIndex);
+			String type = db.getAgentType(pId);
+			agent.setId(pId);
+			agent.setRepresentation(type);
+			db.insertAgentLocation(pId, agent.getLocation());
+			mAgents.put(pId, agent);
+			
+			String message = "An new " + type + " agent registered to the system"; 
+			_domain.addMessage(message);
+			_domain.setValueAt(type, agent.getLocation().getLongitude(), agent.getLocation().getLatitude());
+			
+			agentIndex++;
+		}
+	}
 	
 	public void changeActivityStatusMessage(String pId, ActivityState pState){
 		String name = db.getActivityName(pId);
@@ -64,7 +83,7 @@ public class Simulator {
 	}
 	
 	public void addActivityMessage(Activity pActivity){
-		String message = "A new activity \"" + pActivity.getName() + "\"" + " was created\n";
+		String message = "A new activity \"" + pActivity.getName() + "\"" + " was created";
 		_domain.addMessage(message);
 	}
 	
@@ -76,7 +95,8 @@ public class Simulator {
 	
 	public void changeAgentLocationMessage(String pId, Location pNewLocation){
 		Location oldLocation = db.getAgentLocation(pId);
-		//_domain.walkAgent(_agents, from, to)
+		Agent agent = mAgents.get(pId);
+		_domain.walkAgent(agent, oldLocation, pNewLocation);
 	}
 	
 	public void changeAgentStatus(String agentId, String newStatus){

@@ -20,7 +20,7 @@ public class LocationDeserializer implements JsonDeserializer<Location> {
 		int latitude = jobject.get("latitude").getAsInt();
 		int longitude = jobject.get("longitude").getAsInt();
 		
-		Location loc = new Location(latitude, longitude);
+		Location loc = new Location(longitude, latitude);
 		
 		return loc;
 	}

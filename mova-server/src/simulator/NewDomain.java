@@ -306,11 +306,16 @@ public class NewDomain extends DefaultTableModel{
     private Vector<Entity> manuallyInitializeAgents(){
         Vector<Entity> agents = new Vector<Entity>();
 
-        Agent coordinatorAgent = new Agent(new AgentType("COORDINATOR"));
-        Agent securityOfficerAgent = new Agent(new AgentType("SECURITY_OFFICER"));
-        Agent secretaryAgent = new Agent(new AgentType("SECRETARY"));
-        Agent networkManagerAgent = new Agent(new AgentType("NETWORK_MANAGER"));
-        Agent SoundManagerAgent = new Agent(new AgentType("SOUND_MANAGER"));
+//        Agent coordinatorAgent = new Agent(new AgentType("COORDINATOR"));
+//        Agent securityOfficerAgent = new Agent(new AgentType("SECURITY_OFFICER"));
+//        Agent secretaryAgent = new Agent(new AgentType("SECRETARY"));
+//        Agent networkManagerAgent = new Agent(new AgentType("NETWORK_MANAGER"));
+//        Agent SoundManagerAgent = new Agent(new AgentType("SOUND_MANAGER"));
+        Agent coordinatorAgent = new Agent(new AgentType(""));
+        Agent securityOfficerAgent = new Agent(new AgentType(""));
+        Agent secretaryAgent = new Agent(new AgentType(""));
+        Agent networkManagerAgent = new Agent(new AgentType(""));
+        Agent SoundManagerAgent = new Agent(new AgentType(""));
 
         agents.add(coordinatorAgent);
         agents.add(securityOfficerAgent);
@@ -509,15 +514,6 @@ public class NewDomain extends DefaultTableModel{
                     }
                     setValueAt(newRep, oldLocation.getLongitude(), oldLocation.getLatitude());
                 }
-                String first = entity.toString() + " moved from (" + oldLocation.getLongitude() + "," + oldLocation.getLatitude() + ") to (";
-                String second = newLocation.getLongitude() + "," + newLocation.getLatitude() + ")";
-
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                Date date = new Date();
-                String third = "at " + dateFormat.format(date);
-                String message = first + second + " " + third + '\n';
-
-                addMessage(message);
             }
             entity.update();
             //fireTableDataChanged();
@@ -525,6 +521,7 @@ public class NewDomain extends DefaultTableModel{
     }
     
     public void addMessage(String message){
+    	message = message.concat("\n");
     	for (Observer ob : _observers) {
             ob.update(null, message);
         }
