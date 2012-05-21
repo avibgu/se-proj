@@ -95,7 +95,6 @@ public class CBJ implements CSPAlgorithm {
 
 			mConsistent = true;
 
-			// Always going for the first
 			mAssignment.set(i, mCurrentDomains.get(i).nextValue());
 
 			int h;

@@ -100,6 +100,11 @@ public class Item extends Entity{
 	}
 	
 	@Override
+	public int hashCode() {
+		return mId.hashCode();
+	}
+	
+	@Override
 	public String toString() {
 		return "Item-" + mId;
 	}

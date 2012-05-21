@@ -37,6 +37,11 @@ public class ItemType {
 		return ((ItemType)pOther).getType().equals(mType);
 	}
 	
+	@Override
+	public int hashCode() {
+		return mType.hashCode();
+	}
+	
 	public String toString(){
 		return mType;
 	}

@@ -33,6 +33,11 @@ public class AgentType {
 		return ((AgentType)pOther).getType().equals(mType);
 	}
 	
+	@Override
+	public int hashCode() {
+		return mType.hashCode();
+	}
+	
 	public String toString(){
 		return mType;
 	}
