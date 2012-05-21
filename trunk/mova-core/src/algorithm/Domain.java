@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import com.google.gson.internal.Pair;
 
@@ -65,7 +64,7 @@ public class Domain implements Cloneable {
 
 		for (AgentType agentType : mActivity.getRequiredAgents().keySet()) {
 
-			List<Agent> allAgentsOfThisType = getAllAgentsOfThisTypeFromDB(agentType);
+			List<Agent> allAgentsOfThisType = XXX.getAllAgentsOfThisTypeFromDB(agentType);
 
 			mAgents.add(allAgentsOfThisType);
 
@@ -88,7 +87,7 @@ public class Domain implements Cloneable {
 
 		for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
 
-			Vector<Item> allItemsOfThisType = getAllItemsOfThisTypeFromDB(itemType);
+			List<Item> allItemsOfThisType = XXX.getAllItemsOfThisTypeFromDB(itemType);
 
 			mItems.add(allItemsOfThisType);
 
@@ -119,48 +118,19 @@ public class Domain implements Cloneable {
 		mEmpty = false;
 	}
 
-	static Vector<Item> sItems = new Vector<Item>();
-	
-	private Vector<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
-		// TODO Auto-generated method stub
-
-		if (sItems.size() == 0){
-
-			sItems.add(new Item(pItemType));
-			sItems.add(new Item(pItemType));
-			sItems.add(new Item(pItemType));
-			sItems.add(new Item(pItemType));
-		}
-
-		return sItems;
-	}
-
-	static Vector<Agent> sAgents = new Vector<Agent>();
-	
-	private List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
-		// TODO Auto-generated method stub
-
-		if (sAgents.size() == 0){
-			
-			sAgents.add(new Agent(pAgentType));
-			sAgents.add(new Agent(pAgentType));
-			sAgents.add(new Agent(pAgentType));
-		}
-		
-		return sAgents;
-	}
-
 	public Value nextValue() {
 
-		String hashKey = getHashKeyOfCurrentIndexes();
+//		String hashKey = getHashKeyOfCurrentIndexes();
+//
+//		Value value = mValues.get(hashKey);
 
-		Value value = mValues.get(hashKey);
-
-		if (null == value) {
+		Value value = null;
+				
+//		if (null == value) {
 
 			value = constructValueFromIndexes();
-			mValues.put(hashKey, value);
-		}
+//			mValues.put(hashKey, value);
+//		}
 
 		incrementIndexes();
 
@@ -200,7 +170,7 @@ public class Domain implements Cloneable {
 
 			for (int j = numOfIndexes - 1; j >= 0 && !incremented; j--) {
 
-				if (pEntitiesIndexes.get(i).get(j) + (numOfIndexes - 1 - j) <= lastIndex) {
+				if (pEntitiesIndexes.get(i).get(j) + (numOfIndexes - 1 - j) < lastIndex) {
 
 					int newIndexValue = pEntitiesIndexes.get(i).get(j) + 1;
 

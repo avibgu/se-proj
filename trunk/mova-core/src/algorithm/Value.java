@@ -30,8 +30,8 @@ public class Value {
 	// true - bad for us..
 	public boolean areConflicting(Value pOther) {
 
-		if (mActualStartTime.getTime() >= pOther.getActualEndTime().getTime()
-				|| mActualEndTime.getTime() <= pOther.getActualStartTime()
+		if (mActualStartTime.getTime() > pOther.getActualEndTime().getTime()
+				|| mActualEndTime.getTime() < pOther.getActualStartTime()
 						.getTime())
 			return arePreRequirmentsConflicting(pOther);
 

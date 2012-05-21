@@ -251,6 +251,11 @@ public class Agent extends Entity implements Runnable {
 	}
 	
 	@Override
+	public int hashCode() {
+		return mId.hashCode();
+	}
+	
+	@Override
 	public String toString() {
 		return "Agent-" + mId;
 	}

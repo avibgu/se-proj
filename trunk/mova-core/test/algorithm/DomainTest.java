@@ -36,12 +36,12 @@ public class DomainTest {
 		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
 		
 		requiredAgents.put(new AgentType("AT1"), 1);
-		requiredAgents.put(new AgentType("AT2"), 1);
+//		requiredAgents.put(new AgentType("AT2"), 1);
 		
 		Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
 		
-		requiredItems.put(new ItemType("IT1"), 2);
-		requiredItems.put(new ItemType("IT2"), 1);
+//		requiredItems.put(new ItemType("IT1"), 2);
+//		requiredItems.put(new ItemType("IT2"), 1);
 		
 		Set<String> requiredActivities = new HashSet<String>();
 
@@ -57,22 +57,21 @@ public class DomainTest {
 		
 		Domain domain = new Domain(activity);
 		
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
-		domain.nextValue();
+		Value value = null; 
+		
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
+		value = domain.nextValue();
 		
 		domain.resetIndexes();
 	}
