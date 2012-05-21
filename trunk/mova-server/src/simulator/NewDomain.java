@@ -6,10 +6,8 @@ import actor.Entity;
 import actor.Item;
 import actor.SensorAgent;
 import gui.WalkingAgentWorker;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observer;
 import java.util.Stack;
 import java.util.Vector;
@@ -22,22 +20,22 @@ public class NewDomain extends DefaultTableModel{
     
 	private static final long serialVersionUID = 3391358106917744757L;
 	private MovaMap mMovaMap;
-    private int _nAgents;
-	private int _nItems;
-	private int _nSensors;
+    //private int _nAgents;
+	//private int _nItems;
+	//private int _nSensors;
 	private double _nScanDistance;
 	private Vector<Vector<Entity>> _entities;
     private String[][] _locations;
     private HashMap<Entity, Location> _entitiesMap;
 	private Vector<Observer> _observers;
 	private Vector<Runnable> _itemScanners;
-    private Vector<Room> _rooms;
+    //private Vector<Room> _rooms;
     private Vector<Door> _doors;
 
     public NewDomain (int height, int width, int nAgents, int nItems, int nSensors, double nScanDistance){
-        _nAgents = nAgents;
-        _nItems = nItems;
-        _nSensors = nSensors;
+        //_nAgents = nAgents;
+        //_nItems = nItems;
+        //_nSensors = nSensors;
         _nScanDistance = nScanDistance;
         _entities = new Vector<Vector<Entity>>();
         _locations = new String[height][width];
@@ -147,7 +145,7 @@ public class NewDomain extends DefaultTableModel{
         rooms.add(mainOffice);
         rooms.add(auditorium);
         rooms.add(conferenceRoomA);
-        _rooms = rooms;
+        //_rooms = rooms;
         mMovaMap.setRooms(rooms);
     }
 
@@ -187,12 +185,12 @@ public class NewDomain extends DefaultTableModel{
         updateEntityLocation(entity);
     }
 
-    public void changeItemsLocation(Vector<Entity> changedLocationItems){
+    public void changeItemsLocation(Map<String, Item> changedLocationItems){
         if(changedLocationItems != null){//itemScanner has executed this method
             //update table for each visible item
-            for (Entity e : (Vector<Entity>) changedLocationItems) {
-                updateEntityLocation(e);
-            }
+            for (Item item : changedLocationItems.values()) {
+            	updateEntityLocation(item);
+			}
         }
     }
 
@@ -261,14 +259,14 @@ public class NewDomain extends DefaultTableModel{
         return _entitiesMap;
     }
 
-    public Vector<Entity> scanForItems(Location entityLocation, double distance){
-		Vector<Entity> items = new Vector<Entity>();
+    public Vector<Item> scanForItems(Location entityLocation, double distance){
+		Vector<Item> items = new Vector<Item>();
 		synchronized (_entities) {
 			for (Entity item : _entities.get(1)) {
 				Location itemLocation = item.getLocation();
 				double dist = calcDistance(entityLocation, itemLocation);
 				if(dist <= distance){
-					items.add(item);
+					items.add((Item) item);
 				}
 			}
 		}
@@ -424,9 +422,9 @@ public class NewDomain extends DefaultTableModel{
 		rfidAgent4.setRepLocation(rfidAgent4Location);
 
 		_entitiesMap.put(rfidAgent1, rfidAgent1Location);
-                _entitiesMap.put(rfidAgent2, rfidAgent2Location);
-                _entitiesMap.put(rfidAgent3, rfidAgent3Location);
-                _entitiesMap.put(rfidAgent4, rfidAgent4Location);
+        _entitiesMap.put(rfidAgent2, rfidAgent2Location);
+        _entitiesMap.put(rfidAgent3, rfidAgent3Location);
+        _entitiesMap.put(rfidAgent4, rfidAgent4Location);
 
 		Runnable is1 = new ItemScanner(rfidAgent1, this, _observers, _nScanDistance);
 		_itemScanners.add(is1);

@@ -1,7 +1,6 @@
 package utilities;
 
 import java.lang.reflect.Type;
-import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +8,6 @@ import type.AgentType;
 import type.ItemType;
 
 import actor.Activity;
-import actor.Item;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
