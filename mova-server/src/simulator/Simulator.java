@@ -1,8 +1,5 @@
 package simulator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -15,6 +12,7 @@ import utilities.Location;
 import actor.Activity;
 import actor.Agent;
 import actor.Entity;
+import actor.Item;
 
 
 public class Simulator {
@@ -54,6 +52,19 @@ public class Simulator {
 //		Location oldLocation = agent.getLocation();
 //        Location newLocation = new Location(2, 24);
 //        _domain.walkAgent(agent, oldLocation, newLocation);
+		
+		Item item1 = (Item) _items.elementAt(0);
+		Item item2 = (Item) _items.elementAt(1);
+		
+		item1.setLocation(new Location(3, 23));
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		item2.setLocation(new Location(4, 21));
 	}
 	
 	public void registerAgentMessage(String pId){

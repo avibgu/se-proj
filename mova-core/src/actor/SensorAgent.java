@@ -1,30 +1,34 @@
 package actor;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import type.AgentType;
 
 public class SensorAgent extends Agent {
 	
-	protected Vector<Entity> mVisibleItems;
+	protected Map<String, Item> mVisibleItems;
 	
 	public SensorAgent(AgentType pType) {
 		super(pType);
-		mVisibleItems = new Vector<Entity>();
+		mVisibleItems = new HashMap<String, Item>();
 	}
 
-	public void setVisibleItems(Vector<Entity> pItems){
+	public void setVisibleItems(Map<String, Item> pItems){
 		synchronized (mVisibleItems) {
 			mVisibleItems = pItems;	
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Vector<Entity> getVisibleItems(){
+	public Map<String, Item> getVisibleItems(){
 		
-		Vector<Entity> visibleItems = new Vector<Entity>();
+		Map<String, Item> visibleItems = new HashMap<String, Item>();
 		
 		synchronized (mVisibleItems) {
-			visibleItems = (Vector<Entity>) mVisibleItems.clone();
+			for (Map.Entry<String, Item> item : mVisibleItems.entrySet()) {
+				visibleItems.put(item.getKey(), item.getValue());
+			}
 		}
 		
 		return visibleItems;

@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
+import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
 
 import state.ActivityState;
@@ -51,9 +52,8 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-//		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
-		return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -227,7 +227,7 @@ public class MovaClient {
 	}
 	
 	public void deleteAgent(String agentId){
-		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteAgent");
 		resource.getReference().addQueryParameter("agentId", agentId);

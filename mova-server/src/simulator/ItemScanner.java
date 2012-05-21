@@ -1,11 +1,14 @@
 package simulator;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observer;
 import java.util.Vector;
 
 import utilities.Location;
 
 import actor.Entity;
+import actor.Item;
 import actor.SensorAgent;
 
 public class ItemScanner implements Runnable {
@@ -16,7 +19,8 @@ public class ItemScanner implements Runnable {
 	protected Location mSensorLocation;
 	protected final long mRefreshRate = 3;
 	protected final double mScanDistance;
-	protected Vector<Entity> mVisibleItems;
+	protected Vector<Item> mVisibleItems;
+	protected Map<String, Item> mIsibleItems;
 	protected Vector<Observer> mObservers;
 	
 	public ItemScanner(Entity entity, NewDomain domain, Vector<Observer> observers, double scanDistance){
@@ -24,27 +28,38 @@ public class ItemScanner implements Runnable {
 		mSensorAgent = (SensorAgent)entity;
 		mSensorLocation = mSensorAgent.getLocation();
 		mDontStop = true;
-		mVisibleItems = new Vector<Entity>();
+		mVisibleItems = new Vector<Item>();
+		mIsibleItems = new HashMap<String, Item>();
 		mObservers = observers;
 		mScanDistance = scanDistance;
+		
+		mVisibleItems = mDomain.scanForItems(mSensorLocation, mScanDistance);
+		mIsibleItems = vectorToHashMap(mDomain.scanForItems(mSensorLocation, mScanDistance));
+		String message = mSensorAgent.getType().toString() + " Sensor identified items: ";
+		if(mIsibleItems.size() > 0){
+			createIdentifiedItemsMessage(message, mIsibleItems);
+		}
 	}
 	
 	@Override
 	public void run() {
 		while (mDontStop){
-			Vector<Entity> visible = mDomain.scanForItems(mSensorLocation, mScanDistance);
-			Vector<Entity> changedLocationItems = new Vector<Entity>(); 
-			for (Entity entity : visible) {
-				if(!entity.getLocation().equals(entity.getOldLocation()) && entity.getOldLocation() != null)
-					changedLocationItems.add(entity);
+			Map<String, Item> visible = vectorToHashMap(mDomain.scanForItems(mSensorLocation, mScanDistance));
+			Map<String, Item> changedLocationItems = new HashMap<String, Item>(); 
+			
+			for (Map.Entry<String, Item> item : visible.entrySet()) {
+				if(!mIsibleItems.containsKey(item.getKey()))
+					changedLocationItems.put(item.getKey(), item.getValue());
 			}
 			mSensorAgent.setVisibleItems(visible);
-			mVisibleItems = visible;
+			mIsibleItems = visible;
 			if(changedLocationItems.size() > 0){
 //				for (Observer ob : _observers) {
 //					ob.update(null, changedLocationItems);
 //				}
                 mDomain.changeItemsLocation(changedLocationItems);
+                String message = mSensorAgent.getType().toString() + " Sensor identified new items: ";
+            	createIdentifiedItemsMessage(message, changedLocationItems);
 			}
 			try {
 				Thread.sleep(mRefreshRate * 1000);
@@ -52,6 +67,22 @@ public class ItemScanner implements Runnable {
 				stop();
 			}
 		}
+	}
+	
+	private void createIdentifiedItemsMessage(String initialMessage, Map<String, Item> changedLocationItems){
+        for (Item item : changedLocationItems.values()) {
+        	initialMessage = initialMessage.concat(item.getType().toString() + ", ");
+		}
+        initialMessage = initialMessage.substring(0, initialMessage.length() - 2);
+        mDomain.addMessage(initialMessage);
+	}
+	
+	private Map<String, Item> vectorToHashMap(Vector<Item> items){
+		Map<String, Item> visibleItems = new HashMap<String, Item>();
+		for (Item item : items) {
+			visibleItems.put(item.getId(), item);
+		}
+		return visibleItems;
 	}
 	
 	public void stop() {
