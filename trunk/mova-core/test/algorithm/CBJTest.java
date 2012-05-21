@@ -30,23 +30,26 @@ public class CBJTest {
 	public void tearDown() throws Exception {
 	}
 
-	public Activity createSimpleActivity() {
+	public Activity createSimpleActivity(String pSomeActivityID) {
 
 		Timestamp startTime = new Timestamp(new Date().getTime());
-		Timestamp endTime = new Timestamp(startTime.getTime() + HOUR * 8);
+		Timestamp endTime = new Timestamp(startTime.getTime() + HOUR * 24);
 
 		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
 		
 		requiredAgents.put(new AgentType("AT1"), 1);
-//		requiredAgents.put(new AgentType("AT2"), 1);
+		requiredAgents.put(new AgentType("AT2"), 1);
 		
 		Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
 		
-//		requiredItems.put(new ItemType("IT1"), 1);
-//		requiredItems.put(new ItemType("IT2"), 1);
+		requiredItems.put(new ItemType("IT1"), 1);
+		requiredItems.put(new ItemType("IT2"), 1);
 		
 		Set<String> requiredActivities = new HashSet<String>();
 
+		if (null != pSomeActivityID)
+			requiredActivities.add(pSomeActivityID);
+		
 		return new Activity("KENES", startTime, endTime, HOUR * 2,
 				requiredAgents, requiredItems, requiredActivities, "TEST",
 				"TEST");
@@ -57,9 +60,27 @@ public class CBJTest {
 
 		Vector<Variable> variables = new Vector<Variable>();
 		
-		variables.add(new Variable(createSimpleActivity()));
-		variables.add(new Variable(createSimpleActivity()));
+		Activity activity = null; 
+				
+		activity = createSimpleActivity(null);
+		variables.add(new Variable(activity));
+		variables.add(new Variable(createSimpleActivity(activity.getId())));
+
+		activity = createSimpleActivity(null);
+		variables.add(new Variable(activity));
+		variables.add(new Variable(createSimpleActivity(activity.getId())));
 		
+		variables.add(new Variable(createSimpleActivity(null)));
+		variables.add(new Variable(createSimpleActivity(null)));
+		
+		activity = createSimpleActivity(null);
+		variables.add(new Variable(activity));
+		variables.add(new Variable(createSimpleActivity(activity.getId())));
+		
+		activity = createSimpleActivity(null);
+		variables.add(new Variable(activity));
+		variables.add(new Variable(createSimpleActivity(activity.getId())));
+
 		CBJ cbj = new CBJ(variables);
 		
 		cbj.solve();

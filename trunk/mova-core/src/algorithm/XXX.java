@@ -25,8 +25,9 @@ public class XXX {
 
 			tList = new ArrayList<Agent>();
 
-//			tList.add(new Agent(pAgentType));
-//			tList.add(new Agent(pAgentType));
+			tList.add(new Agent(pAgentType));
+			tList.add(new Agent(pAgentType));
+			tList.add(new Agent(pAgentType));
 			tList.add(new Agent(pAgentType));
 
 			sAgentsMap.put(pAgentType, tList);
@@ -43,9 +44,10 @@ public class XXX {
 
 			tList = new ArrayList<Item>();
 
-//			tList.add(new Item(pItemType));
-//			tList.add(new Item(pItemType));
-//			tList.add(new Item(pItemType));
+			tList.add(new Item(pItemType));
+			tList.add(new Item(pItemType));
+			tList.add(new Item(pItemType));
+			tList.add(new Item(pItemType));
 			tList.add(new Item(pItemType));
 
 			sItemsMap.put(pItemType, tList);

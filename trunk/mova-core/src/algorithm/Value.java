@@ -30,8 +30,8 @@ public class Value {
 	// true - bad for us..
 	public boolean areConflicting(Value pOther) {
 
-		if (mActualStartTime.getTime() > pOther.getActualEndTime().getTime()
-				|| mActualEndTime.getTime() < pOther.getActualStartTime()
+		if (mActualStartTime.getTime() >= pOther.getActualEndTime().getTime()
+				|| mActualEndTime.getTime() <= pOther.getActualStartTime()
 						.getTime())
 			return arePreRequirmentsConflicting(pOther);
 
@@ -68,12 +68,12 @@ public class Value {
 
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Activitiy ID: " + mActivitiyID + "\n");
+		sb.append("\nActivitiy ID: " + mActivitiyID + "\n");
 		sb.append("Actual Start Time: " + mActualStartTime + "\n");
 		sb.append("Actual End Time: " + mActualEndTime + "\n");
 		sb.append("Required Aents: " + mRequiredAgents + "\n");
 		sb.append("Required Items: " + mRequiredItems + "\n");
-		sb.append("\nRequired Activities: " + mRequiredActivities + "\n");
+		sb.append("Required Activities: " + mRequiredActivities + "\n");
 		
 		return sb.toString();
 	}
