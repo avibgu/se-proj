@@ -860,7 +860,7 @@ public class DBHandler {
 
 			mStmt.execute("insert into " + mItemTableName + " values (" + "'"
 					+ item.getId() + "'" + "," + "'" + item.getType().getType() + "'" + "," + "'" 
-					+ item.getState().toString() + "'" + "," + "'" + "" + "'" + ")");
+					+ item.getState().toString() + "'" + "," + "'" + " " + "'" + ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
@@ -870,6 +870,8 @@ public class DBHandler {
 		
 		shutdown();
 		mWrite.unlock();
+		
+		insertItemLocation(item.getId(), item.getLocation());
 	}
 	/**
 	 * Deletes an item from the system
@@ -900,15 +902,19 @@ public class DBHandler {
 	 * @param pItemId the id of the item to update its state
 	 * @param newState the item state
 	 */
-	public void updateItemState(String pItemId, String newState) {
+	public void updateItemState(String pItemId, String pNewState, String pAgentId) {
 		
 		mWrite.lock();
 		createConnection();
 		
 		try {
 			mStmt = mConn.createStatement();
+			String id = " ";
+			if(pNewState.equals("BUSY")){
+				id = pAgentId;
+			}
 			mStmt.execute("update " + mItemTableName + " set ITEM_STATE = " + "'"
-					+ newState + "'" + " WHERE ITEM_ID = " + "'" + pItemId + "'");
+					+ pNewState + "'" + " , AGENT_ID = " + "'" + id + "'" + " WHERE ITEM_ID = " + "'" + pItemId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out.println("updateItemState - database access error" +
@@ -1037,6 +1043,78 @@ public class DBHandler {
 		mRead.unlock();
 		
 		return itemIds;
+	}
+	
+	public Vector<Item> getAgentItems(String pAgentId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		Vector<Item> agentItems = new Vector<Item>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mItemTableName + " WHERE AGENT_ID = " + "'" + pAgentId + "'");
+
+			while (results.next()) {
+				String itemId = results.getString("ITEM_ID");
+				String itemType = results.getString("ITEM_TYPE");
+				String itemState = results.getString("ITEM_STATE");
+				//String agentId = results.getString("AGENT_ID");
+				Item item = new Item(new ItemType(itemType));
+				item.setId(itemId);
+				item.setState(ItemState.valueOf(itemState));
+				item.setRepresentation(itemType);
+				agentItems.add(item);
+			}
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getAgentItems - database access error or no agent in database: " + pAgentId);
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return agentItems;
+	}
+	
+	public Vector<Item> getItems() {
+		
+		mRead.lock();
+		createConnection();
+		
+		Vector<Item> items = new Vector<Item>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from " + mItemTableName);
+
+			while (results.next()) {
+				String itemId = results.getString("ITEM_ID");
+				String itemType = results.getString("ITEM_TYPE");
+				String itemState = results.getString("ITEM_STATE");
+				//String agentId = results.getString("AGENT_ID");
+				Item item = new Item(new ItemType(itemType));
+				item.setId(itemId);
+				item.setState(ItemState.valueOf(itemState));
+				item.setRepresentation(itemType);
+				items.add(item);
+			}
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getItems - database access error");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		for (Item item : items) {
+			item.setLocation(getItemLocation(item.getId()));
+		}
+		return items;
 	}
 //----------------------------ItemTypes Table Handling----------------------------	
     /**

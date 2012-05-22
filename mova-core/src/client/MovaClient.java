@@ -108,10 +108,11 @@ public class MovaClient {
 		resource.put(j.toString());
 	}
 	
-	public void changeItemStatus(String itemId, String newStatus){
+	public void changeItemStatus(String itemId, String newStatus, String pAgentId){
 		JsonObject j = new JsonObject();
 		j.addProperty("itemId", itemId);
 		j.addProperty("newStatus", newStatus);
+		j.addProperty("agentId", pAgentId);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/changeItemStatus");
 		resource.put(j.toString());
 	}
@@ -120,6 +121,13 @@ public class MovaClient {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteItem");
 		resource.getReference().addQueryParameter("itemId", itemId);
 		resource.get();
+	}
+	
+	public Vector<Item> getItems(){
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/getItems");
+		String response = resource.get(String.class);
+		
+		return mMj.jsonToItems(response);
 	}
 	
 	// ACTIVITY

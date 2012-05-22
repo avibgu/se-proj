@@ -480,7 +480,7 @@ public class NewDomain extends DefaultTableModel{
         setDataVector(_locations,names );
     }
 
-    private synchronized void updateEntityLocation(Entity entity){
+    public synchronized void updateEntityLocation(Entity entity){
         Location oldLocation = entity.getLastRepLocation();
         Location newLocation = entity.getLocation();
         if(!newLocation.equals(oldLocation) && oldLocation != null && !entity.updated()){

@@ -35,6 +35,10 @@ public class Simulator {
 		_sensorAgents = _entities.elementAt(2);
 		mAgents = new HashMap<String, Agent>();
 		db = DBHandler.getInstance();
+		for (Entity item : _items) {
+			db.insertItemType(((Item) item).getType().toString());
+			db.insertItem((Item) item);
+		}
 	}
 	
 	public synchronized static Simulator getInstance(NewDomain domain){
@@ -103,7 +107,17 @@ public class Simulator {
 	
 	public void changeAgentLocationMessage(String pId, Location pNewLocation){
 		Location oldLocation = db.getAgentLocation(pId);
+		Vector<Item> items = db.getAgentItems(pId);
+		Vector<Item> simulatedItems = new Vector<Item>();
+		for (Item item1 : items) {
+			//item.setRepLocation(db.getItemLocation(item.getId()));
+			for (Entity item2 : _items) {
+				if(item1.getId().equals(item2.getId()))
+					simulatedItems.add((Item) item2);
+			}
+		}
 		Agent agent = mAgents.get(pId);
+		agent.setMyItems(simulatedItems);
 		_domain.walkAgent(agent, oldLocation, pNewLocation);
 		db.updateAgentLocation(pId, pNewLocation);
 	}

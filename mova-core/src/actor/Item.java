@@ -20,12 +20,6 @@ public class Item extends Entity{
 	protected ItemState mState;
 	
 	/**
-	 * Constructs an empty item. Type and state need to be set manually
-	 */
-	public Item(){
-		mState = ItemState.AVAILABLE;
-	}
-	/**
 	 * Constructs an item with the given item type
 	 * @param pItemType the item type
 	 */
@@ -73,19 +67,19 @@ public class Item extends Entity{
 	/**
 	 * Changes the item's state to BUSY
 	 */
-	public void markAsBusy() {
+	public void markAsBusy(String pAgentId) {
 		synchronized (mState) {
 			mState = ItemState.BUSY;
-			new MovaClient().changeItemStatus(mId, ItemState.BUSY.toString());
+			new MovaClient().changeItemStatus(mId, ItemState.BUSY.toString(), pAgentId);
 		}
 	}
 	/**
 	 * Changes the item's state to AVAILABLE
 	 */
-	public void markAsAvailable() {
+	public void markAsAvailable(String pAgentId) {
 		synchronized (mState) {
 			mState = ItemState.AVAILABLE;
-			new MovaClient().changeItemStatus(mId, ItemState.AVAILABLE.toString());
+			new MovaClient().changeItemStatus(mId, ItemState.AVAILABLE.toString(), pAgentId);
 		}
 	}
 	

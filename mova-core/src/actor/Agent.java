@@ -36,7 +36,8 @@ public class Agent extends Entity implements Runnable {
 	
 	 // The items the agent has.
 	protected Vector<Item>				mMyItems;
-	
+
+
 	public Agent(AgentType pType) {
 
 		mActivitiesToPerform = new Vector<Activity>();
@@ -107,7 +108,7 @@ public class Agent extends Entity implements Runnable {
 					
 					if (item.getType().equals(itemType) && (item.mState == ItemState.AVAILABLE)){
 
-						item.markAsBusy();
+						item.markAsBusy(mId);
 						
 						//TODO: tell server that we took this item
 						
@@ -157,7 +158,7 @@ public class Agent extends Entity implements Runnable {
 		
 		for (Item item : mMyItems){
 			
-			item.markAsAvailable();
+			item.markAsAvailable(mId);
 			//TODO: tell server that we released this item
 		}
 	}
@@ -239,6 +240,15 @@ public class Agent extends Entity implements Runnable {
 	
 	public void foundNewItem(String pItemId, Location pLocation){
 		new MovaClient().distributeItemLocation(pItemId, pLocation);
+	}
+	
+	public Vector<Item> getMyItems() {
+		return mMyItems;
+	}
+
+
+	public void setMyItems(Vector<Item> pMyItems) {
+		mMyItems = pMyItems;
 	}
 
 	@Override

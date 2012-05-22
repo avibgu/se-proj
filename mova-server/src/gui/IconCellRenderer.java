@@ -17,6 +17,7 @@ public class IconCellRenderer  implements TableCellRenderer{
     ImageIcon _itemIcon;
     ImageIcon _personIcon;
     ImageIcon _bgImage;
+    ImageIcon _agentItem;
 
     public IconCellRenderer(NewDomain domain){
         //_domain = domain;
@@ -24,6 +25,8 @@ public class IconCellRenderer  implements TableCellRenderer{
         _sensorIcon = new ImageIcon(getClass().getResource("icons/sensor.gif"));
         _itemIcon = new ImageIcon(getClass().getResource("icons/item.gif"));
         _personIcon = new ImageIcon(getClass().getResource("icons/person.gif"));
+        _agentItem = new ImageIcon(getClass().getResource("icons/Picture2.png"));
+        
     }
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -31,7 +34,9 @@ public class IconCellRenderer  implements TableCellRenderer{
 
         cell.setBackground(new Color(0,0,0,0));
 
-        if(isAgent((String)value))
+        if(isAgent((String)value) && isItem((String)value))
+        	cell.setIcon(_agentItem);
+    	else if(isAgent((String)value))
             cell.setIcon(_agentIcon);
         else if(isSensor((String)value))
              cell.setIcon(_sensorIcon);

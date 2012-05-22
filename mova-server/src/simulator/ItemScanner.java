@@ -17,7 +17,7 @@ public class ItemScanner implements Runnable {
 	protected NewDomain mDomain;
 	protected SensorAgent mSensorAgent;
 	protected Location mSensorLocation;
-	protected final long mRefreshRate = 3;
+	protected final long mRefreshRate = 1;
 	protected final double mScanDistance;
 	protected Vector<Item> mVisibleItems;
 	protected Map<String, Item> mIsibleItems;
@@ -62,7 +62,7 @@ public class ItemScanner implements Runnable {
             	createIdentifiedItemsMessage(message, changedLocationItems);
 			}
 			try {
-				Thread.sleep(mRefreshRate * 1000);
+				Thread.sleep(mRefreshRate * 200);
 			} catch (InterruptedException e) {
 				stop();
 			}
@@ -71,7 +71,9 @@ public class ItemScanner implements Runnable {
 	
 	private void createIdentifiedItemsMessage(String initialMessage, Map<String, Item> changedLocationItems){
         for (Item item : changedLocationItems.values()) {
-        	initialMessage = initialMessage.concat(item.getType().toString() + ", ");
+        	initialMessage = initialMessage.concat(item.getType().toString() 
+        			+ " at ( " + item.getLocation().getLongitude() + "," 
+        			+ item.getLocation().getLatitude() + "), ");
 		}
         initialMessage = initialMessage.substring(0, initialMessage.length() - 2);
         mDomain.addMessage(initialMessage);
