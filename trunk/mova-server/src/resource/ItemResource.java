@@ -91,7 +91,8 @@ public class ItemResource {
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String itemId = j.get("itemId").getAsString();
 		String newStatus = j.get("newStatus").getAsString();
-		db.updateItemState(itemId, newStatus);
+		String agentId = j.get("agentId").getAsString();
+		db.updateItemState(itemId, newStatus, agentId);
 	}
 	
 	@PUT
@@ -106,5 +107,14 @@ public class ItemResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteItemType(String jsonObject){
 		db.deleteItemType(jsonObject);
+	}
+	
+	@GET
+	@Path("/getItems")
+	public String getItems(String jsonObject){
+		Vector<Item> items = db.getItems();
+		MovaJson mj = new MovaJson();
+		
+		return mj.itemsToJson(items);
 	}
 }

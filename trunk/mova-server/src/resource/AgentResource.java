@@ -48,7 +48,7 @@ public class AgentResource {
 		MovaJson mj = new MovaJson();
 		Agent agent = mj.jsonToAgent(jsonObject);
 		db.insertAgentType(agent.getType().toString());
-		db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+		//db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agent.getId());
 		boolean ans = db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());

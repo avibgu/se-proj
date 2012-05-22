@@ -329,14 +329,54 @@ public class DBHandlerTest1 {
 	 */
 	@Test
 	public void testUpdateItemState() {
+		Agent agent = new Agent(new AgentType("COORDINATOR"));
+		_db.insertAgentType(agent.getType().toString());
+		_db.insertAgent(agent.getId(), agent.getType().toString(), true, "1212");
+		
 		_db.insertItemType("Stand");
 		Item item = new Item(new ItemType("Stand"));
 		_db.insertItem(item);
 		assertEquals(ItemState.AVAILABLE, item.getState());
-		_db.updateItemState(item.getId(), ItemState.BUSY.toString());
+		_db.updateItemState(item.getId(), ItemState.BUSY.toString(), agent.getId());
 		assertEquals(ItemState.BUSY, _db.getItemState(item.getId()));
+		assertEquals(agent.getId(), _db.getItemHolder(item.getId()));
+		_db.updateItemState(item.getId(), ItemState.AVAILABLE.toString(), agent.getId());
+		assertEquals(" ", _db.getItemHolder(item.getId()));
+		_db.deleteAgent(agent.getId());
+		_db.deleteAgentType(agent.getType().toString());
 		_db.deleteItem(item.getId());
 		_db.deleteItemType("Stand");
+		
+	}
+	
+	/**
+	 * Test method for {@link db.DBHandler#getAgentItems(String)}.
+	 */
+	@Test
+	public void testGetAgentItems(){
+		Agent agent = new Agent(new AgentType("COORDINATOR"));
+		_db.insertAgentType(agent.getType().toString());
+		_db.insertAgent(agent.getId(), agent.getType().toString(), true, "1212");
+		
+		_db.insertItemType("Stand");
+		_db.insertItemType("Laptop");
+		Item item1 = new Item(new ItemType("Stand"));
+		Item item2 = new Item(new ItemType("Laptop"));
+		_db.insertItem(item1);
+		_db.insertItem(item2);
+		_db.updateItemState(item1.getId(), ItemState.BUSY.toString(), agent.getId());
+		_db.updateItemState(item2.getId(), ItemState.BUSY.toString(), agent.getId());
+		Vector<Item> agentItems = _db.getAgentItems(agent.getId());
+		
+		assertEquals(item1.getId(), agentItems.elementAt(0).getId());
+		assertEquals(item2.getId(), agentItems.elementAt(1).getId());
+
+		_db.deleteAgent(agent.getId());
+		_db.deleteAgentType(agent.getType().toString());
+		_db.deleteItem(item1.getId());
+		_db.deleteItem(item2.getId());
+		_db.deleteItemType("Stand");
+		_db.deleteItemType("Laptop");
 	}
 
 	/**

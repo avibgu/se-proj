@@ -1,6 +1,8 @@
 package gui;
 
+import actor.Agent;
 import actor.Entity;
+import actor.Item;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,8 +44,15 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
 	            Stack<Location> path = _movaMap.calculateShortestPath(_from, _to);
 	            Location oldLocation = _from;
 	            while(path.size() > 0){
-	                Location newLocation = path.pop();
-	                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+	            	Location newLocation = path.pop();
+	            	synchronized (_domain.getEntities()) {
+		                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+		                Vector<Item> items = ((Agent)_entity).getMyItems();
+		                for (Item item : items) {
+							item.setLocation(newLocation);
+							//_domain.updateEntityLocation(item);
+						}
+					}
 					Thread.sleep(800);
 	                oldLocation = newLocation;
 	            }
@@ -56,7 +65,14 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
 	            Location oldLocation = roomDoor;
 	            while(path.size() > 0){
 	                Location newLocation = path.pop();
-	                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+	                synchronized (_domain.getEntities()) {
+		                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+		                Vector<Item> items = ((Agent)_entity).getMyItems();
+		                for (Item item : items) {
+							item.setLocation(newLocation);
+							//_domain.updateEntityLocation(item);
+						}
+					}
 					Thread.sleep(800);
 	                oldLocation = newLocation;
 	            }
@@ -71,7 +87,14 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
         Location oldLocation = from;
         while(path.size() > 0){
             Location newLocation = path.pop();
-            _domain.changeAgentLocation(entity, oldLocation, newLocation);
+            synchronized (_domain.getEntities()) {
+                _domain.changeAgentLocation(_entity, oldLocation, newLocation);
+                Vector<Item> items = ((Agent)_entity).getMyItems();
+                for (Item item : items) {
+					item.setLocation(newLocation);
+					//_domain.updateEntityLocation(item);
+				}
+			}
             try {
 				Thread.sleep(800);
             } catch (InterruptedException ex) {

@@ -31,12 +31,11 @@ public class ItemDeserializer implements JsonDeserializer<Item> {
 		if(jobject.get("type") != null)
 			type = new ItemType(jobject.get("type").getAsString().toUpperCase());
 		
-		Item i = new Item();
+		Item i = new Item(type);
 		i.setId(id);
 		i.setLocation(oldLocation);
 		i.setLocation(location);
 		i.setState(state);
-		i.setType(type);
 		
 		return i;
 	}
