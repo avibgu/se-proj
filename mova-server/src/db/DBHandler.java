@@ -87,6 +87,35 @@ public class DBHandler {
 		} catch (SQLException sqlExcept) {
 		}
 	}
+	
+	public void deleteData(){
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mAgentTableName);
+			mStmt.execute("delete from " + mActivityTableName);
+			mStmt.execute("delete from " + mItemTableName);
+			mStmt.execute("delete from " + mItemTypeTableName);
+			mStmt.execute("delete from " + mActivityTypeTableName);
+			mStmt.execute("delete from " + mAgentTypeTableName);
+			mStmt.execute("delete from " + mActivityTypeItemsTableName);
+			mStmt.execute("delete from " + mActivityTypeAgentsTableName);
+			mStmt.execute("delete from " + mActivityAgentsTableName);
+			mStmt.execute("delete from " + mActivityItemsTableName);
+			mStmt.execute("delete from " + mAgentLocationsTableName);
+			mStmt.execute("delete from " + mItemLocationsTableName);
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertAgentType - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
 
 //----------------------------AgentTypes Table Handling----------------------------    
     /**

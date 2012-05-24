@@ -19,23 +19,16 @@ import utilities.Location;
 public class NewDomain extends DefaultTableModel{
     
 	private static final long serialVersionUID = 3391358106917744757L;
-	private MovaMap mMovaMap;
-    //private int _nAgents;
-	//private int _nItems;
-	//private int _nSensors;
+	private MovaMap mMovaMap; //stores doors, rooms and nodes for route finding
 	private double _nScanDistance;
 	private Vector<Vector<Entity>> _entities;
-    private String[][] _locations;
+    private String[][] _locations; //Data Vector needed for the table
     private HashMap<Entity, Location> _entitiesMap;
 	private Vector<Observer> _observers;
-	private Vector<Runnable> _itemScanners;
-    //private Vector<Room> _rooms;
+	private Vector<Runnable> _itemScanners; //Simulates the sensor scans. One for each Sensor
     private Vector<Door> _doors;
 
     public NewDomain (int height, int width, int nAgents, int nItems, int nSensors, double nScanDistance){
-        //_nAgents = nAgents;
-        //_nItems = nItems;
-        //_nSensors = nSensors;
         _nScanDistance = nScanDistance;
         _entities = new Vector<Vector<Entity>>();
         _locations = new String[height][width];
@@ -43,10 +36,10 @@ public class NewDomain extends DefaultTableModel{
         _observers = new Vector<Observer>();
         _itemScanners = new Vector<Runnable>();
         mMovaMap = new MovaMap(height, width);
-        initializeLocations(height, width);
-        initializeMap();
-        manuallyInitializeLocations();
-        initializeDataVector(width);
+        initializeLocations(height, width);//Initialize data vector to an empty string
+        initializeMap(); //Initialize the mova map
+        manuallyInitializeLocations(); // Initialize the entities on the map
+        initializeDataVector(width); //initialize the data vector needed for the table model
     }
 
     private void initializeMap() {
@@ -230,18 +223,6 @@ public class NewDomain extends DefaultTableModel{
         else
             return null;
     }
-
-//    private boolean reachedToRoomDoor(Location closestDoor, Room toRoom) {
-//        for (Door door : _doors) {
-//            if(door.getLocation().equals(closestDoor)){
-//                if(door.getRoom1().equals(toRoom) || door.getRoom2().equals(toRoom))
-//                    return true;
-//                else
-//                    return false;
-//            }
-//        }
-//        return false;
-//    }
 
     public MovaMap getMovaMap(){
         return mMovaMap;
@@ -453,6 +434,7 @@ public class NewDomain extends DefaultTableModel{
         }
     }
 
+    // Overridden Methods
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;

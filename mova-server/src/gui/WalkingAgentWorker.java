@@ -50,7 +50,7 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
 		                Vector<Item> items = ((Agent)_entity).getMyItems();
 		                for (Item item : items) {
 							item.setLocation(newLocation);
-							//_domain.updateEntityLocation(item);
+							_domain.updateEntityLocation(item);
 						}
 					}
 					Thread.sleep(800);
@@ -70,7 +70,7 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
 		                Vector<Item> items = ((Agent)_entity).getMyItems();
 		                for (Item item : items) {
 							item.setLocation(newLocation);
-							//_domain.updateEntityLocation(item);
+							_domain.updateEntityLocation(item);
 						}
 					}
 					Thread.sleep(800);
@@ -92,7 +92,7 @@ public class WalkingAgentWorker extends SwingWorker<Object, Object>{
                 Vector<Item> items = ((Agent)_entity).getMyItems();
                 for (Item item : items) {
 					item.setLocation(newLocation);
-					//_domain.updateEntityLocation(item);
+					_domain.updateEntityLocation(item);
 				}
 			}
             try {

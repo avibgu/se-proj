@@ -8,6 +8,7 @@ import configuration.ConfigurationManager;
 import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
+
 import simulator.NewDomain;
 
 /**
@@ -19,6 +20,8 @@ public class World extends javax.swing.JFrame implements Observer{
     private static final long serialVersionUID = 7902455422644793244L;
 	private Controller _controller;
     private NewDomain _domain;
+    //private DateFormat format;
+    //private Date date;
     
     /**
      * Creates new form World
@@ -27,6 +30,8 @@ public class World extends javax.swing.JFrame implements Observer{
         _controller = controller;
         _domain = controller.getDomain();
         _domain.getObservers().add(this);
+        //format = new SimpleDateFormat("HH:mm:ss");
+        //date = new Date();
         initComponents();
     }
 
@@ -55,7 +60,7 @@ public class World extends javax.swing.JFrame implements Observer{
         setResizable(false);
 
         //domainTable.setTableHeader(null);
-        domainTable.setFont(new java.awt.Font("Tahoma", 0, 10));
+        domainTable.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         domainTable.setDefaultRenderer(String.class, new IconCellRenderer(_domain));
         domainTable.setModel(_domain);
         domainTable.setAlignmentX(2.0F);
@@ -87,7 +92,7 @@ public class World extends javax.swing.JFrame implements Observer{
 
         messageArea.setColumns(20);
         messageArea.setEditable(false);
-        messageArea.setFont(new java.awt.Font("Calibri", 0, 10));
+        messageArea.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         messageArea.setRows(5);
         messageArea.setText("Messages\n");
         jScrollPane2.setViewportView(messageArea);
@@ -99,11 +104,11 @@ public class World extends javax.swing.JFrame implements Observer{
             }
         });
 
-        stopLabel.setFont(new java.awt.Font("Tahoma", 1, 12));
+        stopLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         stopLabel.setText("System Stopped");
         stopLabel.setVisible(false);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Items are shown as if they are moved only if they are close to one of the sensors(length <= 2)");
 
         jMenu1.setText("File");
