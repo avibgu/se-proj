@@ -12,6 +12,7 @@ import org.restlet.resource.ClientResource;
 
 import state.ActivityState;
 import state.ItemState;
+import type.AgentType;
 import type.ItemType;
 import utilities.Location;
 import utilities.MovaJson;
@@ -46,14 +47,15 @@ public class MovaClient {
 	public MovaClient(){
 		mMj = new MovaJson();
 		ClientConfig config = new DefaultClientConfig();
-		
 		Client client = Client.create(config);
+		client.setConnectTimeout(300000);
 		mService = client.resource(getBaseURI());
 	}
 	
 	private URI getBaseURI() {
-		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
-		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -201,6 +203,14 @@ public class MovaClient {
 	}
 	
 	
+	public void getSchedule(String agentId){
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		queryParams.add("agentId", agentId);
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentSchedule");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+	
 	// AGENT
 	
 	/**
@@ -216,19 +226,19 @@ public class MovaClient {
 		resource.put(j.toString());
 	}
 	
-	public void registerAgent(Agent pAgent){
+	public void registerAgent(String pRegistrationId, String pAgentType){
+		Agent pAgent = new Agent(new AgentType(pAgentType));
+		pAgent.setRegistrationId(pRegistrationId);
 		String j = mMj.agentToJson(pAgent);
-		//mService.path("agents").path("registerAgent").put(j);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/registerAgent");
 		resource.put(j.toString());
-		
 	}
 	
 	
-	public void changeAgentStatus(String agentId, String newStatus){
+	public void changeAgentStatus(String agentId, boolean isLogin){
 		JsonObject j = new JsonObject();
 		j.addProperty("agentId", agentId);
-		j.addProperty("newStatus", newStatus);
+		j.addProperty("newStatus", isLogin);
 		
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/changeAgentStatus");
 		resource.put(j.toString());
@@ -240,6 +250,13 @@ public class MovaClient {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteAgent");
 		resource.getReference().addQueryParameter("agentId", agentId);
 		resource.delete();
+	}
+	
+	public void sendRegistrationId(String registrationId){
+		JsonObject j = new JsonObject();
+		j.addProperty("registrationId", registrationId);
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getStaticTypes");
+		resource.put(j.toString());
 	}
 	
 	// Static

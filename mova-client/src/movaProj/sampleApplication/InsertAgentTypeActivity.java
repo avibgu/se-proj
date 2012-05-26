@@ -2,7 +2,11 @@ package movaProj.sampleApplication;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
+import client.MovaClient;
+
+import movaProj.agent.AgentDataSource;
 import movaProj.agent.MovaAndroidClient;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
@@ -23,14 +27,22 @@ import android.widget.Spinner;
 
 public class InsertAgentTypeActivity extends Activity implements OnClickListener,OnItemSelectedListener,Observer{
 	
-	 private AgentType agentType = new AgentType("COORDINATOR");
+	 private String agentType;
+	 private String registrationId="";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	       super.onCreate(savedInstanceState);
 	       setContentView(R.layout.insert_agent_type);
+	       
+	       // Set the registration Id.
+	       registrationId = getIntent().getStringExtra("registrationId");
+	       
+	       // Get agent Types.
+	       Vector<String> agentTypes = new AgentDataSource(this).getAgentTypes();
+	       
 	       Spinner agentTypesSpinner = (Spinner) findViewById(R.id.insertAgentTypeSpinner);
-	       ArrayAdapter<String> adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, AgentType.values());
+	       ArrayAdapter<String> adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, agentTypes);
 	       agentTypesSpinner.setAdapter(adapter);
 	       agentTypesSpinner.setOnItemSelectedListener(this);
 	       
@@ -42,8 +54,7 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
-		this.agentType = new AgentType(arg0.getItemAtPosition(arg2).toString());
-			
+		this.agentType = arg0.getItemAtPosition(arg2).toString();
 	}
 
 	@Override
@@ -55,8 +66,7 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 	@Override
 	public void onClick(View v) {
 		setContentView(R.layout.progress_bar);
-		MovaAndroidClient.register(agentType,this);
-	
+		new MovaClient().registerAgent(registrationId, agentType);
 	}
 
 	@Override
@@ -66,12 +76,12 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 		switch (message.getMessageType()) {
 		case REGISTER_SUCCESS:
 			i = new Intent(InsertAgentTypeActivity.this,
-					MovaAgentActivity.class);
+					ScheduleListActivity.class);
 			startActivity(i);
 			break;
 		case REGISTER_FAILED:
 			i = new Intent(InsertAgentTypeActivity.this,
-					MovaAgentActivity.class);
+					RegistrationDialogActivity.class);
 			startActivity(i);
 			break;
 		default:

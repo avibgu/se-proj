@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Observer;
 import java.util.Vector;
 
+import movaProj.sampleApplication.InsertAgentTypeActivity;
 import movaProj.sampleApplication.MovaAgentActivity;
 import type.AgentType;
 import type.MessageType;
@@ -25,12 +26,12 @@ import com.google.gson.JsonParser;
 
 public class C2DMReceiver extends BroadcastReceiver
 {
-		private ActivityDataSource activityDatasource;
-		private ItemDataSource itemDataSource;
 		private static Vector<Observer> internalMessageListeners = new Vector<Observer>();
+		private MovaClient movaClient = new MovaClient(); 
+		private MovaJson movaJson = new MovaJson();
 		
 	    private static final String TAG = "C2DMReciever";
-	    
+	    String agent_id="";
 	    
         public C2DMReceiver()
         {
@@ -60,22 +61,7 @@ public class C2DMReceiver extends BroadcastReceiver
     			Log.d("C2DM", "c2dmControl: registrationId = " + registrationId
     					+ ", error = " + error);
     			
-    			String app_name = (String)context.getText(R.string.app_name);
-    			// Use the Notification manager to send notification
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                // Create a notification using android stat_notify_chat icon. 
-                Notification notification = new Notification(android.R.drawable.stat_notify_chat, app_name + ": " + "Got Registration Id", 0);
-     
-                // Create a pending intent to call the HomeActivity when the notification is clicked
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, -1, new Intent(context, MovaAgentActivity.class), PendingIntent.FLAG_UPDATE_CURRENT); // 
-                notification.when = System.currentTimeMillis();
-                notification.flags |= Notification.FLAG_AUTO_CANCEL; 
-                // Set the notification and register the pending intent to it
-                notification.setLatestEventInfo(context, app_name, registrationId, pendingIntent); //
-     
-                // Trigger the notification
-                notificationManager.notify(0, notification);
-    			sendRegistrationIdToServer(registrationId,context);
+    			new MovaClient().sendRegistrationId(registrationId);
     		}
     		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
     			handleMessage(context,intent);
@@ -101,20 +87,23 @@ public class C2DMReceiver extends BroadcastReceiver
 		         	case DISTRIBUTE_ITEM_STATE:
 		         		distributeItemState(context, intent, message);
 		         		break;
-		         	case SEND_SCHEDULE:
-		         		sendSchedule(context, intent, message);
+		         	case GOT_SCHEDULE:
+		         		gotSchedule(context, intent, message);
 		         		break;
 		         	case REGISTER_SUCCESS:
-		         		notifyObservers(new MovaMessage(MessageType.REGISTER_SUCCESS, null));
+		         		notifyObservers(new MovaMessage(MessageType.REGISTER_SUCCESS, agent_id));
 		         		break;
 		         	case REGISTER_FAILED:
-		         		notifyObservers(new MovaMessage(MessageType.REGISTER_FAILED, null));
+		         		notifyObservers(new MovaMessage(MessageType.REGISTER_FAILED, agent_id));
 		         		break;
 		         	case RECALCULATE_START:
 		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_START, null));
 		         		break;
 		         	case RECALCULATE_FINISH:
-		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_FINISH, null));
+		         		getNewSchedule(context);
+		         		break;
+		         	case STATIC_TYPES:
+		         		insertStaticTypes(message,context);
 		         		break;
 		         	default:
 		         		System.out.println("Unsupported message");
@@ -122,17 +111,37 @@ public class C2DMReceiver extends BroadcastReceiver
 	       	}
         }
                      
- 		private void distributeItemState(Context context, Intent intent,
+ 		private void insertStaticTypes(String message, Context context) {
+ 			JsonParser jp = new JsonParser();
+      		JsonObject j = (JsonObject)jp.parse(message);
+      		String registrationId = j.get("registrationId").getAsString();
+      		String activityTypes = j.get("activityTypes").getAsString();
+      		String agentTypes = j.get("agentTypes").getAsString();
+      		String itemTypes = j.get("itemTypes").getAsString();
+			new ActivityDataSource(context).insertActivityTypes(movaJson.jsonToVectorTypes(activityTypes));
+			new AgentDataSource(context).insertAgentTypes(movaJson.jsonToVectorTypes(agentTypes));
+			new ItemDataSource(context).insertItemTypes(movaJson.jsonToVectorTypes(itemTypes));
+			Intent i = new Intent();
+			i.setClass(context, InsertAgentTypeActivity.class);
+			i.putExtra("registrationId", registrationId);
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(i);
+		}
+
+		private void getNewSchedule(Context context) {
+			movaClient.getSchedule(new AgentDataSource(context).getAgentId());
+		}
+
+		private void distributeItemState(Context context, Intent intent,
 				String message) {
  			JsonParser jp = new JsonParser();
       		JsonObject j = (JsonObject)jp.parse(message);
       		String itemId = j.get("itemId").getAsString();
       		String newState = j.get("newStatus").getAsString();
       		
-      		itemDataSource.changeItemState(itemId, newState);
+      		new ItemDataSource(context).changeItemState(itemId, newState);
       		      		
             notifyObservers(new MovaMessage(MessageType.DISTRIBUTE_ITEM_STATE, itemId)); 
-			
 		}
 
 		private void distributeItemLocation(Context context, Intent intent,
@@ -145,19 +154,18 @@ public class C2DMReceiver extends BroadcastReceiver
 			JsonParser jp = new JsonParser();
       		String itemId = jp.parse(message).getAsString();
       	
-      		itemDataSource.deleteItem(itemId);
+      		new ItemDataSource(context).deleteItem(itemId);
       		
             notifyObservers(new MovaMessage(MessageType.DELETE_ITEM, itemId)); 
 		}
 
-		private void sendSchedule(Context context, Intent intent, String message) {
+		private void gotSchedule(Context context, Intent intent, String message) {
 			JsonParser jp = new JsonParser();
       		String j = jp.parse(message).getAsString();
       	
             List<actor.Activity> schedule = new MovaJson().jsonToActivities(j);
-            activityDatasource = new ActivityDataSource(context);
-            activityDatasource.createSchedule(schedule);
-            notifyObservers(new MovaMessage(MessageType.SEND_SCHEDULE, null)); 
+            new ActivityDataSource(context).createSchedule(schedule);
+            notifyObservers(new MovaMessage(MessageType.GOT_SCHEDULE, null)); 
 		}
 
 		public void sendActivity(Context context, Intent intent,String message){
@@ -165,17 +173,12 @@ public class C2DMReceiver extends BroadcastReceiver
       		JsonObject j = (JsonObject) jp.parse(message);
       	
       		actor.Activity activity = new MovaJson().jsonToActivity(j.get("activity").getAsString());
-            activityDatasource = new ActivityDataSource(context);
-            activityDatasource.createActivity(activity);
+            new ActivityDataSource(context).createActivity(activity);
         }
 
 		// Better do this in an asynchronous thread
-        public void sendRegistrationIdToServer(String registrationId,Context context) {
+        public void sendRegistrationIdToServer(String registrationId,String agentType,Context context) {
        		Log.d("C2DM", "Sending registration ID to my application server");
-       		// Create Agent and send to server
-       		      		
-       		Agent agent = new Agent(new AgentType(AgentType.COORDINATOR));
-       		agent.setRegistrationId(registrationId);
-       		new MovaClient().registerAgent(agent);
+       		new MovaClient().registerAgent(registrationId, agentType);
         }
   }

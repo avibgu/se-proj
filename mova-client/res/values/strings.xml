@@ -8,11 +8,13 @@
     <string name="Severity">Severity:</string>
     <string name="agentType">Agent Type:</string>
     <string name="activityType">Activity Type:</string>
-    <string name="description">Description</string>
+    <string name="description">Description:</string>
     <string name="showActivities">My Activities</string>
     <string name="nextActivity">Show my next activity</string>
     <string name="description_new">Description:</string>
     <string name="insertAgentType">Please insert the Agent Type:</string>
     <string name="scheduleList">Show my schedule</string>
+    <string name="welcomeString">Welcome To MoVA Application</string>
+    <string name="LogoutString">Logout</string>
 
 </resources>

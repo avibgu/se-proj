@@ -25,6 +25,7 @@ public class AgentResource {
 	
 	DBHandler db = DBHandler.getInstance();
 	Simulator simulator = Simulator.getInstance(null);
+	MovaJson movaJson = new MovaJson();
 	
 	@PUT
 	@Path("/changeAgentLocation")
@@ -47,10 +48,11 @@ public class AgentResource {
 	public void registerAgent(String jsonObject){
 		MovaJson mj = new MovaJson();
 		Agent agent = mj.jsonToAgent(jsonObject);
-		db.insertAgentType(agent.getType().toString());
-		//db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+		
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agent.getId());
+		
+		db.insertAgentType(agent.getType().toString());
 		boolean ans = db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
 		if (ans){
 			C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsIds,MessageType.REGISTER_SUCCESS);
@@ -66,7 +68,7 @@ public class AgentResource {
 		db.deleteAgent(agentId);
 	}
 	
-	@POST
+	@PUT
 	@Path("/changeAgentStatus")
 	public void changeAgentStatus(String jsonObject){
 		JsonParser jp = new JsonParser();
@@ -87,6 +89,29 @@ public class AgentResource {
 	@Path("/deleteAgentType")
 	public void deleteAgentType(String jsonObject){
 		db.deleteAgentType(jsonObject);
+	}
+	
+	@PUT
+	@Path("/getStaticTypes")
+	public void getStaticTypes(String jsonObject){
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String registrationId = j.get("registrationId").getAsString();
+				
+		// Create static types vectors.
+		
+		Vector<String> activityTypes = db.getActivityTypes();
+		Vector<String> agentTypes = db.getAgentTypes();
+		Vector<String> itemTypes = db.getItemTypes();
+		
+		j = new JsonObject();
+		j.addProperty("registrationId", registrationId);
+		j.addProperty("activityTypes", movaJson.createJsonObj(activityTypes));
+		j.addProperty("agentTypes", movaJson.createJsonObj(agentTypes));
+		j.addProperty("itemTypes", movaJson.createJsonObj(itemTypes));
+				
+		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
+
 	}
 	
 }

@@ -1,5 +1,7 @@
 package movaProj.agent;
 
+import java.util.Vector;
+
 import utilities.Location;
 import actor.Item;
 import android.content.ContentValues;
@@ -76,5 +78,18 @@ public class ItemDataSource {
 		close();
 		
 		return ans;
+	}
+	
+	public void insertItemTypes(Vector<String> types){
+		openToWrite();
+		database.delete(DatabaseHelper.itemTypeTable, null, null);
+		close();
+		for (int i=0; i<types.size() ; ++i){
+			ContentValues cv = new ContentValues();
+			cv.put(DatabaseHelper.itemTypeColName, types.get(i));
+			openToWrite();
+		   	database.insert(DatabaseHelper.itemTypeTable, null,cv);
+		   	close();
+		}
 	}
 }

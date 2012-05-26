@@ -19,11 +19,9 @@ public class MovaActivityDetails extends Activity implements OnClickListener{
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.mova_activity_details);
-	        TextView severity = (TextView) findViewById(R.id.severityDetails);
 	        TextView description = (TextView) findViewById(R.id.descriptionDetails);
 	        TextView activityType = (TextView) findViewById(R.id.activityTypeDetails);
 	        TextView activityName = (TextView) findViewById(R.id.activityNameDetails);
-	        severity.setText(this.getIntent().getExtras().getString("severity"));
 	        description.setText(this.getIntent().getExtras().getString("description"));
 	        activityType.setText(this.getIntent().getExtras().getString("activityType"));
 	        activityName.setText(this.getIntent().getExtras().getString("activityName"));
