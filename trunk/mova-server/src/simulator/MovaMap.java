@@ -10,7 +10,11 @@ import java.util.Stack;
 import java.util.Vector;
 
 import utilities.Location;
-
+/**
+ * The MovaMap class holds the map locations,
+ * including rooms and doors. Calculates the shortest path
+ * from one location to another that passes rooms only via doors
+ */
 public class MovaMap {
     private Map<String, Room> mRooms;
     private Map<Location, Door> mDoors;
@@ -18,7 +22,11 @@ public class MovaMap {
     private LocationNode[][] mLocationNodes;
     private int mHeight;
     private int mWidth;
-
+    /**
+     * Creates a new MovaMap class
+     * @param height the height of the Mova map
+     * @param width the width of the Mova map
+     */
     public  MovaMap(int height, int width){
         mHeight = height;
         mWidth = width;
@@ -27,21 +35,33 @@ public class MovaMap {
         //initializeLocations();
         //setLocationNodesNeighbors();
     }
-
+    /**
+     * Sets the rooms of the map
+     * @param rooms the rooms of the map
+     */
     public void setRooms(Vector<Room> rooms){
         mRooms = Collections.synchronizedMap(new HashMap<String, Room>());
         for (Room room : rooms) {
             mRooms.put(room.getName(), room);
         }
     }
-
+    /**
+     * Sets the doors of the map
+     * @param doors the doors of the map
+     */
     public void setDoors(Vector<Door> doors){
         mDoors = Collections.synchronizedMap(new HashMap<Location, Door>());
         for (Door door : doors) {
             mDoors.put(door.getLocation(), door);
         }
     }
-
+    /**
+     * Calculates the shortest path from start location to goal location
+     * that passes rooms only via doors
+     * @param start the start location
+     * @param goal the goal location
+     * @return the shortest path in a stack. The stack top is the next location to move to.
+     */
     public  Stack<Location> calculateShortestPath(Location start, Location goal){
         Stack<Location> path = new Stack<Location>();
         Queue<LocationNode> queue = new LinkedList<LocationNode>();
@@ -75,7 +95,9 @@ public class MovaMap {
         }
         return path;
     }
-
+    /**
+     * Initialize rooms and doors locations
+     */
     public void initializeLocations() {
         for (Object room : mRooms.values()) {
             for(Location location : ((Room)room).getMargins()){
@@ -89,11 +111,19 @@ public class MovaMap {
             mLocationNodes[door.getLocation().getLongitude()][door.getLocation().getLatitude()] = new LocationNode(door.getLocation());
         }
     }
-
+    /**
+     * Returns the room that has the name roomName
+     * @param roomName the room name to search for
+     * @return the associated Room
+     */
     public Room getRoom(String roomName){
         return (Room)mRooms.get(roomName);
     }
-
+    /**
+     * Returns the location of the room in the given location
+     * @param location the location to search for
+     * @return the Room associated to the location, null if no such room exists 
+     */
     public Room getRoom(Location location){
         for (Object room : mRooms.values()) {
             if(((Room)room).isLocationInRoom(location))
@@ -101,7 +131,9 @@ public class MovaMap {
         }
         return null;
     }
-
+    /**
+     * Sets the location node neighbors for shortest path calculation
+     */
     public void setLocationNodesNeighbors() {
         for(int i = 0; i < mHeight; i++){
         	for(int j = 0; j < mWidth; j++){
@@ -127,7 +159,7 @@ public class MovaMap {
             }
         }
     }
-
+    
     private boolean nodeAccesable(int row, int column) {
         return row >= 0 && row < mHeight && column >= 0 && column < mWidth && mLocations[row][column] != null;
     }
@@ -150,11 +182,17 @@ public class MovaMap {
         else
             return false;
     }
-
+    /**
+     * Returns the map height
+     * @return the map height
+     */
     public int getHeight(){
         return mHeight;
     }
-
+    /**
+     * Returns the map width
+     * @return the map width
+     */
     public int getWidth(){
         return mWidth;
     }
