@@ -178,4 +178,14 @@ public class MovaJson {
 	public String createJsonObj(Object obj){
 		return _gson.toJson(obj);
 	}
+	
+	public Vector<String> jsonToVectorTypes(String jsonObject){
+		Vector<String> returnedTypes = new Vector<String>();
+		String[] types =  _gson.fromJson(jsonObject, String[].class);
+		for(int i = 0; i < types.length; i++){
+			returnedTypes.add(types[i]);
+		}
+		return returnedTypes;
+	}
+	
 }

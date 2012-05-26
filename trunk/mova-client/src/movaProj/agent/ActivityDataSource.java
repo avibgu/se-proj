@@ -3,9 +3,9 @@ package movaProj.agent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import state.ActivityState;
-
 import actor.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -51,12 +51,6 @@ public class ActivityDataSource {
 		   	long insertId = database.insert(DatabaseHelper.activityTable, null,cv);
 		
 			close();
-			
-			openToRead();
-			Cursor cur1 = database.query(DatabaseHelper.activityTable, new String[] {DatabaseHelper.activityColName},null , null, null, null, null);
-			Cursor cur2 = database.rawQuery("SELECT * FROM " + DatabaseHelper.activityTable, null);
-			close();
-			
 		}
 		
 		public void createSchedule(List<actor.Activity> movaSched) {
@@ -70,19 +64,14 @@ public class ActivityDataSource {
 				openToWrite();
 			   	database.insert(DatabaseHelper.scheduleTable, null,cv);
 			   	close();
-			   	
-				openToRead();
-				Cursor cur1 = database.query(DatabaseHelper.scheduleTable, new String[] {DatabaseHelper.scheduleIndexIdCol,DatabaseHelper.scheduleActivityIdCol},null , null, null, null, null);
-				Cursor cur2 = database.rawQuery("SELECT * FROM " + DatabaseHelper.scheduleTable, null);
-				close();
 			}
 			
 		}
 		
 		private void removeOldSchedule() {
 			openToWrite();
-			database.delete(DatabaseHelper.scheduleTable, null, null);
-			database.delete(DatabaseHelper.activityTable, null, null);
+			int one = database.delete(DatabaseHelper.scheduleTable, null, null);
+			int two = database.delete(DatabaseHelper.activityTable, null, null);
 			close();
 		}
 
@@ -124,12 +113,16 @@ public class ActivityDataSource {
 		
 		private void insertDummyActivities(){
 			List<Activity> schedule = new ArrayList<Activity>();
-			Activity act1 = new Activity("BLA", new Timestamp(2012,12,5,10,5,8,45), new Timestamp(2012,12,5,12,5,8,45), 0, null, null, null, null, "Activity #1");
-			Activity act2 = new Activity("BLA", new Timestamp(2012,12,5,12,5,8,45), new Timestamp(2012,12,5,13,5,8,45), 0, null, null, null, null, "Activity #2");
-			Activity act3 = new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #3");
-			schedule.add(act1);
-			schedule.add(act2);
-			schedule.add(act3);
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,10,5,8,45), new Timestamp(2012,12,5,12,5,8,45), 0, null, null, null, "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #1"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,12,5,8,45), new Timestamp(2012,12,5,13,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #2"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #3"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #4"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #5"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #6"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #7"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #8"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #9"));
+			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #10"));
 			createSchedule(schedule);
 		}
 		
@@ -145,6 +138,29 @@ public class ActivityDataSource {
 			ans.setEndTime(new Timestamp(cursor.getLong(6)));
 			ans.setEstimateTime(cursor.getLong(7));
 			return ans;
+		}
+		
+		public void insertActivityTypes(Vector<String> types){
+			openToWrite();
+			database.delete(DatabaseHelper.activityTypeTable, null, null);
+			close();
+			for (int i=0; i<types.size() ; ++i){
+				ContentValues cv = new ContentValues();
+				cv.put(DatabaseHelper.activityTypeColName, types.get(i));
+				openToWrite();
+			   	database.insert(DatabaseHelper.activityTypeTable, null,cv);
+			   	close();
+			}
+		}
+		
+		public void completeActivity(String activityId){
+			openToWrite();
+			database.beginTransaction();
+			int one = database.delete(DatabaseHelper.activityTable, DatabaseHelper.activityColID + "=?", new String[] {activityId});
+			int two = database.delete(DatabaseHelper.scheduleTable, DatabaseHelper.scheduleActivityIdCol + "=?" , new String[] {activityId});
+			database.setTransactionSuccessful();
+			database.endTransaction();
+			close();
 		}
 }
 

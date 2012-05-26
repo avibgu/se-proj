@@ -3,9 +3,11 @@ package resource;
 import java.sql.Timestamp;
 import java.util.Vector;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import simulator.Simulator;
 import state.ActivityState;
@@ -45,7 +47,7 @@ public class ActivityResource {
 		String jsonActivities =  j.get("activities").getAsString();
 		Vector<String> jsonIds = null;
 		
-		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.SEND_SCHEDULE);
+		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.GOT_SCHEDULE);
 	}
 	
 	@PUT
@@ -90,5 +92,14 @@ public class ActivityResource {
 	@Path("/deleteActivityType")
 	public void deleteActivityType(String jsonObject){
 		db.deleteActivityType(jsonObject);
+	}
+	
+	@GET
+	@Path("/getAgentSchedule")
+	public void getAgentSchedule(@PathParam("agentId") String agentId){
+		Vector<Activity> schedule = db.getAgentSchedule(agentId);
+		Vector<String> agentIds = new Vector<String>();
+		agentIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(schedule),agentIds,MessageType.GOT_SCHEDULE);
 	}
 }
