@@ -150,4 +150,14 @@ public class CBJ implements CSPAlgorithm {
 	public void setStatus(int pStatus) {
 		mStatus = pStatus;
 	}
+
+	@Override
+	public boolean isSolved() {
+		return getStatus() == SOLUTION;
+	}
+
+	@Override
+	public Vector<Value> getAssignment() {
+		return mAssignment;
+	}
 }
