@@ -10,6 +10,7 @@ import java.util.Vector;
 import db.DBHandler;
 
 import state.ActivityState;
+import state.ItemState;
 import utilities.Location;
 
 import actor.Activity;
@@ -116,5 +117,62 @@ public class Simulator {
 	
 	public void changeAgentStatus(String agentId, String newStatus){
 		
+	}
+
+	public void updateItemState(String itemId, String newStatus, String agentId) {
+		Item item = mItems.get(itemId);
+		ItemState newState = ItemState.valueOf(newStatus);
+		Location itemLocation = item.getLocation();
+		String agentType = db.getAgentType(agentId);
+		String stringItem = (String) _domain.getValueAt(itemLocation.getLongitude(), itemLocation.getLatitude());
+		switch (newState) {
+		case AVAILABLE:
+			if(stringItem.contains("disabled")){
+				stringItem = stringItem.substring(9, stringItem.length());
+				_domain.setValueAt("available " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			else if(stringItem.contains("busy")){
+				stringItem = stringItem.substring(5, stringItem.length());
+				_domain.setValueAt("available " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			else{
+				_domain.setValueAt(stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			
+			//_domain.setValueAt("disabled " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			break;
+			
+		case BUSY:
+			if(stringItem.contains("disabled")){
+				stringItem = stringItem.substring(9, stringItem.length());
+				_domain.setValueAt("busy " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			else if(stringItem.contains("available ")){
+				stringItem = stringItem.substring(10, stringItem.length());
+				_domain.setValueAt("busy " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			else{
+				_domain.setValueAt(stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			break;
+		case UNAVAILABLE:
+			if(stringItem.contains("busy")){
+				stringItem = stringItem.substring(5, stringItem.length());
+				_domain.setValueAt("disabled " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			else if(stringItem.contains("available ")){
+				stringItem = stringItem.substring(10, stringItem.length());
+				_domain.setValueAt("disabled " + stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			else{
+				_domain.setValueAt(stringItem, itemLocation.getLongitude(), itemLocation.getLatitude());
+			}
+			break;
+		}
+		
+		String message = "The state of Item " + item.getType().toString()
+				+ " was changed to " + newStatus + " by the " + agentType + " Agent at "
+				+ format.format(date);
+		_domain.addMessage(message);
 	}
 }

@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import simulator.Simulator;
 import type.ItemType;
 import type.MessageType;
 import utilities.MovaJson;
@@ -29,6 +30,7 @@ import db.DBHandler;
 public class ItemResource {
 	
 	DBHandler db = DBHandler.getInstance();
+	Simulator simulator = Simulator.getInstance(null);
 	
 	@GET
 	@Path("/findItem")
@@ -93,6 +95,7 @@ public class ItemResource {
 		String newStatus = j.get("newStatus").getAsString();
 		String agentId = j.get("agentId").getAsString();
 		db.updateItemState(itemId, newStatus, agentId);
+		simulator.updateItemState(itemId, newStatus, agentId);
 	}
 	
 	@PUT

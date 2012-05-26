@@ -18,6 +18,8 @@ public class IconCellRenderer  implements TableCellRenderer{
     ImageIcon _personIcon;
     ImageIcon _bgImage;
     ImageIcon _agentItem;
+    ImageIcon _itemDisabledIcon;
+    ImageIcon _itemBusyIcon;
 
     public IconCellRenderer(NewDomain domain){
         //_domain = domain;
@@ -26,7 +28,8 @@ public class IconCellRenderer  implements TableCellRenderer{
         _itemIcon = new ImageIcon(getClass().getResource("icons/item.gif"));
         _personIcon = new ImageIcon(getClass().getResource("icons/person.gif"));
         _agentItem = new ImageIcon(getClass().getResource("icons/Picture2.png"));
-        
+        _itemDisabledIcon = new ImageIcon(getClass().getResource("icons/disabledIcon.gif"));
+        _itemBusyIcon = new ImageIcon(getClass().getResource("icons/busyItem.gif"));
     }
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -40,8 +43,15 @@ public class IconCellRenderer  implements TableCellRenderer{
             cell.setIcon(_agentIcon);
         else if(isSensor((String)value))
              cell.setIcon(_sensorIcon);
-        else if(isItem((String)value))
-             cell.setIcon(_itemIcon);
+        else if(isItem((String)value)){
+        	String val = (String)value;
+        	if(val.contains("busy"))
+        		cell.setIcon(_itemBusyIcon);
+        	else if(val.contains("disabled"))
+        		cell.setIcon(_itemDisabledIcon);
+        	else
+        		cell.setIcon(_itemIcon);
+        }
         else
             cell.setText((String)value);
 

@@ -348,13 +348,13 @@ public class NewDomain extends DefaultTableModel{
             stand.setRepresentation(stand.getType().toString());
             lazerCursor.setRepresentation(lazerCursor.getType().toString());
 
-            Location boardLocation = new Location(12, 28);  _locations[12][28] = board.toString();
-            Location laptopLocation = new Location(12, 26);  _locations[12][26] = laptop.toString();
-            Location mouseLocation = new Location(13, 4);  _locations[13][4] = mouse.toString();
-            Location cableLocation = new Location(12,13);  _locations[12][13] = cable.toString();
-            Location speakerLocation = new Location(8,6);  _locations[8][6] = speaker.toString();
-            Location standLocation = new Location(6, 3);  _locations[6][3] = stand.toString();
-            Location lazerCursorLocation = new Location(14, 15);  _locations[14][15] = lazerCursor.toString();
+            Location boardLocation = new Location(12, 28);  _locations[12][28] = "available " + board.toString();
+            Location laptopLocation = new Location(12, 26);  _locations[12][26] = "available " + laptop.toString();
+            Location mouseLocation = new Location(13, 4);  _locations[13][4] = "available " + mouse.toString();
+            Location cableLocation = new Location(12,13);  _locations[12][13] = "available " + cable.toString();
+            Location speakerLocation = new Location(8,6);  _locations[8][6] = "available " + speaker.toString();
+            Location standLocation = new Location(6, 3);  _locations[6][3] = "available " + stand.toString();
+            Location lazerCursorLocation = new Location(14, 15);  _locations[14][15] = "available " + lazerCursor.toString();
 
             board.setRepLocation(boardLocation);
             laptop.setRepLocation(laptopLocation);
