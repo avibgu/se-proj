@@ -1,7 +1,5 @@
 package algorithm;
 
-import static org.junit.Assert.*;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
