@@ -4,16 +4,16 @@ import java.util.Vector;
 
 //import c2dm.C2dmController;
 
-import type.MessageType;
+//import type.MessageType;
 
 import actor.Activity;
 
 public class Coordinator {
 
-	public CSPAlgorithm mAlgorithm;
+//	public CSPAlgorithm mAlgorithm;
 
 	public Coordinator() {
-		mAlgorithm = new CBJ();
+//		mAlgorithm = new CBJ();
 	}
 
 	public void recalculate() {
