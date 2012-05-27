@@ -826,6 +826,55 @@ public class DBHandler {
 		return name;
 	}
 	
+	public Vector<Activity> getAllActivities() {
+		
+		mRead.lock();
+		createConnection();
+		
+		Vector<Activity> activities = new Vector<Activity>();
+		
+		try {
+			
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mActivityTableName);
+			
+			while (results.next()) {
+				
+				String activityId = results.getString("ACTIVITY_ID");
+				String name = results.getString("NAME");
+				String description = results.getString("DESCRIPTION");
+				String activityType = results.getString("ACTIVITY_TYPE");
+				String activityState = results.getString("ACTIVITY_STATE");
+				Timestamp startTime = results.getTimestamp("START_TIME");
+				Timestamp endTime = results.getTimestamp("END_TIME");
+				int estimatedTime = results.getInt("ESTIMATE_TIME");
+				Activity activity = new Activity(name);
+				activity.setId(activityId);
+				activity.setDescription(description);
+				activity.setType(activityType);
+				activity.setState(ActivityState.valueOf(activityState));
+				activity.setStartTime(startTime);
+				activity.setEndTime(endTime);
+				activity.setEstimateTime(estimatedTime);
+				
+				activities.add(activity);
+			}
+
+			results.close();
+			mStmt.close();
+		}
+		
+		catch (SQLException sqlExcept) {
+			System.out.println("getAllActivities - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return activities;
+	}
+	
 //----------------------------ActivityTypeAgents Table Handling----------------------------
 	private void insertActivityTypeAgent(Activity activity) {
 		mWrite.lock();
@@ -1575,5 +1624,4 @@ public class DBHandler {
 		
 		return location;
 	}
-	
 }

@@ -1,15 +1,23 @@
-package algorithm;
+package movaProj.agent;
 
 import java.util.Vector;
+
+import client.MovaClient;
 
 //import c2dm.C2dmController;
 
 //import type.MessageType;
 
 import actor.Activity;
+import algorithm.CBJ;
+import algorithm.CSPAlgorithm;
+import algorithm.Value;
+import algorithm.Variable;
 
 public class Coordinator {
 
+	public static final MovaClient sfMovaClient = new MovaClient();
+	
 	private Coordinator() {
 	}
 
@@ -19,7 +27,7 @@ public class Coordinator {
 
 		waitForApprovalOrUnapproval();
 
-		Vector<Activity> activities = getActivitiesFromDB();
+		Vector<Activity> activities = getActivitiesFromDB(myID);
 
 		Vector<Variable> variables = new Vector<Variable>();
 
@@ -51,15 +59,6 @@ public class Coordinator {
 	private static void notifyAboutStartingTheRecalculate(String myID) {
 		// TODO: notify all other Agent that we are starting coordinating,
 		// provide coordination-id (and order on the Agents?..) we are first..
-
-//		C2dmController.getInstance().sendMessageToDevice("3", null,
-//				getAllAgentsIDsBesidesMe(myID), MessageType.RECALCULATE_START);
-
-	}
-
-	private Vector<String> getAllAgentsIDsBesidesMe(String myID) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private static void waitForApprovalOrUnapproval() {
@@ -67,8 +66,12 @@ public class Coordinator {
 
 	}
 
-	private static Vector<Activity> getActivitiesFromDB() {
-		// TODO Auto-generated method stub
+	private static Vector<Activity> getActivitiesFromDB(String myID) {
+		
+		sfMovaClient.getAllActivities(myID);
+		
+		//TODO
+		
 		return null;
 	}
 
@@ -79,8 +82,5 @@ public class Coordinator {
 
 	private static void notifyAboutFinishingTheRecalculate(String myID) {
 		// TODO Auto-generated method stub
-
-//		C2dmController.getInstance().sendMessageToDevice("3", null,
-//				getAllAgentsIDsBesidesMe(myID), MessageType.RECALCULATE_FINISH);
 	}
 }
