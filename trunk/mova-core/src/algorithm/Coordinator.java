@@ -10,15 +10,12 @@ import actor.Activity;
 
 public class Coordinator {
 
-//	public CSPAlgorithm mAlgorithm;
-
-	public Coordinator() {
-//		mAlgorithm = new CBJ();
+	private Coordinator() {
 	}
 
-	public void recalculate() {
+	public static void recalculate(String myID) {
 
-		notifyAboutStartingTheRecalculate();
+		notifyAboutStartingTheRecalculate(myID);
 
 		waitForApprovalOrUnapproval();
 
@@ -29,59 +26,61 @@ public class Coordinator {
 		for (Activity activity : activities)
 			variables.add(new Variable(activity));
 
-//		try {
-//
-//			mAlgorithm.solve(variables);
-//		}
-//
-//		catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		if (mAlgorithm.isSolved()) {
-//
-//			updateDatabaseWithNewSchecdule(mAlgorithm.getAssignment());
-//			notifyAboutFinishingTheRecalculate();
-//		}
-//
-//		else
-//			; // TODO: what to do when there is no solution??..
+		CSPAlgorithm mAlgorithm = new CBJ(variables);
+		
+		try {
+
+			mAlgorithm.solve();
+			
+			if (mAlgorithm.isSolved()) {
+
+				updateDatabaseWithNewSchecdule(mAlgorithm.getAssignment());
+				notifyAboutFinishingTheRecalculate(myID);
+			}
+
+			else
+				; // TODO: what to do when there is no solution??..
+		}
+
+		catch (Exception e) {
+			// TODO: what to do when the algorithm fails??..
+			e.printStackTrace();
+		}
 	}
 
-	private void notifyAboutStartingTheRecalculate() {
+	private static void notifyAboutStartingTheRecalculate(String myID) {
 		// TODO: notify all other Agent that we are starting coordinating,
 		// provide coordination-id (and order on the Agents?..) we are first..
 
 //		C2dmController.getInstance().sendMessageToDevice("3", null,
-//				getAllAgentsIDsBesidesMe(), MessageType.RECALCULATE_START);
+//				getAllAgentsIDsBesidesMe(myID), MessageType.RECALCULATE_START);
 
 	}
 
-	private Vector<String> getAllAgentsIDsBesidesMe() {
+	private Vector<String> getAllAgentsIDsBesidesMe(String myID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private void waitForApprovalOrUnapproval() {
+	private static void waitForApprovalOrUnapproval() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private Vector<Activity> getActivitiesFromDB() {
+	private static Vector<Activity> getActivitiesFromDB() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private void updateDatabaseWithNewSchecdule(Vector<Value> pAssignment) {
+	private static void updateDatabaseWithNewSchecdule(Vector<Value> pAssignment) {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void notifyAboutFinishingTheRecalculate() {
+	private static void notifyAboutFinishingTheRecalculate(String myID) {
 		// TODO Auto-generated method stub
 
 //		C2dmController.getInstance().sendMessageToDevice("3", null,
-//				getAllAgentsIDsBesidesMe(), MessageType.RECALCULATE_FINISH);
+//				getAllAgentsIDsBesidesMe(myID), MessageType.RECALCULATE_FINISH);
 	}
 }

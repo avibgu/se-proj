@@ -255,12 +255,12 @@ public class FCCBJ implements CSPAlgorithm{
 		mStatus = pStatus;
 	}
 
-//	@Override
+	@Override
 	public boolean isSolved() {
 		return getStatus() == SOLUTION;
 	}
 
-//	@Override
+	@Override
 	public Vector<Value> getAssignment() {
 		return mAssignment;
 	}
