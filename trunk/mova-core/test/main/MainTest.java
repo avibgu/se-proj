@@ -53,7 +53,8 @@ public class MainTest {
 	public void testCreateAgent(){
 		Agent agent = new Agent(new AgentType(AgentType.COORDINATOR));
 		agent.setRegistrationId("64638947389430gfdgdfg");
-		new MovaClient().registerAgent(agent);
+//		new MovaClient().registerAgent(agent);
+		//TODO ...
 	}
 	
 	@Test
