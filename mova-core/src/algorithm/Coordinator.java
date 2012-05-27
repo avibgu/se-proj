@@ -29,24 +29,24 @@ public class Coordinator {
 		for (Activity activity : activities)
 			variables.add(new Variable(activity));
 
-		try {
-
-			mAlgorithm.solve(variables);
-		}
-
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if (mAlgorithm.isSolved()) {
-
-			updateDatabaseWithNewSchecdule(mAlgorithm.getAssignment());
-			notifyAboutFinishingTheRecalculate();
-		}
-
-		else
-			; // TODO: what to do when there is no solution??..
+//		try {
+//
+//			mAlgorithm.solve(variables);
+//		}
+//
+//		catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		if (mAlgorithm.isSolved()) {
+//
+//			updateDatabaseWithNewSchecdule(mAlgorithm.getAssignment());
+//			notifyAboutFinishingTheRecalculate();
+//		}
+//
+//		else
+//			; // TODO: what to do when there is no solution??..
 	}
 
 	private void notifyAboutStartingTheRecalculate() {
