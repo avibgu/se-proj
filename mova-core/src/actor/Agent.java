@@ -27,7 +27,7 @@ public class Agent extends Entity implements Runnable {
 	protected Activity					mCurrentActivity;
 	protected String					mRegistrationId;
 	
-	protected Coordinator				mCoordinator;
+//	protected Coordinator				mCoordinator;
 	protected boolean					mIsLoggedIn;
 	
 
@@ -47,7 +47,7 @@ public class Agent extends Entity implements Runnable {
 		mCurrentActivity = null;
 		mRegistrationId = "";
 		
-		mCoordinator = new Coordinator();
+//		mCoordinator = new Coordinator();
 		
 		mItems = new Vector<Item>();
 		mMyItems = new Vector<Item>();
