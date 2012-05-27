@@ -15,7 +15,11 @@ import javax.net.ssl.SSLSession;
 
 import type.MessageType;
 import db.DBHandler;
-
+/**
+ * The C2dmController class is a singleton class used to
+ * receive messages from the server resources and send them
+ * to the mobile Mova clients via the C2DM servers as push messages
+ */
 public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
@@ -28,11 +32,20 @@ public class C2dmController {
 	public C2dmController() {
 		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 * Returns the only instance of the class
+	 * @return the only instance of the class
+	 */
 	public static C2dmController getInstance() {
 		return mInstance;
 	}
-
+	/**
+	 * Sends a given message to all agent ids given
+	 * @param pCollapseKey
+	 * @param pMessage the message to send
+	 * @param pAgentsIds the agent ids to send to
+	 * @param pMessageType the type of the messsage
+	 */
 	public void sendMessageUsingRegistrationId(String pCollapseKey, String pMessage,
 			String registrationId, MessageType pMessageType){
 		try{

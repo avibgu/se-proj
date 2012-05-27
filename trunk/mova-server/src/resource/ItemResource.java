@@ -25,13 +25,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import db.DBHandler;
-
+/**
+ * The item resource is used to process incoming connections
+ * from the Mova Client that are relevant to items
+ */
 @Path("/items")
 public class ItemResource {
 	
 	DBHandler db = DBHandler.getInstance();
 	Simulator simulator = Simulator.getInstance(null);
-	
+	/**
+	 * 
+	 * @param type
+	 * @param quantity
+	 * @param location
+	 * @return
+	 */
 	@GET
 	@Path("/findItem")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -55,6 +64,10 @@ public class ItemResource {
 		
 		return mj.itemsToJson(items);
 	}
+	/**
+	 * Distributes an item's location to all agents
+	 * @param jsonObject a json object that holds the item id and the location of the item
+	 */
 	@PUT
 	@Path("/distributeItemLocation")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -64,8 +77,10 @@ public class ItemResource {
 		Vector<String> agentsId = null;
 		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsId,MessageType.DISTRIBUTE_ITEM_LOCATION);
 	}
-	
-
+	/**
+	 * Distributes an item's state to all agents
+	 * @param jsonObject a json object that holds the item id and the state of the item
+	 */
 	@PUT
 	@Path("/distributeItemState")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -74,7 +89,10 @@ public class ItemResource {
 		Vector<String> agentsId = null;
 		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsId,MessageType.DISTRIBUTE_ITEM_STATE);
 	}
-	
+	/**
+	 * Deletes an item from the system
+	 * @param itemId the item id
+	 */
 	@DELETE
 	@Path("/deleteItem/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -85,7 +103,11 @@ public class ItemResource {
 		String jsonObject = new MovaJson().createJsonObj(itemId);
 		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsId,MessageType.DELETE_ITEM);
 	}
-	
+	/**
+	 * Changes an item's state in the system
+	 * @param jsonObject a json object that holds the item id, 
+	 * the new item state and the agent id that changed the item's state
+	 */
 	@PUT
 	@Path("/changeItemStatus")
 	public void changeItemStatus(String jsonObject){
@@ -97,21 +119,30 @@ public class ItemResource {
 		db.updateItemState(itemId, newStatus, agentId);
 		simulator.updateItemState(itemId, newStatus, agentId);
 	}
-	
+	/**
+	 * Creates a new item type
+	 * @param jsonObject a json object that holds the new item type
+	 */
 	@PUT
 	@Path("/createItemType")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void createItemType(String jsonObject){
 		db.insertItemType(jsonObject);
 	}
-	
+	/**
+	 * Deletes an existing item type
+	 * @param jsonObject a json object that holds the item type
+	 */
 	@PUT
 	@Path("/deleteItemType")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteItemType(String jsonObject){
 		db.deleteItemType(jsonObject);
 	}
-	
+	/**
+	 * Returns all the items in the systems
+	 * @return all the items in the systems
+	 */
 	@GET
 	@Path("/getItems")
 	public String getItems(String jsonObject){

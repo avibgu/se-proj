@@ -18,7 +18,11 @@ import actor.Agent;
 import actor.Entity;
 import actor.Item;
 
-
+/**
+ * The singleton simulator is reference by the server's resources
+ * It is used to query the database and present changes and activities 
+ * in the simulated world
+ */
 public class Simulator {
 
 	private static NewDomain _domain;
@@ -50,7 +54,11 @@ public class Simulator {
 		}
 		
 	}
-	
+	/**
+	 * Returns the only instance of the simulator
+	 * @param domain the domain of the simulator. Used only for the first call.
+	 * @return a new Simulator object if not created, the current simulator if was created 
+	 */
 	public synchronized static Simulator getInstance(NewDomain domain){
 		if (mSimulator == null)
 		{
@@ -64,7 +72,10 @@ public class Simulator {
 	public void start() {
 
 	}
-	
+	/**
+	 * Registers a new agent in the simulator and presents it in the virtual world
+	 * @param pId the id of the new agent
+	 */
 	public void registerAgentMessage(String pId){
 		if(agentIndex < _agents.size()){
 			Agent agent = (Agent) _agents.elementAt(agentIndex);
@@ -81,24 +92,39 @@ public class Simulator {
 			agentIndex++;
 		}
 	}
-	
+	/**
+	 * Changes the activity in the simulator and adds a new relevant message log
+	 * @param pId the id of the activity
+	 * @param pState the new state of the activity
+	 */
 	public void changeActivityStatusMessage(String pId, ActivityState pState){
 		String name = db.getActivityName(pId);
 		String message = "The activity \"" + name + "\"" + " status changed to " + pState;
 		_domain.addMessage(message);
 	}
-	
+	/**
+	 * Creates a new activity in the simulator and adds a new relevant message log
+	 * @param pActivity the activity to add
+	 */
 	public void addActivityMessage(Activity pActivity){
 		String message = "A new activity \"" + pActivity.getName() + "\"" + " was created at " + format.format(date);
 		_domain.addMessage(message);
 	}
-	
+	/**
+	 * Creates a new relevant message log of the postponed activity
+	 * @param activityId the activity id of the postponed Activity
+	 * @param newEndTime the new end time of the activity
+	 */
 	public void postoneActivityMessage(String activityId, String newEndTime){
 		String name = db.getActivityName(activityId);
 		String message = "The activity \"" + name + "\"" + " was postponed to " + newEndTime;
 		_domain.addMessage(message);
 	}
-	
+	/**
+	 * Simulates the movement of the agent to the new location. Adds a new relevant message log
+	 * @param pId the agent id
+	 * @param pNewLocation the new location of the agent
+	 */
 	public void changeAgentLocationMessage(String pId, Location pNewLocation){
 		Location oldLocation = db.getAgentLocation(pId);
 		Vector<Item> items = db.getAgentItems(pId);
@@ -114,11 +140,22 @@ public class Simulator {
 		_domain.walkAgent(agent, oldLocation, pNewLocation);
 		db.updateAgentLocation(pId, pNewLocation);
 	}
-	
+	/**
+	 * Creates a new relevant message log of the agent's status change
+	 * @param agentId the agent id
+	 * @param newStatus the new agent status
+	 */
 	public void changeAgentStatus(String agentId, String newStatus){
-		
+		String agentType = db.getAgentType(agentId);
+		String message = "The " + agentType + " agent changed its status to " + newStatus;
+		_domain.addMessage(message);
 	}
-
+	/**
+	 * Updates the item's representation in the simulated world according to the new status
+	 * @param itemId the item id
+	 * @param newStatus the new status of the item
+	 * @param agentId the id of the agent that changed the item's status
+	 */
 	public void updateItemState(String itemId, String newStatus, String agentId) {
 		Item item = mItems.get(itemId);
 		ItemState newState = ItemState.valueOf(newStatus);

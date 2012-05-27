@@ -9,13 +9,15 @@ import gui.WalkingAgentWorker;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observer;
-import java.util.Stack;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import type.AgentType;
 import type.ItemType;
 import utilities.Location;
-
+/**
+ * The NewDomain class is used to hold the Mova map, entities, item scanners
+ * and all the logic for representing the simulated world
+ */
 public class NewDomain extends DefaultTableModel{
     
 	private static final long serialVersionUID = 3391358106917744757L;
@@ -27,7 +29,15 @@ public class NewDomain extends DefaultTableModel{
 	private Vector<Observer> _observers;
 	private Vector<Runnable> _itemScanners; //Simulates the sensor scans. One for each Sensor
     private Vector<Door> _doors;
-
+    /**
+     * Creates a new domain according configurable variables
+     * @param height the domain height
+     * @param width the domain width
+     * @param nAgents the number of agents to create
+     * @param nItems the number of items to create
+     * @param nSensors the number of sensors
+     * @param nScanDistance the scan distance of the item scanners
+     */
     public NewDomain (int height, int width, int nAgents, int nItems, int nSensors, double nScanDistance){
         _nScanDistance = nScanDistance;
         _entities = new Vector<Vector<Entity>>();
@@ -172,12 +182,21 @@ public class NewDomain extends DefaultTableModel{
         }
         return locationRange;
     }
-
+    /**
+     * Changes an entity's location from one location to another
+     * @param entity the entity to change its location
+     * @param from the start location
+     * @param to the new location
+     */
     public void changeAgentLocation(Entity entity, Location from, Location to){
         entity.setLocation(to);
         updateEntityLocation(entity);
     }
-
+    /**
+     * Changes all items locations in the domain
+     * @param changedLocationItems the map of the items where the String key is
+     * the items' id
+     */
     public void changeItemsLocation(Map<String, Item> changedLocationItems){
         if(changedLocationItems != null){//itemScanner has executed this method
             //update table for each visible item
@@ -186,60 +205,87 @@ public class NewDomain extends DefaultTableModel{
 			}
         }
     }
-
+    /**
+     * Creates a new Worker thread to simulate an agent's movement and executes the thread
+     * @param entity the agent entity to simulate its movement
+     * @param from the start location
+     * @param to the goal location
+     */
     public void walkAgent(Entity entity, Location from, Location to) {
            WalkingAgentWorker worker = new WalkingAgentWorker(this, entity, from, to, _doors);
            worker.execute();
     }
-
+    /**
+     * Stops all item scanner threads execution
+     */
     public void stop() {
 		for (Runnable listener : _itemScanners) {
 			((ItemScanner)listener).stop();
 		}
 	}
-
+    /**
+     * Returns the scan distance of all the item scanners
+     * @return the scan distance of all the item scanners
+     */
     public double getScanDistance(){
     	return _nScanDistance;
     }
 
-    public Location findClosestRoomDoor(Location from, Room fromRoom) {
-        Door closestDoor = null;
-        int shortestPath = Integer.MAX_VALUE;
-        for (Door door : _doors) {
-            Room room1 = door.getRoom1();
-            Room room2 = door.getRoom2();
-            if(room1 == null || room2 == null)
-                continue;
-            if(room1.equals(fromRoom) || room2.equals(fromRoom)){
-                Stack<Location> path = mMovaMap.calculateShortestPath(from, door.getLocation());
-                if(path.size() < shortestPath){
-                    shortestPath = path.size();
-                    closestDoor = door;
-                }
-            }
-        }
-        if(closestDoor != null)
-            return closestDoor.getLocation();
-        else
-            return null;
-    }
-
+//    public Location findClosestRoomDoor(Location from, Room fromRoom) {
+//        Door closestDoor = null;
+//        int shortestPath = Integer.MAX_VALUE;
+//        for (Door door : _doors) {
+//            Room room1 = door.getRoom1();
+//            Room room2 = door.getRoom2();
+//            if(room1 == null || room2 == null)
+//                continue;
+//            if(room1.equals(fromRoom) || room2.equals(fromRoom)){
+//                Stack<Location> path = mMovaMap.calculateShortestPath(from, door.getLocation());
+//                if(path.size() < shortestPath){
+//                    shortestPath = path.size();
+//                    closestDoor = door;
+//                }
+//            }
+//        }
+//        if(closestDoor != null)
+//            return closestDoor.getLocation();
+//        else
+//            return null;
+//    }
+    /**
+     * Returns the Mova map
+     * @return the Mova map
+     */
     public MovaMap getMovaMap(){
         return mMovaMap;
     }
-
+    /**
+     * Returns the Observers of the domain
+     * @return the Observers of the domain
+     */
     public Vector<Observer> getObservers() {
 		return _observers;
 	}
-    
+    /**
+     * Returns the entities located in the domain
+     * @return the entities located in the domain
+     */
     public Vector<Vector<Entity>> getEntities(){
         return _entities;
     }
-
+    /**
+     * Returns the entities map where the key is entity and the value is its location
+     * @return the entities map where the key is entity and the value is its location
+     */
     public HashMap<Entity, Location> getEntitiesMap(){
         return _entitiesMap;
     }
-
+    /**
+     * Scans for items according to a scan distance
+     * @param entityLocation the location of the sensor
+     * @param distance the scan distance
+     * @return a Vector of items identified in the scan range
+     */
     public Vector<Item> scanForItems(Location entityLocation, double distance){
 		Vector<Item> items = new Vector<Item>();
 		synchronized (_entities) {
@@ -461,7 +507,10 @@ public class NewDomain extends DefaultTableModel{
             names[i] = String.valueOf(i);
         setDataVector(_locations,names );
     }
-
+    /**
+     * Updates an entity's representation in the domain
+     * @param entity the entity to update
+     */
     public synchronized void updateEntityLocation(Entity entity){
         Location oldLocation = entity.getLastRepLocation();
         Location newLocation = entity.getLocation();
@@ -499,7 +548,10 @@ public class NewDomain extends DefaultTableModel{
             //fireTableDataChanged();
         }
     }
-    
+    /**
+     * Adds a new message to the message board in the domain
+     * @param message the message to add
+     */
     public void addMessage(String message){
     	message = message.concat("\n");
     	for (Observer ob : _observers) {
