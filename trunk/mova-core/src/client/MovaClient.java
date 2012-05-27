@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
-import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
 
 import state.ActivityState;
@@ -211,6 +210,12 @@ public class MovaClient {
 		resource.get();
 	}
 	
+	public void getAllActivities(String agentId){
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAllActivities");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+	
 	// AGENT
 	
 	/**
@@ -291,4 +296,16 @@ public class MovaClient {
 		resource.put(type);
 	}
 	
+	
+	
+	
+	
+//	public void changeAgentStatus(String agentId, boolean isLogin){
+//		JsonObject j = new JsonObject();
+//		j.addProperty("agentId", agentId);
+//		j.addProperty("newStatus", isLogin);
+//		
+//		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/changeAgentStatus");
+//		resource.put(j.toString());
+//	}
 }

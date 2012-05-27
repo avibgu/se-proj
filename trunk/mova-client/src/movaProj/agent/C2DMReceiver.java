@@ -5,14 +5,8 @@ import java.util.Observer;
 import java.util.Vector;
 
 import movaProj.sampleApplication.InsertAgentTypeActivity;
-import movaProj.sampleApplication.MovaAgentActivity;
-import type.AgentType;
 import type.MessageType;
 import utilities.MovaJson;
-import actor.Agent;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -90,6 +84,9 @@ public class C2DMReceiver extends BroadcastReceiver
 		         	case GOT_SCHEDULE:
 		         		gotSchedule(context, intent, message);
 		         		break;
+		         	case GOT_ACTIVITIES:
+		         		//TODO Avi..
+		         		break;
 		         	case REGISTER_SUCCESS:
 		         		notifyObservers(new MovaMessage(MessageType.REGISTER_SUCCESS, agent_id));
 		         		break;
@@ -97,9 +94,11 @@ public class C2DMReceiver extends BroadcastReceiver
 		         		notifyObservers(new MovaMessage(MessageType.REGISTER_FAILED, agent_id));
 		         		break;
 		         	case RECALCULATE_START:
+		         		//TODO Avi..
 		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_START, null));
 		         		break;
 		         	case RECALCULATE_FINISH:
+		         		//TODO Avi..
 		         		getNewSchedule(context);
 		         		break;
 		         	case STATIC_TYPES:

@@ -64,7 +64,7 @@ public class Domain implements Cloneable {
 
 		for (AgentType agentType : mActivity.getRequiredAgents().keySet()) {
 
-			List<Agent> allAgentsOfThisType = XXX.getAllAgentsOfThisTypeFromDB(agentType);
+			List<Agent> allAgentsOfThisType = getAllAgentsOfThisTypeFromDB(agentType);
 
 			mAgents.add(allAgentsOfThisType);
 
@@ -87,7 +87,7 @@ public class Domain implements Cloneable {
 
 		for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
 
-			List<Item> allItemsOfThisType = XXX.getAllItemsOfThisTypeFromDB(itemType);
+			List<Item> allItemsOfThisType = getAllItemsOfThisTypeFromDB(itemType);
 
 			mItems.add(allItemsOfThisType);
 
@@ -116,6 +116,16 @@ public class Domain implements Cloneable {
 		}
 
 		mEmpty = false;
+	}
+
+	private List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public Value nextValue() {
