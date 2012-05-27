@@ -52,9 +52,9 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -203,7 +203,7 @@ public class MovaClient {
 	
 	
 	public void getSchedule(String agentId){
-		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentSchedule");
 		resource.getReference().addQueryParameter("agentId", agentId);
@@ -239,6 +239,11 @@ public class MovaClient {
 		resource.put(j.toString());
 	}
 	
+	public void registerAgent(Agent pAgent){
+		String j = mMj.agentToJson(pAgent);
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/registerAgent");
+		resource.put(j.toString());
+	}
 	
 	public void changeAgentStatus(String agentId, boolean isLogin){
 		JsonObject j = new JsonObject();

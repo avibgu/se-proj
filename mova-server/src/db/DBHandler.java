@@ -87,7 +87,9 @@ public class DBHandler {
 		} catch (SQLException sqlExcept) {
 		}
 	}
-	
+	/**
+	 * Deletes all database data, not the tables
+	 */
 	public void deleteData(){
 		mWrite.lock();
 		createConnection();
@@ -163,7 +165,10 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Returns all the agent types in the system
+	 * @return all the agent types in the system
+	 */
 	public Vector<String> getAgentTypes() {
 		
 		mRead.lock();
@@ -390,7 +395,11 @@ public class DBHandler {
 		
 		return regristrationId;
 	}
-	
+	/**
+	 * Returns the type of the agent
+	 * @param pAgentId the agent id to search for
+	 * @return the agent type of the agent
+	 */
 	public String getAgentType(String pAgentId) {
 		
 		mRead.lock();
@@ -1122,7 +1131,11 @@ public class DBHandler {
 		
 		return itemIds;
 	}
-	
+	/**
+	 * Returns all items that the agent holds
+	 * @param pAgentId the agent id to search for
+	 * @return all items that the agent holds
+	 */
 	public Vector<Item> getAgentItems(String pAgentId) {
 		
 		mRead.lock();
@@ -1157,7 +1170,10 @@ public class DBHandler {
 		
 		return agentItems;
 	}
-	
+	/**
+	 * Returns all items in the system
+	 * @return all items in the system
+	 */
 	public Vector<Item> getItems() {
 		
 		mRead.lock();
@@ -1273,6 +1289,11 @@ public class DBHandler {
 	}
 	
 //	----------------------------ActivityAgents Table Handling----------------------------
+	/**
+	 * Adds an agent to the activity agent list
+	 * @param pActivityId the activity id
+	 * @param pAgentId the agent id to add
+	 */
 	public void insertActivityAgent(String pActivityId, String pAgentId){
     	mWrite.lock();
 		createConnection();
@@ -1290,7 +1311,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
     }
-	
+	/**
+	 * Deletes an agent from the activity agent list
+	 * @param pActivityId the activity id
+	 * @param pAgentId the agent id to remove
+	 */
 	public void deleteActivityAgent(String pActivityId, String pAgentId){
 		mWrite.lock();
 		createConnection();
@@ -1309,7 +1334,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Returns all agent ids relevant to the given activity
+	 * @param pActivityId the activity id to search for
+	 * @return all agent ids relevant to the given activity
+	 */
 	public Vector<String> getActivityAgentIds(String pActivityId){
 		mRead.lock();
 		createConnection();
@@ -1336,7 +1365,11 @@ public class DBHandler {
 		
 		return activityAgentIds;
 	}
-	
+	/**
+	 * Returns the activity schedule of the given agent id
+	 * @param pAgentId the agent id to search for
+	 * @return the activity schedule of the given agent id
+	 */
 	public Vector<Activity> getAgentSchedule(String pAgentId){
 		mRead.lock();
 		createConnection();
@@ -1390,6 +1423,11 @@ public class DBHandler {
 	}
 	
 //	----------------------------ActivityItems Table Handling----------------------------
+	/**
+	 * Inserts a new item that is used in the activity
+	 * @param pActivityId the activity id
+	 * @param pItemId the item id inserted
+	 */
 	public void insertActivityItem(String pActivityId, String pItemId){
     	mWrite.lock();
 		createConnection();
@@ -1407,7 +1445,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
     }
-	
+	/**
+	 * Deletes an existing item from the activity
+	 * @param pActivityId the activity id
+	 * @param pItemId the item to delete
+	 */
 	public void deleteActivityItem(String pActivityId, String pItemId){
 		mWrite.lock();
 		createConnection();
@@ -1426,7 +1468,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Returns all item ids relevant to the given activity id
+	 * @param pActivityId the activity id
+	 * @return all item ids relevant to the given activity id
+	 */
 	public Vector<String> getActivityItemIds(String pActivityId){
 		mRead.lock();
 		createConnection();
@@ -1455,6 +1501,11 @@ public class DBHandler {
 	}
 	
 //	----------------------------AgentLocations Table Handling----------------------------
+	/**
+	 * Inserts the location of an agent
+	 * @param pAgentId the agent id
+	 * @param location the agent's location
+	 */
 	public void insertAgentLocation(String pAgentId, Location location){
 		mWrite.lock();
 		createConnection();
@@ -1473,7 +1524,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Updates the agent's location
+	 * @param pAgentId the agent id
+	 * @param newLocation the new location of the agent
+	 */
 	public void updateAgentLocation(String pAgentId, Location newLocation){
 		mWrite.lock();
 		createConnection();
@@ -1491,7 +1546,10 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Deletes an existing location of an agent
+	 * @param pAgentId the agent id
+	 */
 	public void deleteAgentLocation(String pAgentId){
 		mWrite.lock();
 		createConnection();
@@ -1509,7 +1567,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Returns the location of the given agent id
+	 * @param pAgentId the agent id
+	 * @return the location of the given agent id
+	 */
 	public Location getAgentLocation(String pAgentId){
 		mRead.lock();
 		createConnection();
@@ -1539,7 +1601,12 @@ public class DBHandler {
 		
 		return location;
 	}
-//	----------------------------ItemLocations Table Handling----------------------------	
+//	----------------------------ItemLocations Table Handling----------------------------
+	/**
+	 * Inserts the location of an item
+	 * @param pItemId the item id
+	 * @param location the item's location
+	 */
 	public void insertItemLocation(String pItemId, Location location){
 		mWrite.lock();
 		createConnection();
@@ -1558,7 +1625,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Updates the item's location
+	 * @param pItemId the item id
+	 * @param newLocation the new location of the item
+	 */
 	public void updateItemLocation(String pItemId, Location newLocation){
 		mWrite.lock();
 		createConnection();
@@ -1576,7 +1647,10 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Deletes an existing location of an item
+	 * @param pItemId the item id
+	 */
 	public void deleteItemLocation(String pItemId){
 		mWrite.lock();
 		createConnection();
@@ -1594,7 +1668,11 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-	
+	/**
+	 * Returns the location of the given item id
+	 * @param pItemId the item id
+	 * @return the location of the given item id
+	 */
 	public Location getItemLocation(String pItemId){
 		mRead.lock();
 		createConnection();

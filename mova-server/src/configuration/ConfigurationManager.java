@@ -6,7 +6,12 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import simulator.NewDomain;
-
+/**
+ * The ConfigurationManager class is used to read
+ * properties from the config.properties file 
+ * such as: number of agents, items and sensors
+ * and the scan distance of the sensors 
+ */
 public class ConfigurationManager {
 
 	/**

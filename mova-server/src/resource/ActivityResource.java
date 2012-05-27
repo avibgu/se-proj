@@ -20,14 +20,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import db.DBHandler;
-
+/**
+ * The activity resource is used to process incoming connections
+ * from the Mova Client that are relevant to activites
+ */
 @Path("/activities")
 public class ActivityResource {
 	
 	DBHandler db = DBHandler.getInstance();
 	MovaJson mj = new MovaJson();
 	Simulator simulator = Simulator.getInstance(null);
-	
+	/**
+	 * Sends an activity to all the relevant agents
+	 * @param jsonObject a json object that holds the agent ids of the relevant agents
+	 */
 	@PUT
 	@Path("/sendActivity")
 	public void sendActivity(String jsonObject){
@@ -38,7 +44,11 @@ public class ActivityResource {
 		
 		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds,MessageType.SEND_ACTIVITY);
 	}
-	
+	/**
+	 * Sends a whole activity schedule to all relevant agents
+	 * @param jsonObject a json object that holds the agent ids of the relevant agents
+	 * and the activity to send
+	 */
 	@POST
 	@Path("/sendScheduledActivities")
 	public void sendScheduledActivities(String jsonObject){
@@ -49,7 +59,11 @@ public class ActivityResource {
 		
 		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.GOT_SCHEDULE);
 	}
-	
+	/**
+	 * Changes an activity status
+	 * @param jsonObject a json object that holds the activity id to change
+	 * and the new state of the activity
+	 */
 	@PUT
 	@Path("/changeActivityStatus")
 	public void changeActivityStatus(String jsonObject){
@@ -59,7 +73,11 @@ public class ActivityResource {
 		ActivityState state = ActivityState.valueOf(j.get("state").getAsString());
 		db.updateActivityState(id, state.toString());
 	}
-	
+	/**
+	 *
+	 * @param jsonObject
+	 */
+	//TODO finish javadoc
 	@PUT
 	@Path("/addActivity")
 	public void addActivity(String jsonObject){
@@ -68,7 +86,11 @@ public class ActivityResource {
 		
 		// Recalculate?
 	}
-	
+	/**
+	 * 
+	 * @param jsonObject
+	 */
+	//TODO finish javadoc
 	@PUT
 	@Path("/postponeActivity")
 	public void postponeActivity(String jsonObject){
@@ -81,13 +103,19 @@ public class ActivityResource {
 		// Recalculate.
 		
 	}
-	
+	/**
+	 * Creates a new Activity Type in the system
+	 * @param jsonObject a json object that holds the new activity type
+	 */
 	@PUT
 	@Path("/createActivityType")
 	public void createActivityType(String jsonObject){
 		db.insertActivityType(jsonObject);
 	}
-	
+	/**
+	 * Deletes an existing Activity Type from the system
+	 * @param jsonObject a json object that holds the existing activity type
+	 */
 	@PUT
 	@Path("/deleteActivityType")
 	public void deleteActivityType(String jsonObject){
