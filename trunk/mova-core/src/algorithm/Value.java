@@ -3,6 +3,7 @@ package algorithm;
 import java.util.Date;
 import java.util.Set;
 
+import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
@@ -124,5 +125,11 @@ public class Value {
 
 	public void setRequiredActivities(Set<String> pRequiredActivities) {
 		mRequiredActivities = pRequiredActivities;
+	}
+
+	public Activity getActivity() {
+		// TODO Auto-generated method stub
+//		return new Activity(pType, mActualStartTime, mActualEndTime, mActualEndTime.getTime() - mActualStartTime.getTime(), mRequiredAgents, mRequiredItems, mRequiredActivities, pDescription, pName);
+		return null;
 	}
 }

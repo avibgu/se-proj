@@ -1,5 +1,7 @@
 package movaProj.agent;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 import client.MovaClient;
@@ -14,14 +16,18 @@ import algorithm.CSPAlgorithm;
 import algorithm.Value;
 import algorithm.Variable;
 
-public class Coordinator {
+public class Coordinator implements Observer {
 
-	public static final MovaClient sfMovaClient = new MovaClient();
-	
-	private Coordinator() {
+	private MovaClient mMovaClient;
+	private Vector<Activity> mActivities;
+
+	public Coordinator() {
+
+		mMovaClient = new MovaClient();
+		C2DMReceiver.addListener(this);
 	}
 
-	public static void recalculate(String myID) {
+	public void recalculate(String myID) {
 
 		notifyAboutStartingTheRecalculate(myID);
 
@@ -35,14 +41,14 @@ public class Coordinator {
 			variables.add(new Variable(activity));
 
 		CSPAlgorithm mAlgorithm = new CBJ(variables);
-		
+
 		try {
 
 			mAlgorithm.solve();
-			
+
 			if (mAlgorithm.isSolved()) {
 
-				updateDatabaseWithNewSchecdule(mAlgorithm.getAssignment());
+				updateDatabaseWithNewSchecdule(myID, mAlgorithm.getAssignment());
 				notifyAboutFinishingTheRecalculate(myID);
 			}
 
@@ -56,31 +62,81 @@ public class Coordinator {
 		}
 	}
 
-	private static void notifyAboutStartingTheRecalculate(String myID) {
+	private void notifyAboutStartingTheRecalculate(String myID) {
 		// TODO: notify all other Agent that we are starting coordinating,
 		// provide coordination-id (and order on the Agents?..) we are first..
 	}
 
-	private static void waitForApprovalOrUnapproval() {
+	private void waitForApprovalOrUnapproval() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private static Vector<Activity> getActivitiesFromDB(String myID) {
-		
-		sfMovaClient.getAllActivities(myID);
-		
-		//TODO
-		
-		return null;
+	private Vector<Activity> getActivitiesFromDB(String myID) {
+
+		mActivities = null;
+
+		mMovaClient.getAllActivities(myID);
+
+		// TODO
+
+		synchronized (this) {
+
+			while (null == mActivities) {
+				
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return mActivities;
 	}
 
-	private static void updateDatabaseWithNewSchecdule(Vector<Value> pAssignment) {
+	private void updateDatabaseWithNewSchecdule(String myID, Vector<Value> pAssignment) {
 		// TODO Auto-generated method stub
 
+		Vector<Activity> schedule = new Vector<Activity>();
+		
+		for (Value value : pAssignment)
+			schedule.add(value.getActivity());
+		
+//		mMovaClient.putNewSchedule(myID, schedule);	TODO
+		
+		/**
+		 * TODO Question
+		 * how do we know to distinct between Activity and instance of Activity?..
+		 * do we use Activity and Activity Type?........
+		 */
 	}
 
-	private static void notifyAboutFinishingTheRecalculate(String myID) {
+	private void notifyAboutFinishingTheRecalculate(String myID) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void update(Observable pObservable, Object pData) {
+
+		if (pData instanceof MovaMessage) {
+
+			MovaMessage message = (MovaMessage) pData;
+
+			switch (message.getMessageType()) {
+
+			case GOT_ACTIVITIES:
+				
+				// TODO
+				synchronized (this) {
+
+					mActivities = (Vector<Activity>) message.getData();
+					this.notifyAll();
+				}
+				
+				break;
+			}
+
+		}
 	}
 }
