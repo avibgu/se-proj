@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import java.util.Vector;
 
+import movaProj.agent.C2DMReceiver;
 import movaProj.agent.MovaMessage;
 
 import client.MovaClient;
@@ -18,6 +20,7 @@ import com.google.gson.internal.Pair;
 
 import type.AgentType;
 import type.ItemType;
+import utilities.MovaJson;
 
 import actor.Activity;
 import actor.Agent;
@@ -47,27 +50,28 @@ public class Domain implements Cloneable, Observer {
 
 	protected boolean mEmpty;
 
-	protected HashMap<String, List<Agent>> mAgentsMap;
-	protected HashMap<String, List<Item>> mItemsMap;
-	
+	protected HashMap<AgentType, List<Agent>> mAgentsMap;
+	protected HashMap<ItemType, List<Item>> mItemsMap;
+
 	protected MovaClient mMovaClient;
 
 	public Domain(Activity pActivity) {
 		this(pActivity, "");
 	}
-	
+
 	public Domain(Activity pActivity, String pMyID) {
+
+		C2DMReceiver.addListener(this);
 
 		mActivity = pActivity;
 		mMyID = pMyID;
-		
+
 		getItemsAndAgentsFromDB();
 		initValues();
 	}
 
-
 	private void getItemsAndAgentsFromDB() {
-		
+
 		mAgentsMap = null;
 
 		mMovaClient.getAllAgents(mMyID);
@@ -75,7 +79,7 @@ public class Domain implements Cloneable, Observer {
 		synchronized (this) {
 
 			while (null == mAgentsMap) {
-				
+
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
@@ -83,7 +87,7 @@ public class Domain implements Cloneable, Observer {
 				}
 			}
 		}
-		
+
 		mItemsMap = null;
 
 		mMovaClient.getItems(mMyID);
@@ -91,7 +95,7 @@ public class Domain implements Cloneable, Observer {
 		synchronized (this) {
 
 			while (null == mItemsMap) {
-				
+
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
@@ -177,17 +181,17 @@ public class Domain implements Cloneable, Observer {
 
 	public Value nextValue() {
 
-//		String hashKey = getHashKeyOfCurrentIndexes();
-//
-//		Value value = mValues.get(hashKey);
+		// String hashKey = getHashKeyOfCurrentIndexes();
+		//
+		// Value value = mValues.get(hashKey);
 
 		Value value = null;
-				
-//		if (null == value) {
 
-			value = constructValueFromIndexes();
-//			mValues.put(hashKey, value);
-//		}
+		// if (null == value) {
+
+		value = constructValueFromIndexes();
+		// mValues.put(hashKey, value);
+		// }
 
 		incrementIndexes();
 
@@ -303,27 +307,27 @@ public class Domain implements Cloneable, Observer {
 
 		// TODO
 		return null;
-		
-//		Map<String, Value> values = new HashMap<String, Value>();
-//		
-//		for (String key : mValues.keySet())
-//			values.put(key, values.get(key).clone());
-//
-//		List<List<Agent>> agents = ;
-//		List<List<Item>> items;
-//
-//		List<List<Integer>> agentsIndexes;
-//		List<List<Integer>> itemsIndexes;
-//
-//		List<Pair<Date, Date>> times;
-//		Integer timesIndex;
-//
-//		List<Integer> agentsSizes;
-//		List<Integer> itemsSizes;
-//
-//		return new Domain(mActivity, values, agents, items, agentsIndexes,
-//				itemsIndexes, times, timesIndex, agentsSizes, itemsSizes,
-//				mEmpty);
+
+		// Map<String, Value> values = new HashMap<String, Value>();
+		//
+		// for (String key : mValues.keySet())
+		// values.put(key, values.get(key).clone());
+		//
+		// List<List<Agent>> agents = ;
+		// List<List<Item>> items;
+		//
+		// List<List<Integer>> agentsIndexes;
+		// List<List<Integer>> itemsIndexes;
+		//
+		// List<Pair<Date, Date>> times;
+		// Integer timesIndex;
+		//
+		// List<Integer> agentsSizes;
+		// List<Integer> itemsSizes;
+		//
+		// return new Domain(mActivity, values, agents, items, agentsIndexes,
+		// itemsIndexes, times, timesIndex, agentsSizes, itemsSizes,
+		// mEmpty);
 	}
 
 	public boolean isEmpty() {
@@ -340,33 +344,59 @@ public class Domain implements Cloneable, Observer {
 			switch (message.getMessageType()) {
 
 			case GOT_ALL_AGENTS:
-				
+
 				synchronized (this) {
 
-					mAgentsMap = new HashMap<String, List<Agent>>();
+					mAgentsMap = new HashMap<AgentType, List<Agent>>();
 					
-					// TODO
+					Vector<Agent> agents = new MovaJson()
+							.jsonToAgents((String) message.getData());
 					
+					for (Agent agent : agents){
+						
+						List<Agent> tAgents = mAgentsMap.get(agent.getType());
+						
+						if (null == tAgents){
+							
+							tAgents = new ArrayList<Agent>();
+							mAgentsMap.put(agent.getType(), tAgents);
+						}
+						
+						tAgents.add(agent);
+					}
+
 					this.notifyAll();
 				}
-				
+
 				break;
-				
+
 			case ITEMS_LIST:
-				
+
 				synchronized (this) {
 
-					mItemsMap = new HashMap<String, List<Item>>();
+					mItemsMap = new HashMap<ItemType, List<Item>>();
 					
-					// TODO
+					Vector<Item> items = new MovaJson()
+							.jsonToItems((String) message.getData());
 					
+					for (Item item : items){
+						
+						List<Item> tItems = mItemsMap.get(item.getType());
+						
+						if (null == tItems){
+							
+							tItems = new ArrayList<Item>();
+							mItemsMap.put(item.getType(), tItems);
+						}
+						
+						tItems.add(item);
+					}
+
 					this.notifyAll();
 				}
-				
+
 				break;
-
 			}
-
 		}
 	}
 }
