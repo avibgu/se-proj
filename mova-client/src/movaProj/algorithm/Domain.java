@@ -6,7 +6,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
+import java.util.Vector;
+
+import movaProj.agent.AgentDataSource;
+import movaProj.agent.MovaMessage;
+
+import client.MovaClient;
 
 import com.google.gson.internal.Pair;
 
@@ -17,11 +25,14 @@ import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
-public class Domain implements Cloneable {
+public class Domain implements Cloneable, Observer {
 
 	private static final long HOUR = 1000 * 60 * 60;
 
+	protected String mMyID;
+
 	protected Activity mActivity;
+
 	protected Map<String, Value> mValues;
 
 	protected List<List<Agent>> mAgents;
@@ -38,10 +49,58 @@ public class Domain implements Cloneable {
 
 	protected boolean mEmpty;
 
+	protected HashMap<String, List<Agent>> mAgentsMap;
+	protected HashMap<String, List<Item>> mItemsMap;
+	
+	protected MovaClient mMovaClient;
+
 	public Domain(Activity pActivity) {
+		this(pActivity, "");
+	}
+	
+	public Domain(Activity pActivity, String pMyID) {
 
 		mActivity = pActivity;
+		mMyID = pMyID;
+		
+		getItemsAndAgentsFromDB();
 		initValues();
+	}
+
+
+	private void getItemsAndAgentsFromDB() {
+		
+		mAgentsMap = null;
+
+		mMovaClient.getAllAgents(mMyID);
+
+		synchronized (this) {
+
+			while (null == mAgentsMap) {
+				
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		mItemsMap = null;
+
+		mMovaClient.getItems(mMyID);
+
+		synchronized (this) {
+
+			while (null == mItemsMap) {
+				
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	public Domain(Activity pActivity, Map<String, Value> pValues,
@@ -64,7 +123,7 @@ public class Domain implements Cloneable {
 
 		for (AgentType agentType : mActivity.getRequiredAgents().keySet()) {
 
-			List<Agent> allAgentsOfThisType = getAllAgentsOfThisTypeFromDB(agentType);
+			List<Agent> allAgentsOfThisType = mAgentsMap.get(agentType);
 
 			mAgents.add(allAgentsOfThisType);
 
@@ -87,7 +146,7 @@ public class Domain implements Cloneable {
 
 		for (ItemType itemType : mActivity.getRequiredItems().keySet()) {
 
-			List<Item> allItemsOfThisType = getAllItemsOfThisTypeFromDB(itemType);
+			List<Item> allItemsOfThisType = mItemsMap.get(itemType);
 
 			mItems.add(allItemsOfThisType);
 
@@ -116,16 +175,6 @@ public class Domain implements Cloneable {
 		}
 
 		mEmpty = false;
-	}
-
-	private List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private List<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Value nextValue() {
@@ -281,5 +330,45 @@ public class Domain implements Cloneable {
 
 	public boolean isEmpty() {
 		return mEmpty;
+	}
+
+	@Override
+	public void update(Observable pObservable, Object pData) {
+
+		if (pData instanceof MovaMessage) {
+
+			MovaMessage message = (MovaMessage) pData;
+
+			switch (message.getMessageType()) {
+
+			case GOT_ALL_AGENTS:
+				
+				synchronized (this) {
+
+					mAgentsMap = new HashMap<String, List<Agent>>();
+					
+					// TODO
+					
+					this.notifyAll();
+				}
+				
+				break;
+				
+			case GOT_ALL_ITEMS:
+				
+				synchronized (this) {
+
+					mItemsMap = new HashMap<String, List<Item>>();
+					
+					// TODO
+					
+					this.notifyAll();
+				}
+				
+				break;
+
+			}
+
+		}
 	}
 }
