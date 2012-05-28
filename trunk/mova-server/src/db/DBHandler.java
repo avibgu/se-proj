@@ -20,6 +20,7 @@ import type.AgentType;
 import type.ItemType;
 import utilities.Location;
 import actor.Activity;
+import actor.Agent;
 import actor.Item;
 
 /**
@@ -524,7 +525,38 @@ public class DBHandler {
 		mWrite.unlock();
 	}
 
+	public List<Agent> getAllAgents() {
 
+		mRead.lock();
+		createConnection();
+		
+		List<Agent> agents = new ArrayList<Agent>();
+		
+		try {
+			mStmt = mConn.createStatement();
+
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mAgentTableName + " WHERE agent_status = 't'");
+
+			while (results.next()) {
+
+				Agent agent = new Agent(new AgentType(results.getString("agent_type")));
+				agent.setId(results.getString("agent_id"));
+				agents.add(agent);
+			}
+			
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getAllAgents - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return agents;
+	}
+	
 //----------------------------ActivityTypes Table Handling----------------------------	
     /**
      * Inserts a new activity type
