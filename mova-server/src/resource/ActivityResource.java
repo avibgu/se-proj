@@ -1,6 +1,7 @@
 package resource;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.GET;
@@ -134,7 +135,7 @@ public class ActivityResource {
 	@GET
 	@Path("/getAllActivities")
 	public void getAllActivities(@PathParam("agentId") String agentId){
-		Vector<Activity> activities = db.getAllActivities();
+		List<Activity> activities = db.getAllActivities();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
 		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(activities),agentIds, MessageType.GOT_ACTIVITIES);
