@@ -269,6 +269,12 @@ public class MovaClient {
 		resource.put(j.toString());
 	}
 	
+	public void getAllAgents(String agentId) {
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAllAgents");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+	
 	// Static
 	
 	public void createAgentType(String type){
@@ -300,6 +306,7 @@ public class MovaClient {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/deleteActivityType");
 		resource.put(type);
 	}
+
 	
 	
 	
