@@ -9,9 +9,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
-import java.util.Vector;
 
-import movaProj.agent.AgentDataSource;
 import movaProj.agent.MovaMessage;
 
 import client.MovaClient;
@@ -354,7 +352,7 @@ public class Domain implements Cloneable, Observer {
 				
 				break;
 				
-			case GOT_ALL_ITEMS:
+			case ITEMS_LIST:
 				
 				synchronized (this) {
 
