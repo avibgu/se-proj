@@ -1,5 +1,6 @@
 package resource;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.DELETE;
@@ -136,5 +137,13 @@ public class AgentResource {
 		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
 
 	}
-	
+
+	@PUT
+	@Path("/getAllAgents")
+	public void getAllAgents(@PathParam("agentId") String agentId){
+		List<Agent> activities = db.getAllAgents();
+		Vector<String> agentIds = new Vector<String>();
+		agentIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(activities),agentIds, MessageType.GOT_ALL_AGENTS);
+	}
 }
