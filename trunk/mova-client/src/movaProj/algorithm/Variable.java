@@ -13,6 +13,11 @@ public class Variable implements Comparable<Variable>{
 		mDomain = new Domain(mActivity);
 	}
 	
+	public Variable(Activity pActivity, String pMyID) {
+		mActivity = pActivity;
+		mDomain = new Domain(mActivity, pMyID);
+	}
+
 	public Domain getDomain() {
 //		return (Domain) mDomain.clone(); TODO
 		return mDomain;

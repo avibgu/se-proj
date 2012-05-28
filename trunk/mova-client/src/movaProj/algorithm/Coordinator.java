@@ -1,8 +1,11 @@
 package movaProj.algorithm;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+
+import utilities.MovaJson;
 
 import movaProj.agent.C2DMReceiver;
 import movaProj.agent.MovaMessage;
@@ -18,7 +21,7 @@ import actor.Activity;
 public class Coordinator implements Observer {
 
 	private MovaClient mMovaClient;
-	private Vector<Activity> mActivities;
+	private List<Activity> mActivities;
 
 	public Coordinator() {
 
@@ -32,12 +35,12 @@ public class Coordinator implements Observer {
 
 		waitForApprovalOrUnapproval();
 
-		Vector<Activity> activities = getActivitiesFromDB(myID);
+		List<Activity> activities = getActivitiesFromDB(myID);
 
 		Vector<Variable> variables = new Vector<Variable>();
 
 		for (Activity activity : activities)
-			variables.add(new Variable(activity));
+			variables.add(new Variable(activity, myID));
 
 		CSPAlgorithm mAlgorithm = new CBJ(variables);
 
@@ -71,7 +74,7 @@ public class Coordinator implements Observer {
 
 	}
 
-	private Vector<Activity> getActivitiesFromDB(String myID) {
+	private List<Activity> getActivitiesFromDB(String myID) {
 
 		mActivities = null;
 
@@ -125,11 +128,10 @@ public class Coordinator implements Observer {
 			switch (message.getMessageType()) {
 
 			case GOT_ACTIVITIES:
-				
-				// TODO
+
 				synchronized (this) {
 
-					mActivities = (Vector<Activity>) message.getData();
+					mActivities = new MovaJson().jsonToActivities((String)message.getData());
 					this.notifyAll();
 				}
 				
