@@ -1,8 +1,11 @@
-package movaProj.agent;
+package movaProj.algorithm;
 
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+
+import movaProj.agent.C2DMReceiver;
+import movaProj.agent.MovaMessage;
 
 import client.MovaClient;
 
@@ -11,10 +14,6 @@ import client.MovaClient;
 //import type.MessageType;
 
 import actor.Activity;
-import algorithm.CBJ;
-import algorithm.CSPAlgorithm;
-import algorithm.Value;
-import algorithm.Variable;
 
 public class Coordinator implements Observer {
 
