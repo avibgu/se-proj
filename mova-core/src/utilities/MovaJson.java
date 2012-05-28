@@ -187,5 +187,24 @@ public class MovaJson {
 		}
 		return returnedTypes;
 	}
-	
+
+	public Vector<Agent> jsonToAgents(String json) {
+
+		Vector<Agent> agents = new Vector<Agent>();
+		Agent[] itemsArray = null;
+		
+		try{
+			itemsArray = _gson.fromJson(json, Agent[].class);
+		}
+		
+		catch(JsonSyntaxException e){
+			return agents;
+		}
+		
+		for(int i = 0; i < itemsArray.length; i++){
+			agents.add(itemsArray[i]);
+		}
+		
+		return agents;
+	}
 }
