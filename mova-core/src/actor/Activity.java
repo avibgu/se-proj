@@ -44,6 +44,10 @@ public class Activity {
 	// The Upper bound time of this Activity
 	protected Timestamp					mEndTime;
 
+	protected Timestamp					mActualStartTime;
+	
+	protected Timestamp					mActualEndTime;
+	
 	// The time (in milliseconds) that we assume this Activity will takes
 	protected long						mEstimateTime;
 	
@@ -131,6 +135,8 @@ public class Activity {
 		mState = ActivityState.PENDING;
 		mStartTime = pStartTime;
 		mEndTime = pEndTime;
+		mActualStartTime = null;
+		mActualEndTime = null;
 		mEstimateTime = pEstimateTime;
 		mRequiredAgents = pRequiredAgents;
 		mRequiredItems = pRequiredItems;
@@ -209,6 +215,12 @@ public class Activity {
 	 */
 	public void setEndTime(Timestamp pEndTime) {
 		mEndTime = pEndTime;
+	}
+	public Timestamp getActualEndTime() {
+		return mActualEndTime;
+	}
+	public void setActualEndTime(Timestamp pActualEndTime) {
+		mActualEndTime = pActualEndTime;
 	}
 	/**
 	 * Returns the activity estimated time in milliseconds
@@ -358,6 +370,13 @@ public class Activity {
 		mEndTime.setTime(mEndTime.getTime() + addedTimeInMilliseconds);
 		new MovaClient().postponeActivity(mId, mEndTime.toString());
 	}
+	public Timestamp getActualStartTime() {
+		return mActualStartTime;
+	}
+	public void setActualStartTime(Timestamp pActualStartTime) {
+		mActualStartTime = pActualStartTime;
+	}
+
 	/**
 	 * Compares to activities according to activity id
 	 * @param pActivity the activity to compare

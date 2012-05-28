@@ -168,9 +168,9 @@ public class Domain implements Cloneable, Observer {
 		mTimes = new ArrayList<Pair<Date, Date>>();
 		mTimesIndex = 0;
 
-		for (long i = mActivity.getStartTime().getTime(); i
-				+ mActivity.getEstimateTime() < mActivity.getEndTime()
-				.getTime(); i += HOUR) {
+		for (long i = Math.max(mActivity.getStartTime().getTime(),
+				new Date().getTime()); i + mActivity.getEstimateTime() < mActivity
+				.getEndTime().getTime(); i += HOUR) {
 
 			mTimes.add(new Pair<Date, Date>(new Date(i), new Date(i
 					+ mActivity.getEstimateTime())));
@@ -189,11 +189,15 @@ public class Domain implements Cloneable, Observer {
 
 		// if (null == value) {
 
-		value = constructValueFromIndexes();
+		do {
+			value = constructValueFromIndexes();
+			
+			incrementIndexes();
+		}
+		while(null != value);
+
 		// mValues.put(hashKey, value);
 		// }
-
-		incrementIndexes();
 
 		return value;
 	}
@@ -348,20 +352,20 @@ public class Domain implements Cloneable, Observer {
 				synchronized (this) {
 
 					mAgentsMap = new HashMap<AgentType, List<Agent>>();
-					
+
 					Vector<Agent> agents = new MovaJson()
 							.jsonToAgents((String) message.getData());
-					
-					for (Agent agent : agents){
-						
+
+					for (Agent agent : agents) {
+
 						List<Agent> tAgents = mAgentsMap.get(agent.getType());
-						
-						if (null == tAgents){
-							
+
+						if (null == tAgents) {
+
 							tAgents = new ArrayList<Agent>();
 							mAgentsMap.put(agent.getType(), tAgents);
 						}
-						
+
 						tAgents.add(agent);
 					}
 
@@ -375,20 +379,20 @@ public class Domain implements Cloneable, Observer {
 				synchronized (this) {
 
 					mItemsMap = new HashMap<ItemType, List<Item>>();
-					
+
 					Vector<Item> items = new MovaJson()
 							.jsonToItems((String) message.getData());
-					
-					for (Item item : items){
-						
+
+					for (Item item : items) {
+
 						List<Item> tItems = mItemsMap.get(item.getType());
-						
-						if (null == tItems){
-							
+
+						if (null == tItems) {
+
 							tItems = new ArrayList<Item>();
 							mItemsMap.put(item.getType(), tItems);
 						}
-						
+
 						tItems.add(item);
 					}
 
