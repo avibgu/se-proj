@@ -1,6 +1,8 @@
 package movaProj.algorithm;
 
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import actor.Activity;
@@ -9,17 +11,20 @@ import actor.Item;
 
 public class Value {
 
-	private String		mActivitiyID;
-	private Date		mActualStartTime;
-	private Date		mActualEndTime;
-	private Set<Agent>	mRequiredAgents;
-	private Set<Item>	mRequiredItems;
-	private Set<String>	mRequiredActivities;
+	private Activity mActivity;
+	private String mActivitiyID;
+	private Date mActualStartTime;
+	private Date mActualEndTime;
+	private Set<Agent> mRequiredAgents;
+	private Set<Item> mRequiredItems;
+	private Set<String> mRequiredActivities;
 
-	public Value(String pActivitiyID, Date pActualStartTime,
-			Date pActualEndTime, Set<Agent> pRequiredAgents,
-			Set<Item> pRequiredItems, Set<String> pRequiredActivities) {
+	public Value(Activity pActivity, String pActivitiyID,
+			Date pActualStartTime, Date pActualEndTime,
+			Set<Agent> pRequiredAgents, Set<Item> pRequiredItems,
+			Set<String> pRequiredActivities) {
 
+		setActivity(pActivity);
 		mActivitiyID = pActivitiyID;
 		mActualStartTime = pActualStartTime;
 		mActualEndTime = pActualEndTime;
@@ -63,19 +68,19 @@ public class Value {
 
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("\nActivitiy ID: " + mActivitiyID + "\n");
 		sb.append("Actual Start Time: " + mActualStartTime + "\n");
 		sb.append("Actual End Time: " + mActualEndTime + "\n");
 		sb.append("Required Aents: " + mRequiredAgents + "\n");
 		sb.append("Required Items: " + mRequiredItems + "\n");
 		sb.append("Required Activities: " + mRequiredActivities + "\n");
-		
+
 		return sb.toString();
 	}
 
@@ -128,8 +133,37 @@ public class Value {
 	}
 
 	public Activity getActivity() {
-		// TODO Auto-generated method stub
-//		return new Activity(pType, mActualStartTime, mActualEndTime, mActualEndTime.getTime() - mActualStartTime.getTime(), mRequiredAgents, mRequiredItems, mRequiredActivities, pDescription, pName);
-		return null;
+		
+		Activity activity;
+		
+		try {
+			activity = mActivity.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		activity.setActualStartTime(new Timestamp(mActualStartTime.getTime()));
+		activity.setActualStartTime(new Timestamp(mActualStartTime.getTime()));
+		
+		Set<String> agentsIDs = new HashSet<String>();
+		
+		for (Agent agent : mRequiredAgents)
+			agentsIDs.add(agent.getId());
+		
+		activity.setParticipatingAgentIds(agentsIDs);
+		
+		Set<String> itemsIDs = new HashSet<String>();
+		
+		for (Item item : mRequiredItems)
+			itemsIDs.add(item.getId());
+		
+		activity.setParticipatingItemIds(itemsIDs);
+				
+		return activity;
+	}
+
+	public void setActivity(Activity activity) {
+		mActivity = activity;
 	}
 }

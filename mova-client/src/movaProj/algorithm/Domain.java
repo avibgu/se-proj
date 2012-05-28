@@ -191,10 +191,9 @@ public class Domain implements Cloneable, Observer {
 
 		do {
 			value = constructValueFromIndexes();
-			
+
 			incrementIndexes();
-		}
-		while(null != value);
+		} while (null != value);
 
 		// mValues.put(hashKey, value);
 		// }
@@ -266,8 +265,9 @@ public class Domain implements Cloneable, Observer {
 			for (Integer index : mItemsIndexes.get(i))
 				requiredItems.add(mItems.get(i).get(index));
 
-		return new Value(mActivity.getId(), mTimes.get(mTimesIndex).first,
-				mTimes.get(mTimesIndex).second, requiredAgents, requiredItems,
+		return new Value(mActivity, mActivity.getId(),
+				mTimes.get(mTimesIndex).first, mTimes.get(mTimesIndex).second,
+				requiredAgents, requiredItems,
 				mActivity.getRequiredActivityIds());
 	}
 
