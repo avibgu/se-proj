@@ -210,7 +210,7 @@ public class MovaClient {
 	}
 	
 	public void getAllActivities(String agentId){
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAllActivities");
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAllActivities");
 		resource.getReference().addQueryParameter("agentId", agentId);
 		resource.get();
 	}
