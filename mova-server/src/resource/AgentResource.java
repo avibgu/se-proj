@@ -121,9 +121,9 @@ public class AgentResource {
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String registrationId = j.get("registrationId").getAsString();
-				
+
 		// Create static types vectors.
-		
+
 		Vector<String> activityTypes = db.getActivityTypes();
 		Vector<String> agentTypes = db.getAgentTypes();
 		Vector<String> itemTypes = db.getItemTypes();
@@ -133,9 +133,8 @@ public class AgentResource {
 		j.addProperty("activityTypes", movaJson.createJsonObj(activityTypes));
 		j.addProperty("agentTypes", movaJson.createJsonObj(agentTypes));
 		j.addProperty("itemTypes", movaJson.createJsonObj(itemTypes));
-				
-		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
 
+		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
 	}
 
 	@PUT
