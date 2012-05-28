@@ -86,7 +86,7 @@ public class C2DMReceiver extends BroadcastReceiver
 		         		break;
 		         	case GOT_ACTIVITIES:
 		         		//TODO Avi.. how do i get data?..
-		         		notifyObservers(new MovaMessage(MessageType.GOT_ACTIVITIES, null));
+		         		notifyObservers(new MovaMessage(MessageType.GOT_ACTIVITIES, message));
 		         		break;
 		         	case REGISTER_SUCCESS:
 		         		notifyObservers(new MovaMessage(MessageType.REGISTER_SUCCESS, agent_id));
