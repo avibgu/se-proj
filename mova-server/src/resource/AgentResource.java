@@ -64,6 +64,7 @@ public class AgentResource {
 		
 		db.insertAgentType(agent.getType().toString());
 		boolean ans = db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
+		
 		if (ans){
 			C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsIds,MessageType.REGISTER_SUCCESS);
 		}else{

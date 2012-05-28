@@ -2,7 +2,9 @@ package movaProj.agent;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import state.ActivityState;
@@ -16,9 +18,7 @@ public class ActivityDataSource {
 		// Database fields
 		private SQLiteDatabase database;
 		private DatabaseHelper dbHelper;
-		private String[] allColumns = { DatabaseHelper.activityColID,
-				DatabaseHelper.activityColName,DatabaseHelper.activityColType , DatabaseHelper.activityColDescription};
-
+	
 		public ActivityDataSource(Context context) {
 			dbHelper = new DatabaseHelper(context);
 		}
@@ -36,19 +36,28 @@ public class ActivityDataSource {
 		}
 
 		public void createActivity(actor.Activity movaAct) {
-			ContentValues cv = new ContentValues();
-		    cv.put(DatabaseHelper.activityColName, movaAct.getName());
-		    cv.put(DatabaseHelper.activityColType, movaAct.getType().toString());
-		    cv.put(DatabaseHelper.activityColDescription, movaAct.getDescription());
-		    cv.put(DatabaseHelper.activityColID, movaAct.getId());
-		    cv.put(DatabaseHelper.activityColStartTime, movaAct.getStartTime().getTime());
-		    cv.put(DatabaseHelper.activityColEndTime, movaAct.getEndTime().getTime());
-		    cv.put(DatabaseHelper.activityColEstimatedTime, movaAct.getEstimateTime());
-		    cv.put(DatabaseHelper.activityColState, movaAct.getState().toString());
-		    		    
-		    openToWrite();
+			ContentValues cv1 = new ContentValues();
+		    cv1.put(DatabaseHelper.activityColName, movaAct.getName());
+		    cv1.put(DatabaseHelper.activityColType, movaAct.getType().toString());
+		    cv1.put(DatabaseHelper.activityColDescription, movaAct.getDescription());
+		    cv1.put(DatabaseHelper.activityColID, movaAct.getId());
+		    cv1.put(DatabaseHelper.activityColStartTime, movaAct.getStartTime().getTime());
+		    cv1.put(DatabaseHelper.activityColEndTime, movaAct.getEndTime().getTime());
+		    cv1.put(DatabaseHelper.activityColEstimatedTime, movaAct.getEstimateTime());
+		    cv1.put(DatabaseHelper.activityColState, movaAct.getState().toString());
 		    
-		   	long insertId = database.insert(DatabaseHelper.activityTable, null,cv);
+		    openToWrite();	    
+		    
+		    Set<String> participatingItemIds = movaAct.getParticipatingItemIds();
+		    for (String id : participatingItemIds){
+			    ContentValues cv2 = new ContentValues();
+			    cv2.put(DatabaseHelper.activityItemsColactivityID, movaAct.getId());
+			    cv2.put(DatabaseHelper.activityItemsColItemsId, id);
+			    database.insert(DatabaseHelper.activityItemsTable, null,cv2);
+		    }
+		    
+		    
+		   	database.insert(DatabaseHelper.activityTable, null,cv1);
 		
 			close();
 		}
@@ -70,28 +79,13 @@ public class ActivityDataSource {
 		
 		private void removeOldSchedule() {
 			openToWrite();
-			int one = database.delete(DatabaseHelper.scheduleTable, null, null);
-			int two = database.delete(DatabaseHelper.activityTable, null, null);
+			database.delete(DatabaseHelper.scheduleTable, null, null);
+			database.delete(DatabaseHelper.activityTable, null, null);
 			close();
 		}
 
 		
 		
-		public List<actor.Activity> getAllActivities() {
-			List<actor.Activity> activities = new ArrayList<actor.Activity>();
-			Cursor cursor = database.query(DatabaseHelper.activityTable,
-					allColumns, null, null, null, null, null);
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				actor.Activity comment = cursorToMovaActivity(cursor);
-				activities.add(comment);
-				cursor.moveToNext();
-			}
-			// Make sure to close the cursor
-			cursor.close();
-			return activities;
-		}
-
 		public List<actor.Activity> getSchedule() {
 			insertDummyActivities();
 			openToRead();
@@ -102,18 +96,26 @@ public class ActivityDataSource {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				Cursor cursor1 = database.query(DatabaseHelper.activityTable, null, DatabaseHelper.activityColID + "=?" , new String[] {cursor.getString(1)}, null, null, null);
-				schedule.add(cursorToMovaActivity(cursor1)); 
+				Cursor cursor2 = database.query(DatabaseHelper.activityItemsTable, new String[] {DatabaseHelper.activityItemsColItemsId}, DatabaseHelper.activityColID + "=?" , new String[] {cursor.getString(1)}, null, null, null);
+				schedule.add(cursorToMovaActivity(cursor1,cursor2)); 
 				cursor.moveToNext();
 			}
 			// Make sure to close the cursor
 			cursor.close();
+			
 			close();
 			return schedule;
 		}
 		
 		private void insertDummyActivities(){
 			List<Activity> schedule = new ArrayList<Activity>();
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,10,5,8,45), new Timestamp(2012,12,5,12,5,8,45), 0, null, null, null, "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #1"));
+			Activity act1 = new Activity("BLA", new Timestamp(2012,12,5,10,5,8,45), new Timestamp(2012,12,5,12,5,8,45), 0, null, null, null, "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #1");
+			Set<String> itemsids = new HashSet<String>();
+			itemsids.add("5d367716-d973-4f6a-a528-938d32a428eb");
+			itemsids.add("e815177d-9c77-4921-8281-b1f0164abafb");
+//			itemsids.add("9120d700-ead6-4547-abf7-f9d686ef7860");
+			act1.setParticipatingItemIds(itemsids);
+			schedule.add(act1);
 			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,12,5,8,45), new Timestamp(2012,12,5,13,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #2"));
 			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #3"));
 			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #4"));
@@ -126,17 +128,26 @@ public class ActivityDataSource {
 			createSchedule(schedule);
 		}
 		
-		private actor.Activity cursorToMovaActivity(Cursor cursor) {
-			cursor.moveToFirst();
+		private actor.Activity cursorToMovaActivity(Cursor cursor1, Cursor cursor2) {
+			cursor1.moveToFirst();
 			actor.Activity ans = new actor.Activity("");
-			ans.setId(cursor.getString(0));
-			ans.setName(cursor.getString(1));
-			ans.setDescription(cursor.getString(2));
-			ans.setType(cursor.getString(3));
-			ans.setState(ActivityState.valueOf((cursor.getString(4))));
-			ans.setStartTime(new Timestamp(cursor.getLong(5)));
-			ans.setEndTime(new Timestamp(cursor.getLong(6)));
-			ans.setEstimateTime(cursor.getLong(7));
+			ans.setId(cursor1.getString(0));
+			ans.setName(cursor1.getString(1));
+			ans.setDescription(cursor1.getString(2));
+			ans.setType(cursor1.getString(3));
+			ans.setState(ActivityState.valueOf((cursor1.getString(4))));
+			ans.setStartTime(new Timestamp(cursor1.getLong(5)));
+			ans.setEndTime(new Timestamp(cursor1.getLong(6)));
+			ans.setEstimateTime(cursor1.getLong(7));
+			cursor2.moveToFirst();
+			Set<String> participantsItems = new HashSet<String>();
+			while (!cursor2.isAfterLast()){
+				participantsItems.add(cursor2.getString(0));
+				cursor2.moveToNext();
+			}
+			ans.setParticipatingItemIds(participantsItems);
+			cursor1.close();
+			cursor2.close();
 			return ans;
 		}
 		

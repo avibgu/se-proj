@@ -52,9 +52,9 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
-		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -124,11 +124,10 @@ public class MovaClient {
 		resource.get();
 	}
 	
-	public Vector<Item> getItems(){
+	public void getItems(String agentId){
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/getItems");
-		String response = resource.get(String.class);
-		
-		return mMj.jsonToItems(response);
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get(String.class);
 	}
 	
 	// ACTIVITY
@@ -231,12 +230,13 @@ public class MovaClient {
 		resource.put(j.toString());
 	}
 	
-	public void registerAgent(String pRegistrationId, String pAgentType){
+	public Agent registerAgent(String pRegistrationId, String pAgentType){
 		Agent pAgent = new Agent(new AgentType(pAgentType));
 		pAgent.setRegistrationId(pRegistrationId);
 		String j = mMj.agentToJson(pAgent);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/registerAgent");
 		resource.put(j.toString());
+		return pAgent;
 	}
 	
 	public void registerAgent(Agent pAgent){

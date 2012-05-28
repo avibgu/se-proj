@@ -3,13 +3,15 @@ package movaProj.sampleApplication;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
-import client.MovaClient;
+import java.util.Set;
+import java.util.Vector;
 
 import movaProj.agent.AgentDataSource;
+import movaProj.agent.ItemDataSource;
 import movaProj.agent.MovaAndroidClient;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
+import actor.Item;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import client.MovaClient;
 
 public class ScheduleListActivity extends Activity implements Observer,OnCreateContextMenuListener, OnClickListener {
 	
@@ -48,14 +51,23 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
 				actor.Activity activity = schedule.get(position);
+				Set<String> itemsId = activity.getParticipatingItemIds();
+				Vector<String> displayedItems = new Vector<String>();
+				for (String itemId : itemsId){
+					ItemDataSource itemDataSource = new ItemDataSource(parent.getContext());
+					Item item = itemDataSource.getItem(itemId);
+					displayedItems.add(item.getType() + "  " + item.getLocation().getLongitude() + ":" + item.getLocation().getLatitude());
+				}
 				Intent i = new Intent(ScheduleListActivity.this,
 						MovaActivityDetails.class);
 				i.putExtra("description", activity.getDescription());
 				i.putExtra("activityType", activity.getType());
 				i.putExtra("activityName", activity.getName());
-				i.putExtra("activityStartTime", activity.getStartTime());
-				i.putExtra("activityEndTime", activity.getEndTime());
-				i.putExtra("activityItems", activity.getParticipatingItemIds().toArray());
+				i.putExtra("activityStartTime", activity.getStartTime().getHours() + ":" + 
+						 convertTimeToString(activity.getStartTime().getMinutes()));
+				i.putExtra("activityEndTime", activity.getEndTime().getHours() + ":" + 
+						 convertTimeToString(activity.getEndTime().getMinutes()));
+				i.putExtra("activityItems", displayedItems);
 				startActivity(i);
 			}
 		});

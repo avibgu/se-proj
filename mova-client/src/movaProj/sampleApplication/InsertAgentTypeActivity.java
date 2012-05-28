@@ -66,7 +66,7 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 	@Override
 	public void onClick(View v) {
 		setContentView(R.layout.progress_bar);
-		new MovaClient().registerAgent(registrationId, agentType);
+		MovaAndroidClient.registerAgent(this,registrationId, agentType);
 	}
 
 	@Override

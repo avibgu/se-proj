@@ -22,96 +22,99 @@
             android:id="@+id/activityNameDetails"
             android:layout_width="match_parent"
             android:layout_height="37dp"
-            android:textSize="18dp"
-            android:textColor="#3399FF" />
+            android:textSize="26dp"
+            android:textColor="#9370D8" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal" 
+        android:layout_marginTop="7dp">
         <TextView
             android:id="@+id/editText3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.09"
             android:text="@string/activityType"
             android:textColor="#3399FF"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+             />
+        
+        
+        <TextView
+            android:id="@+id/activityTypeDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp" 
+            android:textSize="18dp"
+       		 />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
+        android:id="@+id/linearLayout18"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/activityTypeDetails"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:textSize="18dp" />
-
-    </LinearLayout>
-	 <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
+        android:orientation="horizontal"
+		android:layout_marginTop="7dp" >
 
 
         <TextView
             android:id="@+id/activitystartTimeDetailsLabel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="18dp" 
             android:text="Start Time:"
             android:textColor="#3399FF"/>
         
          <TextView
             android:id="@+id/activitystartTimeDetails"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="18dp" 
-           />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp" 
+            android:textSize="18dp"
+            />
 
     </LinearLayout>
     
     	 <LinearLayout
         android:id="@+id/linearLayout9"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="horizontal"
+        android:layout_marginTop="7dp"  >
 
 
 
         <TextView
             android:id="@+id/activityendTimeDetailsLabel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="18dp" 
             android:text="End Time:"
             android:textColor="#3399FF"/>
         
          <TextView
             android:id="@+id/activityendTimeDetails"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="18dp" 
-           />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:paddingLeft="6dp" 
+            />
 
     </LinearLayout>    <LinearLayout
         android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="7dp">
 
         <TextView
             android:id="@+id/editText7"
-            android:layout_width="126dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#3399FF"
             android:text="@string/description" 
@@ -119,8 +122,8 @@
         
           <TextView
             android:id="@+id/descriptionDetails"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="18dp" />
         
 
@@ -128,39 +131,49 @@
 	
       	 <LinearLayout
         android:id="@+id/linearLayout10"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:layout_marginTop="7dp">
 
         <TextView
             android:id="@+id/activityenditemsDetailsLabel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="18dp" 
             android:text="Required Resources:"
             android:textColor="#3399FF"/>
         
         <ListView xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:id="@+id/activityDetailsItemslist"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent" >
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:divider="@null"
+		    android:dividerHeight="0dp"
+		     >
 		</ListView>
         
     </LinearLayout>
     
- 	  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/linearLayout11"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="bottom" 
         android:layout_gravity="bottom"
-        android:layout_marginTop="20dp">
-   <Button
+        android:layout_marginTop="20dp"
+       
+        
+		>
+  		<Button
             android:id="@+id/okButton"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="OK" />
+            android:layout_alignParentBottom="true"
+            style="@android:style/ButtonBar"
+            android:text="OK" 
+            />
 
-	</LinearLayout>
+	</RelativeLayout>
 </LinearLayout>

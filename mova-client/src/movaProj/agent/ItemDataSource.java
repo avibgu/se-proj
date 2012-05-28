@@ -2,6 +2,8 @@ package movaProj.agent;
 
 import java.util.Vector;
 
+import state.ItemState;
+import type.ItemType;
 import utilities.Location;
 import actor.Item;
 import android.content.ContentValues;
@@ -65,6 +67,29 @@ public class ItemDataSource {
 		close();
 	}
 	
+	public void insertItems(Vector<Item> items){
+		deleteItems();
+		openToWrite();
+		for (Item item : items){
+			ContentValues cv = new ContentValues();
+		    cv.put(DatabaseHelper.itemColID, item.getId());
+		    cv.put(DatabaseHelper.itemLatitudeCol, item.getLocation().getLatitude());
+		    cv.put(DatabaseHelper.itemLongitudeCol, item.getLocation().getLongitude());
+		    cv.put(DatabaseHelper.itemColState, item.getState().toString());
+		    cv.put(DatabaseHelper.itemColType, item.getType().toString());
+		    long num1 = database.insert(DatabaseHelper.itemTable, null, cv);
+		    System.out.println("num1 = " + num1);
+		}
+		close();
+	}
+	
+	private void deleteItems() {
+		openToWrite();
+		database.delete(DatabaseHelper.itemTable, null, null);
+		close();
+		
+	}
+
 	public Location getItemLocation(String itemId){
 		openToRead();
 		Cursor itemLocationCur = database.query(DatabaseHelper.itemTable, 
@@ -78,6 +103,27 @@ public class ItemDataSource {
 		close();
 		
 		return ans;
+	}
+	
+	public Item getItem(String itemId){
+		openToRead();
+		Item item=null;
+		Cursor itemCur = database.query(DatabaseHelper.itemTable, 
+					   new String[] {DatabaseHelper.itemColID,DatabaseHelper.itemColType,DatabaseHelper.itemLongitudeCol, DatabaseHelper.itemLatitudeCol,
+									 DatabaseHelper.itemColState},
+					   				 DatabaseHelper.itemColID + "=?", new String[] {itemId}, null, null, null);
+		if (itemCur != null){
+			itemCur.moveToFirst();
+			item = new Item(new ItemType(itemCur.getString(1)));
+			item.setId(itemCur.getString(0));
+			item.setLocation(new Location(itemCur.getInt(2), itemCur.getInt(3)));
+			item.setState(ItemState.valueOf(itemCur.getString(4)));
+		}
+		
+		itemCur.close();
+		close();
+		
+		return item;
 	}
 	
 	public void insertItemTypes(Vector<String> types){
