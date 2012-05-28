@@ -85,7 +85,8 @@ public class C2DMReceiver extends BroadcastReceiver
 		         		gotSchedule(context, intent, message);
 		         		break;
 		         	case GOT_ACTIVITIES:
-		         		//TODO Avi..
+		         		//TODO Avi.. how do i get data?..
+		         		notifyObservers(new MovaMessage(MessageType.GOT_ACTIVITIES, null));
 		         		break;
 		         	case REGISTER_SUCCESS:
 		         		notifyObservers(new MovaMessage(MessageType.REGISTER_SUCCESS, agent_id));
