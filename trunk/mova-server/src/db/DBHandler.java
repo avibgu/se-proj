@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
@@ -835,12 +837,12 @@ public class DBHandler {
 		return name;
 	}
 	
-	public Vector<Activity> getAllActivities() {
+	public List<Activity> getAllActivities() {
 		
 		mRead.lock();
 		createConnection();
 		
-		Vector<Activity> activities = new Vector<Activity>();
+		List<Activity> activities = new ArrayList<Activity>();
 		
 		try {
 			
