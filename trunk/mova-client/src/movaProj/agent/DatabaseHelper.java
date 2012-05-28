@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	static final String dbName="movaDB";
-	
+	private static final int DATABASE_VERSION = 5; 
 		
 	// Activities
 	static final String activityTable="Activity";
@@ -18,6 +18,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	static final String activityColStartTime="StartTime";
 	static final String activityColEndTime="EndTime";
 	static final String activityColEstimatedTime="EstimatedTime";
+	
+	// Items participates in activity
+	static final String activityItemsTable="ActivityItems";
+	static final String activityItemsColactivityID="Id";
+	static final String activityItemsColItemsId="Name";
 	
 	// SCHEDULE
 	static final String scheduleTable="Schedule";
@@ -66,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	static final String activityTypeAgentsColNumberOfAgents="NumberOfAgents";
 	
 	public DatabaseHelper(Context context) {
-		super(context, dbName, null,3); 
+		super(context, dbName, null,DATABASE_VERSION); 
 	}
 
 	@Override
@@ -78,12 +83,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				  + activityColStartTime + " TEXT , " + activityColEndTime + " TEXT , "
 				  + activityColEstimatedTime + " INTEGER )" );
 		  
+		  db.execSQL("CREATE TABLE "+activityItemsTable+" ("+activityItemsColactivityID+ " TEXT , "
+				  + activityItemsColItemsId + " TEXT, PRIMARY KEY (" + activityItemsColactivityID +","+activityItemsColItemsId+"))" );
+		  
 		  db.execSQL("CREATE TABLE "+scheduleTable+" ("+scheduleIndexIdCol+ " integer primary key, "+
 				  scheduleActivityIdCol+ " integer )" );
 		  
 		  db.execSQL("CREATE TABLE "+itemTable+" ("+itemColID+ " TEXT primary key , "
-				  + itemColType + " TEXT , " + itemColState + " TEXT , "
-				  + itemColAgentId + " TEXT )" );
+				  + itemColType + " TEXT , " + itemColState + " TEXT , " + itemLatitudeCol +" TEXT ,"
+				  + itemLongitudeCol + " TEXT,"+ itemColAgentId + " TEXT )" );
 		  
 		  db.execSQL("CREATE TABLE "+agentTable+" ("+agentColID+ " TEXT primary key , "
 				  + agentColType + " TEXT , " + agentColStatus + " TEXT , "
@@ -115,6 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + agentTypeTable);
 		db.execSQL("DROP TABLE IF EXISTS " + activityTypeItemsTable);
 		db.execSQL("DROP TABLE IF EXISTS " + activityTypeAgentsTable);
+		db.execSQL("DROP TABLE IF EXISTS " + activityItemsTable);
 		onCreate(db);
 	}
 	

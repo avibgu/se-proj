@@ -135,7 +135,6 @@ public class ItemResource {
 	 */
 	@PUT
 	@Path("/deleteItemType")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void deleteItemType(String jsonObject){
 		db.deleteItemType(jsonObject);
 	}
@@ -145,10 +144,12 @@ public class ItemResource {
 	 */
 	@GET
 	@Path("/getItems")
-	public String getItems(String jsonObject){
+	public void getItems(@QueryParam("agentId") String agentId){
 		Vector<Item> items = db.getItems();
-		MovaJson mj = new MovaJson();
+		String itemsJson = new MovaJson().itemsToJson(items);
+		Vector<String> agentsIds = new Vector<String>();
+		agentsIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", itemsJson, agentsIds, MessageType.ITEMS_LIST);
 		
-		return mj.itemsToJson(items);
 	}
 }

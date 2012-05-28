@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import state.ActivityState;
 import utilities.Location;
+import actor.Agent;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -32,10 +33,16 @@ public class MovaAndroidClient {
 	
 	public static void register(Activity activity){
 		// Ask registration Id from Google.
-				Intent intent = new Intent("com.google.android.c2dm.intent.REGISTER");
-				intent.putExtra("app",
-						PendingIntent.getBroadcast(activity, 0, new Intent(), 0));
-				intent.putExtra("sender", "movaC2DM@gmail.com");
-				activity.startService(intent);
+		Intent intent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		intent.putExtra("app",
+				PendingIntent.getBroadcast(activity, 0, new Intent(), 0));
+		intent.putExtra("sender", "movaC2DM@gmail.com");
+		activity.startService(intent);
+	}
+	
+	public static void registerAgent(Activity activity, String pRegistrationId, String pAgentType){
+		Agent newAgent = new MovaClient().registerAgent(pRegistrationId, pAgentType);
+		new AgentDataSource(activity).insertAgent(newAgent);
+		new MovaClient().getItems(newAgent.getId());
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Vector;
 import movaProj.sampleApplication.InsertAgentTypeActivity;
 import type.MessageType;
 import utilities.MovaJson;
+import actor.Item;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -105,13 +106,21 @@ public class C2DMReceiver extends BroadcastReceiver
 		         	case STATIC_TYPES:
 		         		insertStaticTypes(message,context);
 		         		break;
+		         	case ITEMS_LIST:
+		         		insertItems(message,context);
+		         		break;
 		         	default:
 		         		System.out.println("Unsupported message");
 		         }
 	       	}
         }
                      
- 		private void insertStaticTypes(String message, Context context) {
+ 		private void insertItems(String message, Context context) {
+			Vector<Item> items = new MovaJson().jsonToItems(message);
+			new ItemDataSource(context).insertItems(items);
+		}
+
+		private void insertStaticTypes(String message, Context context) {
  			JsonParser jp = new JsonParser();
       		JsonObject j = (JsonObject)jp.parse(message);
       		String registrationId = j.get("registrationId").getAsString();
