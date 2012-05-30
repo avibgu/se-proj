@@ -1,5 +1,7 @@
 package movaProj.algorithm;
 
+import java.util.List;
+
 import actor.Activity;
 
 public class Variable implements Comparable<Variable>{
@@ -13,9 +15,9 @@ public class Variable implements Comparable<Variable>{
 		mDomain = new Domain(mActivity);
 	}
 	
-	public Variable(Activity pActivity, String pMyID) {
+	public Variable(Activity pActivity, String pMyID, List<Activity> pActivities) {
 		mActivity = pActivity;
-		mDomain = new Domain(mActivity, pMyID);
+		mDomain = new Domain(mActivity, pMyID, pActivities);
 	}
 
 	public Domain getDomain() {

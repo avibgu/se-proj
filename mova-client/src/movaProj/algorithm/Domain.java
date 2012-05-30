@@ -18,8 +18,10 @@ import client.MovaClient;
 
 import com.google.gson.internal.Pair;
 
+import state.ActivityState;
 import type.AgentType;
 import type.ItemType;
+
 import utilities.MovaJson;
 
 import actor.Activity;
@@ -55,14 +57,14 @@ public class Domain implements Cloneable, Observer {
 
 	protected Map<String, Date> mAgentsAvailability;
 	protected Map<String, Date> mItemsAvailability;
-	
+
 	protected MovaClient mMovaClient;
 
 	public Domain(Activity pActivity) {
-		this(pActivity, "");
+		this(pActivity, "", null);
 	}
 
-	public Domain(Activity pActivity, String pMyID) {
+	public Domain(Activity pActivity, String pMyID, List<Activity> pActivities) {
 
 		C2DMReceiver.addListener(this);
 
@@ -70,7 +72,7 @@ public class Domain implements Cloneable, Observer {
 		mMyID = pMyID;
 
 		getItemsAndAgentsFromDB();
-		initValues();
+		initValues(pActivities);
 	}
 
 	private void getItemsAndAgentsFromDB() {
@@ -107,37 +109,37 @@ public class Domain implements Cloneable, Observer {
 			}
 		}
 
-		mAgentsAvailability = null;
-
-		mMovaClient.getAgentsAvailability(mMyID);
-
-		synchronized (this) {
-
-			while (null == mAgentsAvailability) {
-
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		mItemsAvailability = null;
-
-		mMovaClient.getItemsAvailability(mMyID);
-
-		synchronized (this) {
-
-			while (null == mItemsAvailability) {
-
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		// mAgentsAvailability = null;
+		//
+		// mMovaClient.getAgentsAvailability(mMyID);
+		//
+		// synchronized (this) {
+		//
+		// while (null == mAgentsAvailability) {
+		//
+		// try {
+		// this.wait();
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }
+		//
+		// mItemsAvailability = null;
+		//
+		// mMovaClient.getItemsAvailability(mMyID);
+		//
+		// synchronized (this) {
+		//
+		// while (null == mItemsAvailability) {
+		//
+		// try {
+		// this.wait();
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }
 	}
 
 	public Domain(Activity pActivity, Map<String, Value> pValues,
@@ -150,7 +152,7 @@ public class Domain implements Cloneable, Observer {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected void initValues() {
+	protected void initValues(List<Activity> pActivities) {
 
 		mValues = new HashMap<String, Value>();
 
@@ -212,6 +214,21 @@ public class Domain implements Cloneable, Observer {
 		}
 
 		mEmpty = false;
+
+		mAgentsAvailability = new HashMap<String, Date>();
+		mItemsAvailability = new HashMap<String, Date>();
+		
+		for (Activity activity : pActivities) {
+
+			if (activity.getState() == ActivityState.IN_PROGRESS){
+				
+				for (String agentID : activity.getParticipatingAgentIds())
+					mAgentsAvailability.put(agentID, activity.getActualEndTime());
+				
+				for (String itemID : activity.getParticipatingItemIds())
+					mItemsAvailability.put(itemID, activity.getActualEndTime());
+			}
+		}
 	}
 
 	public Value nextValue() {
@@ -304,7 +321,7 @@ public class Domain implements Cloneable, Observer {
 			if (mAgentsAvailability.get(agent.getId()).after(
 					mTimes.get(mTimesIndex).first))
 				return null;
-		
+
 		for (Item item : requiredItems)
 			if (mItemsAvailability.get(item.getId()).after(
 					mTimes.get(mTimesIndex).first))
@@ -445,28 +462,28 @@ public class Domain implements Cloneable, Observer {
 				}
 
 				break;
-
-			case AGENTS_AVAILABILITY:
-
-				synchronized (this) {
-
-					mAgentsAvailability = new MovaJson()
-							.jsonToAvailabilty((String) message.getData());
-					this.notifyAll();
-				}
-
-				break;
-			
-			case ITEMS_AVAILABILITY:
-
-				synchronized (this) {
-
-					mItemsAvailability = new MovaJson()
-							.jsonToAvailabilty((String) message.getData());
-					this.notifyAll();
-				}
-
-				break;
+			//
+			// case AGENTS_AVAILABILITY:
+			//
+			// synchronized (this) {
+			//
+			// mAgentsAvailability = new MovaJson()
+			// .jsonToAvailabilty((String) message.getData());
+			// this.notifyAll();
+			// }
+			//
+			// break;
+			//
+			// case ITEMS_AVAILABILITY:
+			//
+			// synchronized (this) {
+			//
+			// mItemsAvailability = new MovaJson()
+			// .jsonToAvailabilty((String) message.getData());
+			// this.notifyAll();
+			// }
+			//
+			// break;
 			}
 		}
 	}

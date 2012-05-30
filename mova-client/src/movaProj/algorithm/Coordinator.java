@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+import state.ActivityState;
 import utilities.MovaJson;
 
 import movaProj.agent.C2DMReceiver;
@@ -40,7 +41,8 @@ public class Coordinator implements Observer {
 		Vector<Variable> variables = new Vector<Variable>();
 
 		for (Activity activity : activities)
-			variables.add(new Variable(activity, myID));
+			if (activity.getState() == ActivityState.PENDING)
+				variables.add(new Variable(activity, myID, activities));
 
 		CSPAlgorithm mAlgorithm = new CBJ(variables);
 
