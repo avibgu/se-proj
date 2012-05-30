@@ -196,7 +196,7 @@ public class MovaClient {
 		resource.put(jAc.toString());
 	}
 	
-	public void postponeActivity(String activityId, String newFinishTime){
+	public void postponeActivity(String activityId, long newFinishTime){
 		JsonObject j = new JsonObject();
 		j.addProperty("activityId", activityId);
 		j.addProperty("addedTime", newFinishTime);

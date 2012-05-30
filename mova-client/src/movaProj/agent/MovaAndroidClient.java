@@ -30,7 +30,16 @@ public class MovaAndroidClient {
 	
 	public static void completeActivity(Activity activity, String activityId){
 		new ActivityDataSource(activity).completeActivity(activityId); // Remove from agent database
-		new MovaClient().changeActivityStatus(activityId, ActivityState.COMPLETED);// Send to the server.
+		new MovaClient().changeActivityStatus(activityId, ActivityState.COMPLETED); // Send to the server.
+	}
+	
+	public static void postponeActivity(String activityId, long addedTime, long oldEndTime){
+		long addedTimeInMilliseconds = addedTime * 60000;
+		new MovaClient().postponeActivity(activityId, oldEndTime+addedTimeInMilliseconds);
+	}
+	
+	public static void startActivity(Activity activity, String activityId){
+		new MovaClient().changeActivityStatus(activityId, ActivityState.IN_PROGRESS);// Send to the server.
 	}
 	
 	public static void register(Activity activity){
