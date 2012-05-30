@@ -178,7 +178,7 @@ public class AgentResource {
 		db.changeAgentActivityId(agentId, currentActivityId);
 	}
 	
-	@PUT
+	@GET
 	@Path("/startRecalculate")
 	public void startRecalculate(@PathParam("agentId") String agentId){
 		
@@ -191,7 +191,7 @@ public class AgentResource {
 			C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(approvement),null, MessageType.RECALCULATE_START);
 	}
 	
-	@PUT
+	@GET
 	@Path("/finishRecalculate")
 	public void finishRecalculate(@PathParam("agentId") String agentId){
 		Vector<String> agentsIds = new Vector<String>();
