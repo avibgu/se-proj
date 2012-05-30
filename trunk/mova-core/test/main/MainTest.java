@@ -63,11 +63,7 @@ public class MainTest {
 		new MovaClient().addActivity(activity);
 	}
 	
-	@Test
-	public void testPostponeActivity(){
-		new MovaClient().postponeActivity("gfdg4543", "44");
-	}
-	
+
 	@Test
 	public void testSendSchedule(){
 		Vector<Activity> schedule = new Vector<Activity>();

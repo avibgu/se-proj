@@ -442,19 +442,6 @@ public class Activity implements Cloneable {
 		mParticipatingItemIds = pItems;
 	}
 
-	/**
-	 * Postpones the activity end time
-	 * 
-	 * @param addedTime
-	 *            the added time
-	 */
-	public void postponeActivity(long addedTime) {
-		long addedTimeInMilliseconds = addedTime * 60000;
-		mEstimateTime = mEstimateTime + addedTime;
-		mEndTime.setTime(mEndTime.getTime() + addedTimeInMilliseconds);
-		new MovaClient().postponeActivity(mId, mEndTime.toString());
-	}
-
 	public Timestamp getActualStartTime() {
 		return mActualStartTime;
 	}

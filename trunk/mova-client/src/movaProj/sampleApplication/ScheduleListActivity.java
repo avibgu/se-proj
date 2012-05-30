@@ -13,6 +13,7 @@ import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
 import actor.Item;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -26,7 +27,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import client.MovaClient;
 
@@ -85,7 +88,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	  if (v.getId()==R.id.mylist) {
 	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 	    menu.setHeaderTitle(schedule1.get(info.position).getName());
-	    String[] menuItems = new String[] { "Postpone Activity", "Mark as Completed"};
+	    String[] menuItems = new String[] { "Start Activity" , "Postpone Activity", "Mark as Completed"};
 	    for (int i = 0; i<menuItems.length; i++) {
 	      menu.add(Menu.NONE, i, i, menuItems[i]);
 	    }
@@ -98,12 +101,31 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	  int menuItemIndex = item.getItemId();
 	  
 	  switch (menuItemIndex){
-		case 0:
-			setContentView(R.layout.picker);
-			Button postponeButton = (Button) this.findViewById(R.id.numberPickerOkButton);
-			postponeButton.setOnClickListener(this);
+	  	case 0: // Start Activity
+			MovaAndroidClient.startActivity(this, schedule1.get(info.position).getId());
+			Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
 			break;
-		case 1: // Complete Activity - Remove from the list and mark as completed.
+		case 1:
+			// custom dialog
+			final Dialog dialog = new Dialog(this);
+			final String activityId = schedule1.get(info.position).getId();
+			final long activityOldEndTime = schedule1.get(info.position).getEndTime().getTime();
+			dialog.setContentView(R.layout.picker);
+			dialog.setTitle("Postpone activity deadline");
+ 
+			Button postponeButton = (Button) this.findViewById(R.id.numberPickerOkButton);
+			// if button is clicked, close the custom dialog
+			postponeButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					MovaAndroidClient.postponeActivity(activityId, 15*60*1000, activityOldEndTime);
+				}
+			});
+ 
+			dialog.show();
+			break;
+		case 2: // Complete Activity - Remove from the list and mark as completed.
 			MovaAndroidClient.completeActivity(this, schedule1.get(info.position).getId());
 			Toast.makeText(getApplicationContext(), "Activity Mark as Completed", Toast.LENGTH_LONG);
 			ListView listView = (ListView) findViewById(R.id.mylist);

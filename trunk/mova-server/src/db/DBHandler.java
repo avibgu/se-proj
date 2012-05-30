@@ -884,7 +884,9 @@ public class DBHandler {
 			
 			mStmt = mConn.createStatement();
 			ResultSet results = mStmt.executeQuery("select * from "
-					+ mActivityTableName);
+					+ mActivityTableName + "," + mActivityAgentsTableName +"," + mActivityItemsTableName +
+					"where " + mActivityTableName+".ACTIVITY_ID = " + mActivityAgentsTableName+".ACTIVITY_ID AND "
+					+ mActivityTableName+".ACTIVITY_ID = " + mActivityItemsTableName+".ACTIVITY_ID ");
 			
 			while (results.next()) {
 				
