@@ -23,6 +23,7 @@ public class Coordinator implements Observer {
 
 	private MovaClient mMovaClient;
 	private List<Activity> mActivities;
+	private Boolean recalculateApprovement;
 
 	public Coordinator() {
 
@@ -34,8 +35,10 @@ public class Coordinator implements Observer {
 
 		notifyAboutStartingTheRecalculate(myID);
 
-		waitForApprovalOrUnapproval();
-
+		// TODO: what to do when we shouldn't perform recalculate
+		if (!recalculateApprovement)
+			return;					
+		
 		List<Activity> activities = getActivitiesFromDB(myID);
 
 		Vector<Variable> variables = new Vector<Variable>();
@@ -67,13 +70,24 @@ public class Coordinator implements Observer {
 	}
 
 	private void notifyAboutStartingTheRecalculate(String myID) {
-		// TODO: notify all other Agent that we are starting coordinating,
-		// provide coordination-id (and order on the Agents?..) we are first..
-	}
+		// notify all other Agent that we are starting coordinating,
+		// (provide coordination-id and order on the Agents?.. we are first..)
 
-	private void waitForApprovalOrUnapproval() {
-		// TODO Auto-generated method stub
+		recalculateApprovement = null;
 
+		mMovaClient.startRecalculate(myID);
+
+		synchronized (this) {
+
+			while (null == recalculateApprovement) {
+
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private List<Activity> getActivitiesFromDB(String myID) {
@@ -82,12 +96,10 @@ public class Coordinator implements Observer {
 
 		mMovaClient.getAllActivities(myID);
 
-		// TODO
-
 		synchronized (this) {
 
 			while (null == mActivities) {
-				
+
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
@@ -99,25 +111,19 @@ public class Coordinator implements Observer {
 		return mActivities;
 	}
 
-	private void updateDatabaseWithNewSchecdule(String myID, Vector<Value> pAssignment) {
-		// TODO Auto-generated method stub
+	private void updateDatabaseWithNewSchecdule(String myID,
+			Vector<Value> pAssignment) {
 
 		Vector<Activity> schedule = new Vector<Activity>();
-		
+
 		for (Value value : pAssignment)
 			schedule.add(value.getActivity());
-		
-//		mMovaClient.putNewSchedule(myID, schedule);	TODO
-		
-		/**
-		 * TODO Question
-		 * how do we know to distinct between Activity and instance of Activity?..
-		 * do we use Activity and Activity Type?........
-		 */
+
+		mMovaClient.sendSchedule(schedule, myID);
 	}
 
 	private void notifyAboutFinishingTheRecalculate(String myID) {
-		// TODO Auto-generated method stub
+		mMovaClient.finishRecalculate(myID);
 	}
 
 	@Override
@@ -133,13 +139,24 @@ public class Coordinator implements Observer {
 
 				synchronized (this) {
 
-					mActivities = new MovaJson().jsonToActivities((String)message.getData());
+					mActivities = new MovaJson()
+							.jsonToActivities((String) message.getData());
 					this.notifyAll();
 				}
-				
+
+				break;
+
+			case RECALCULATE_APPROVEMENT:
+
+				synchronized (this) {
+
+					recalculateApprovement = new MovaJson()
+							.jsonToBoolean((String) message.getData());
+					this.notifyAll();
+				}
+
 				break;
 			}
-
 		}
 	}
 }

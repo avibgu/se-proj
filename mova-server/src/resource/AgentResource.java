@@ -168,4 +168,25 @@ public class AgentResource {
 		// Update DB
 		db.changeAgentActivityId(agentId, currentActivityId);
 	}
+	
+	@PUT
+	@Path("/startRecalculate")
+	public void startRecalculate(@PathParam("agentId") String agentId){
+		
+		Boolean approvement = DBHandler.canStartNewRecalculte();
+		Vector<String> agentsIds = new Vector<String>();
+		agentsIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(approvement),agentsIds, MessageType.RECALCULATE_APPROVEMENT);
+		
+		if (approvement)
+			C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(approvement),null, MessageType.RECALCULATE_START);
+	}
+	
+	@PUT
+	@Path("/finishRecalculate")
+	public void finishRecalculate(@PathParam("agentId") String agentId){
+		Vector<String> agentsIds = new Vector<String>();
+		agentsIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", null, null, MessageType.RECALCULATE_FINISH);
+	}	
 }

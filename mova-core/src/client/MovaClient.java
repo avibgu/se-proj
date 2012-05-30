@@ -319,6 +319,18 @@ public class MovaClient {
 		resource.put(type);
 	}
 
+	public void startRecalculate(String agentId) {
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/startRecalculate");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+
+	public void finishRecalculate(String agentId) {
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/finishRecalculate");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+
 	
 	
 	
