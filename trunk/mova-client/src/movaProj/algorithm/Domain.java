@@ -50,9 +50,12 @@ public class Domain implements Cloneable, Observer {
 
 	protected boolean mEmpty;
 
-	protected HashMap<AgentType, List<Agent>> mAgentsMap;
-	protected HashMap<ItemType, List<Item>> mItemsMap;
+	protected Map<AgentType, List<Agent>> mAgentsMap;
+	protected Map<ItemType, List<Item>> mItemsMap;
 
+	protected Map<String, Date> mAgentsAvailability;
+	protected Map<String, Date> mItemsAvailability;
+	
 	protected MovaClient mMovaClient;
 
 	public Domain(Activity pActivity) {
@@ -95,6 +98,38 @@ public class Domain implements Cloneable, Observer {
 		synchronized (this) {
 
 			while (null == mItemsMap) {
+
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		mAgentsAvailability = null;
+
+		mMovaClient.getAgentsAvailability(mMyID);
+
+		synchronized (this) {
+
+			while (null == mAgentsAvailability) {
+
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		mItemsAvailability = null;
+
+		mMovaClient.getItemsAvailability(mMyID);
+
+		synchronized (this) {
+
+			while (null == mItemsAvailability) {
 
 				try {
 					this.wait();
@@ -265,6 +300,16 @@ public class Domain implements Cloneable, Observer {
 			for (Integer index : mItemsIndexes.get(i))
 				requiredItems.add(mItems.get(i).get(index));
 
+		for (Agent agent : requiredAgents)
+			if (mAgentsAvailability.get(agent.getId()).after(
+					mTimes.get(mTimesIndex).first))
+				return null;
+		
+		for (Item item : requiredItems)
+			if (mItemsAvailability.get(item.getId()).after(
+					mTimes.get(mTimesIndex).first))
+				return null;
+
 		return new Value(mActivity, mActivity.getId(),
 				mTimes.get(mTimesIndex).first, mTimes.get(mTimesIndex).second,
 				requiredAgents, requiredItems,
@@ -396,6 +441,28 @@ public class Domain implements Cloneable, Observer {
 						tItems.add(item);
 					}
 
+					this.notifyAll();
+				}
+
+				break;
+
+			case AGENTS_AVAILABILITY:
+
+				synchronized (this) {
+
+					mAgentsAvailability = new MovaJson()
+							.jsonToAvailabilty((String) message.getData());
+					this.notifyAll();
+				}
+
+				break;
+			
+			case ITEMS_AVAILABILITY:
+
+				synchronized (this) {
+
+					mItemsAvailability = new MovaJson()
+							.jsonToAvailabilty((String) message.getData());
 					this.notifyAll();
 				}
 
