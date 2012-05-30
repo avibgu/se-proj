@@ -31,13 +31,13 @@ public class Coordinator implements Observer {
 		C2DMReceiver.addListener(this);
 	}
 
-	public void recalculate(String myID) {
+	public boolean recalculate(String myID) {
 
 		notifyAboutStartingTheRecalculate(myID);
 
 		// TODO: what to do when we shouldn't perform recalculate
 		if (!recalculateApprovement)
-			return;					
+			return false;					
 		
 		List<Activity> activities = getActivitiesFromDB(myID);
 
@@ -67,6 +67,8 @@ public class Coordinator implements Observer {
 			// TODO: what to do when the algorithm fails??..
 			e.printStackTrace();
 		}
+		
+		return true;
 	}
 
 	private void notifyAboutStartingTheRecalculate(String myID) {
