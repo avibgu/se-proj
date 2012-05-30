@@ -51,8 +51,10 @@ public class DBHandler {
     private static final Lock					mRead = mRwl.readLock();
     private static final Lock					mWrite = mRwl.writeLock();
     
-    private static DBHandler					mDbHandler = null;
+    private static Boolean[]					isRecalculating = new Boolean[]{false};
     
+    private static DBHandler					mDbHandler = null;
+	
     private DBHandler(){}
     /**
      * Gets the DBHandler only instance
@@ -1745,5 +1747,18 @@ public class DBHandler {
 		mRead.unlock();
 		
 		return location;
+	}
+	public static Boolean canStartNewRecalculte() {
+
+		synchronized (isRecalculating) {
+		
+			if (!isRecalculating[0]){
+				
+				isRecalculating[0] = true;
+				return true;
+			}
+			
+			else return false;
+		}		
 	}
 }

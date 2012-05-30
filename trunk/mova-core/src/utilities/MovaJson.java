@@ -239,4 +239,15 @@ public class MovaJson {
 		
 		return map;
 	}
+
+	public Boolean jsonToBoolean(String json) {
+		
+		try{
+			return _gson.fromJson(json, Boolean.class);
+		}
+		
+		catch(JsonSyntaxException e){
+			return null;
+		}
+	}
 }

@@ -101,6 +101,7 @@ public class C2DMReceiver extends BroadcastReceiver
 		         		break;
 		         	case RECALCULATE_FINISH:
 		         		//TODO Avi..
+		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_FINISH, null));
 		         		getNewSchedule(context);
 		         		break;
 		         	case STATIC_TYPES:
@@ -118,6 +119,9 @@ public class C2DMReceiver extends BroadcastReceiver
 //		         		break;
 //		         	case ITEMS_AVAILABILITY:
 //		         		notifyObservers(new MovaMessage(MessageType.ITEMS_AVAILABILITY, message));
+//		         		break;
+		         	case RECALCULATE_APPROVEMENT:
+		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_APPROVEMENT, message));
 //		         		break;
 		         	default:
 		         		System.out.println("Unsupported message");
