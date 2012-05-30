@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 import simulator.Simulator;
 import state.ActivityState;
@@ -125,7 +126,7 @@ public class ActivityResource {
 	
 	@GET
 	@Path("/getAgentSchedule")
-	public void getAgentSchedule(@PathParam("agentId") String agentId){
+	public void getAgentSchedule(@QueryParam("agentId") String agentId){
 		Vector<Activity> schedule = db.getAgentSchedule(agentId);
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
@@ -134,7 +135,7 @@ public class ActivityResource {
 	
 	@GET
 	@Path("/getAllActivities")
-	public void getAllActivities(@PathParam("agentId") String agentId){
+	public void getAllActivities(@QueryParam("agentId") String agentId){
 		List<Activity> activities = db.getAllActivities();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
