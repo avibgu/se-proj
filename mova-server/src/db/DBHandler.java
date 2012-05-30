@@ -1826,4 +1826,11 @@ public class DBHandler {
 			else return false;
 		}		
 	}
+	public static void finishRecalculte() {
+	
+		synchronized (isRecalculating) {
+		
+			isRecalculating[0] = false;
+		}
+	}
 }
