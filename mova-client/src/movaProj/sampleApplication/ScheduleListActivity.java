@@ -63,10 +63,10 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 				i.putExtra("description", activity.getDescription());
 				i.putExtra("activityType", activity.getType());
 				i.putExtra("activityName", activity.getName());
-				i.putExtra("activityStartTime", activity.getStartTime().getHours() + ":" + 
-						 convertTimeToString(activity.getStartTime().getMinutes()));
-				i.putExtra("activityEndTime", activity.getEndTime().getHours() + ":" + 
-						 convertTimeToString(activity.getEndTime().getMinutes()));
+				i.putExtra("activityStartTime", activity.getActualStartTime().getHours() + ":" + 
+						 convertTimeToString(activity.getActualStartTime().getMinutes()));
+				i.putExtra("activityEndTime", activity.getActualEndTime().getHours() + ":" + 
+						 convertTimeToString(activity.getActualEndTime().getMinutes()));
 				i.putExtra("activityItems", displayedItems);
 				startActivity(i);
 			}
@@ -76,7 +76,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		
 		Button logoutButton = (Button) this.findViewById(R.id.changeStatusButton);
 		logoutButton.setOnClickListener(this);
-		
+
 	}
 
 	@Override
@@ -99,6 +99,9 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	  
 	  switch (menuItemIndex){
 		case 0:
+			setContentView(R.layout.picker);
+			Button postponeButton = (Button) this.findViewById(R.id.numberPickerOkButton);
+			postponeButton.setOnClickListener(this);
 			break;
 		case 1: // Complete Activity - Remove from the list and mark as completed.
 			MovaAndroidClient.completeActivity(this, schedule1.get(info.position).getId());
@@ -175,9 +178,20 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 					ScheduleListActivity.class);
 					startActivity(i);
 			break;
-			
+		case R.id.initialButton:
+			MovaAndroidClient.recalculate(this);
+			break;
+		case R.id.numberPickerOkButton:
+			NumberPicker numberPicker = (NumberPicker) this.findViewById(R.id.numberPickerComponent);
+			int addedTime = numberPicker.getCurrent();
+			long addedTimeInMilliseconds = addedTime * 60000;
+//			mEstimateTime = mEstimateTime + addedTime;
+//			mEndTime.setTime(mEndTime.getTime() + addedTimeInMilliseconds);
+//			new MovaClient().postponeActivity(activityId, newFinishTime);
+			break;
 		}
-		
+	
+
 	}
 
 

@@ -104,13 +104,13 @@ public class DBHandler {
 			mStmt.execute("delete from " + mItemTableName);
 			mStmt.execute("delete from " + mItemTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeTableName);
-			mStmt.execute("delete from " + mAgentTypeTableName);
+//			mStmt.execute("delete from " + mAgentTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeItemsTableName);
 			mStmt.execute("delete from " + mActivityTypeAgentsTableName);
 			mStmt.execute("delete from " + mActivityAgentsTableName);
 			mStmt.execute("delete from " + mActivityItemsTableName);
 			mStmt.execute("delete from " + mAgentLocationsTableName);
-			mStmt.execute("delete from " + mItemLocationsTableName);
+	//		mStmt.execute("delete from " + mItemLocationsTableName);
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
@@ -542,6 +542,7 @@ public class DBHandler {
 
 				Agent agent = new Agent(new AgentType(results.getString("agent_type")));
 				agent.setId(results.getString("agent_id"));
+				agent.setCurrentActivityId(results.getInt("activity_id"));
 				agents.add(agent);
 			}
 			
@@ -649,7 +650,8 @@ public class DBHandler {
 					+ activity.getId() + "'" + "," + "'" + activity.getName() + "'" + "," + "'" + activity.getDescription() 
 					+ "'" + "," + "'" + activity.getType() + "'" + "," + "'" + activity.getState().toString()
 					+ "'" + "," + "'" + activity.getStartTime() + "'" + "," + "'" + activity.getEndTime() + 
-					"'" + "," + estimatedTime + ")");
+					"'" + "," + estimatedTime + "'" + "," + "'" + activity.getActualStartTime() + "'" + "," + "'" 
+					+ activity.getActualEndTime() + ")");
 			mStmt.close();
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
@@ -707,7 +709,7 @@ public class DBHandler {
 		
 		try {
 			mStmt = mConn.createStatement();
-			mStmt.execute("update " + mActivityTableName + " set END_TIME = " + "'"
+			mStmt.execute("update " + mActivityTableName + " set ACTUAL_END_TIME = " + "'"
 					+ newEndTime + "'" + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
@@ -787,7 +789,7 @@ public class DBHandler {
 		
 		try {
 			mStmt = mConn.createStatement();
-			ResultSet results = mStmt.executeQuery("select END_TIME from "
+			ResultSet results = mStmt.executeQuery("select ACTUAL_END_TIME from "
 					+ mActivityTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
 
 			results.next();
@@ -892,6 +894,8 @@ public class DBHandler {
 				Timestamp startTime = results.getTimestamp("START_TIME");
 				Timestamp endTime = results.getTimestamp("END_TIME");
 				int estimatedTime = results.getInt("ESTIMATE_TIME");
+				Timestamp actualStartTime = results.getTimestamp("ACTUAL_START_TIME");
+				Timestamp actualEndTime = results.getTimestamp("ACTUAL_END_TIME");
 				Activity activity = new Activity(name);
 				activity.setId(activityId);
 				activity.setDescription(description);
@@ -900,6 +904,8 @@ public class DBHandler {
 				activity.setStartTime(startTime);
 				activity.setEndTime(endTime);
 				activity.setEstimateTime(estimatedTime);
+				activity.setActualStartTime(actualStartTime);
+				activity.setActualEndTime(actualEndTime);
 				
 				activities.add(activity);
 			}
@@ -1428,6 +1434,8 @@ public class DBHandler {
 				Timestamp startTime = results.getTimestamp("START_TIME");
 				Timestamp endTime = results.getTimestamp("END_TIME");
 				int estimatedTime = results.getInt("ESTIMATE_TIME");
+				Timestamp actualStartTime = results.getTimestamp("ACTUAL_START_TIME");
+				Timestamp actualEndTime = results.getTimestamp("ACTUAL_END_TIME");
 				Activity activity = new Activity(name);
 				activity.setId(activityId);
 				activity.setDescription(description);
@@ -1436,6 +1444,8 @@ public class DBHandler {
 				activity.setStartTime(startTime);
 				activity.setEndTime(endTime);
 				activity.setEstimateTime(estimatedTime);
+				activity.setActualStartTime(actualStartTime);
+				activity.setActualEndTime(actualEndTime);
 				
 				schedule.add(activity);
 			}

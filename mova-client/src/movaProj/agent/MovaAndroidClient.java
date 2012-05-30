@@ -3,6 +3,8 @@ package movaProj.agent;
 import java.util.List;
 import java.util.Observer;
 
+import movaProj.algorithm.Coordinator;
+
 import state.ActivityState;
 import utilities.Location;
 import actor.Agent;
@@ -44,5 +46,9 @@ public class MovaAndroidClient {
 		Agent newAgent = new MovaClient().registerAgent(pRegistrationId, pAgentType);
 		new AgentDataSource(activity).insertAgent(newAgent);
 		new MovaClient().getItems(newAgent.getId());
+	}
+	
+	public static void recalculate(Activity activity){
+		new Coordinator().recalculate(new AgentDataSource(activity).getAgentId());
 	}
 }

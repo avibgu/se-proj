@@ -140,4 +140,5 @@ public class ActivityResource {
 		agentIds.add(agentId);
 		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(activities),agentIds, MessageType.GOT_ACTIVITIES);
 	}
+	
 }

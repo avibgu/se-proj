@@ -6,7 +6,6 @@ import java.util.Set;
 
 import type.AgentType;
 import type.ItemType;
-
 import actor.Activity;
 
 import com.google.gson.JsonArray;
