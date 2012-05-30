@@ -26,4 +26,5 @@
         android:layout_margin="50dp"
         android:text="Register to Mova Conference Service" />
 
+
 </LinearLayout>

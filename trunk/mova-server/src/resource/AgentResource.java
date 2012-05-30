@@ -15,6 +15,7 @@ import simulator.Simulator;
 import type.MessageType;
 import utilities.Location;
 import utilities.MovaJson;
+import actor.Activity;
 import actor.Agent;
 import c2dm.C2dmController;
 
@@ -155,5 +156,16 @@ public class AgentResource {
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
 		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
+	}
+	
+	@PUT
+	@Path("/setCurrentActivityId")
+	public void setCurrentActivityId(String jsonObject){
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(jsonObject);
+		String agentId = j.get("agentId").getAsString();
+		String currentActivityId = j.get("currentActivityId").getAsString();
+		// Update DB
+		db.changeAgentActivityId(agentId, currentActivityId);
 	}
 }

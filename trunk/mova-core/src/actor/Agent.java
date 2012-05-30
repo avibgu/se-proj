@@ -23,6 +23,8 @@ public class Agent extends Entity implements Runnable {
 	protected AgentType					mType;
 	protected boolean					mDontStop;
 	protected Activity					mCurrentActivity;
+	protected int						mCurrentActivityId;
+	
 	protected String					mRegistrationId;
 	
 	protected boolean					mIsLoggedIn;
@@ -155,6 +157,15 @@ public class Agent extends Entity implements Runnable {
 			item.markAsAvailable(mId);
 			//TODO: tell server that we released this item
 		}
+	}
+	
+	public int getCurrentActivityId() {
+		return mCurrentActivityId;
+	}
+
+
+	public void setCurrentActivityId(int pCurrentActivityId) {
+		mCurrentActivityId = pCurrentActivityId;
 	}
 	
 	private void resolveProblems() {

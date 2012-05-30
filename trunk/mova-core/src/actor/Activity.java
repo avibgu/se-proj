@@ -47,7 +47,7 @@ public class Activity implements Cloneable {
 
 	protected Timestamp mActualEndTime;
 
-	// The time (in milliseconds) that we assume this Activity will takes
+	// The time (in milliseconds) that we assume this Activity will take
 	protected long mEstimateTime;
 
 	// Map between the required Agent of a specific type and the desired

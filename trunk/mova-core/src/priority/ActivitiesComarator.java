@@ -1,8 +1,5 @@
 package priority;
 
-import java.util.Comparator;
-
-import actor.Activity;
 
 //@Deprecated
 //public class ActivitiesComarator implements Comparator<Activity> {

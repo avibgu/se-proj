@@ -30,6 +30,7 @@
       <activity  android:name = "movaProj.sampleApplication.ScheduleListActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.MovaAgentActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.ActivityLongClickList" > </activity>
+      <activity  android:name = "movaProj.sampleApplication.NumberPicker" > </activity>
 
         <receiver
             android:name=".C2DMReceiver"
