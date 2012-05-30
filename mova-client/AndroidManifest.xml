@@ -14,7 +14,7 @@
 
     <application
         android:icon="@drawable/mova" 
-        android:label="@string/app_name" >
+        android:label="@string/app_name" android:debuggable="true">
         <activity
             android:label="@string/app_name"
             android:name="movaProj.sampleApplication.RegistrationDialogActivity" >
