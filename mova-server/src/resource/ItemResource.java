@@ -1,5 +1,6 @@
 package resource;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.Consumes;
@@ -152,4 +153,14 @@ public class ItemResource {
 		C2dmController.getInstance().sendMessageToDevice("3", itemsJson, agentsIds, MessageType.ITEMS_LIST);
 		
 	}
+	
+	@GET
+	@Path("/getItemsAvailability")
+	public void getItemsAvailability(@QueryParam("agentId") String agentId){
+		List<String> agentsAvailability = db.getItemsAvailability();
+		Vector<String> agentIds = new Vector<String>();
+		agentIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.ITEMS_AVAILABILITY);
+	}
+	
 }

@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 import simulator.Simulator;
 import type.MessageType;
@@ -140,9 +142,18 @@ public class AgentResource {
 	@PUT
 	@Path("/getAllAgents")
 	public void getAllAgents(@PathParam("agentId") String agentId){
-		List<Agent> activities = db.getAllAgents();
+		List<Agent> agents = db.getAllAgents();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(activities),agentIds, MessageType.GOT_ALL_AGENTS);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ALL_AGENTS);
+	}
+	
+	@GET
+	@Path("/getAgentsAvailability")
+	public void getAgentsAvailability(@QueryParam("agentId") String agentId){
+		List<String> agentsAvailability = db.getAgentsAvailability();
+		Vector<String> agentIds = new Vector<String>();
+		agentIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
 	}
 }
