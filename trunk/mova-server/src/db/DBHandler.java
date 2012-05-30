@@ -8,6 +8,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -106,13 +107,13 @@ public class DBHandler {
 			mStmt.execute("delete from " + mItemTableName);
 			mStmt.execute("delete from " + mItemTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeTableName);
-//			mStmt.execute("delete from " + mAgentTypeTableName);
+			mStmt.execute("delete from " + mAgentTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeItemsTableName);
 			mStmt.execute("delete from " + mActivityTypeAgentsTableName);
 			mStmt.execute("delete from " + mActivityAgentsTableName);
 			mStmt.execute("delete from " + mActivityItemsTableName);
 			mStmt.execute("delete from " + mAgentLocationsTableName);
-	//		mStmt.execute("delete from " + mItemLocationsTableName);
+			mStmt.execute("delete from " + mItemLocationsTableName);
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
@@ -873,6 +874,66 @@ public class DBHandler {
 		return name;
 	}
 	
+	public Map<AgentType, Integer> getActivityTypeAgents(String pActivityId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mActivityTypeAgentsTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			while (results.next()) {
+				String agentType = results.getString("AGENT_TYPE");
+				int numberOfAgents = results.getInt("NUMBER_OF_AGENTS");
+				requiredAgents.put(new AgentType(agentType), numberOfAgents);
+			}
+			
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityTypeAgents - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return requiredAgents;
+	}
+	
+	public Map<ItemType, Integer> getActivityTypeItems(String pActivityId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
+		
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select * from "
+					+ mActivityTypeItemsTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			while (results.next()) {
+				String itemType = results.getString("ITEM_TYPE");
+				int numberOfItems = results.getInt("NUMBER_OF_ITEMS");
+				requiredItems.put(new ItemType(itemType), numberOfItems);
+			}
+			
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityTypeAgents - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return requiredItems;
+	}
+	
 	public List<Activity> getAllActivities() {
 		
 		mRead.lock();
@@ -910,6 +971,8 @@ public class DBHandler {
 				activity.setEstimateTime(estimatedTime);
 				activity.setActualStartTime(actualStartTime);
 				activity.setActualEndTime(actualEndTime);
+				activity.setRequiredAgents(getActivityTypeAgents(activity.getId()));
+				activity.setRequiredItems(getActivityTypeItems(activity.getId()));
 				
 				activities.add(activity);
 			}
