@@ -29,6 +29,8 @@ CREATE TABLE app.activities (
   start_time TIMESTAMP,
   end_time TIMESTAMP,
   estimate_time INTEGER,
+  actual_start_time TIMESTAMP,
+  actual_end_time TIMESTAMP,
   FOREIGN KEY (activity_type)
   REFERENCES app.activityTypes(name)
 );
@@ -100,3 +102,4 @@ CREATE TABLE app.itemLocations  (
 	FOREIGN KEY (item_id) 
   	REFERENCES app.items(item_id) ON DELETE CASCADE
 );
+
