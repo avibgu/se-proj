@@ -180,8 +180,7 @@ public class AgentResource {
 	
 	@GET
 	@Path("/startRecalculate")
-	public void startRecalculate(@PathParam("agentId") String agentId){
-		
+	public void startRecalculate(@QueryParam("agentId") String agentId){
 		Boolean approvement = DBHandler.canStartNewRecalculte();
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
@@ -193,7 +192,8 @@ public class AgentResource {
 	
 	@GET
 	@Path("/finishRecalculate")
-	public void finishRecalculate(@PathParam("agentId") String agentId){
+	public void finishRecalculate(@QueryParam("agentId") String agentId){
+		DBHandler.finishRecalculte();
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
 		C2dmController.getInstance().sendMessageToDevice("3", null, null, MessageType.RECALCULATE_FINISH);
