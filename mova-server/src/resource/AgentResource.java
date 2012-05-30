@@ -140,7 +140,7 @@ public class AgentResource {
 		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
 	}
 
-	@PUT
+	@GET
 	@Path("/getAllAgents")
 	public void getAllAgents(@PathParam("agentId") String agentId){
 		List<Agent> agents = db.getAllAgents();
