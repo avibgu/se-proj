@@ -154,13 +154,13 @@ public class ItemResource {
 		
 	}
 	
-	@GET
-	@Path("/getItemsAvailability")
-	public void getItemsAvailability(@QueryParam("agentId") String agentId){
-		List<String> agentsAvailability = db.getItemsAvailability();
-		Vector<String> agentIds = new Vector<String>();
-		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.ITEMS_AVAILABILITY);
-	}
+//	@GET
+//	@Path("/getItemsAvailability")
+//	public void getItemsAvailability(@QueryParam("agentId") String agentId){
+//		List<String> agentsAvailability = db.getItemsAvailability();
+//		Vector<String> agentIds = new Vector<String>();
+//		agentIds.add(agentId);
+//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.ITEMS_AVAILABILITY);
+//	}
 	
 }
