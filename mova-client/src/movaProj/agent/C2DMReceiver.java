@@ -107,13 +107,17 @@ public class C2DMReceiver extends BroadcastReceiver
 		         		insertStaticTypes(message,context);
 		         		break;
 		         	case ITEMS_LIST:
-		         		//TODO Avi..
 		         		insertItems(message,context);
 		         		notifyObservers(new MovaMessage(MessageType.ITEMS_LIST, message));
 		         		break;
 		         	case GOT_ALL_AGENTS:
-		         		//TODO Avi..
 		         		notifyObservers(new MovaMessage(MessageType.GOT_ALL_AGENTS, message));
+		         		break;
+		         	case AGENTS_AVAILABILITY:
+		         		notifyObservers(new MovaMessage(MessageType.AGENTS_AVAILABILITY, message));
+		         		break;
+		         	case ITEMS_AVAILABILITY:
+		         		notifyObservers(new MovaMessage(MessageType.ITEMS_AVAILABILITY, message));
 		         		break;
 		         	default:
 		         		System.out.println("Unsupported message");
