@@ -149,14 +149,14 @@ public class AgentResource {
 		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ALL_AGENTS);
 	}
 	
-	@GET
-	@Path("/getAgentsAvailability")
-	public void getAgentsAvailability(@QueryParam("agentId") String agentId){
-		List<String> agentsAvailability = db.getAgentsAvailability();
-		Vector<String> agentIds = new Vector<String>();
-		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
-	}
+//	@GET
+//	@Path("/getAgentsAvailability")
+//	public void getAgentsAvailability(@QueryParam("agentId") String agentId){
+//		List<String> agentsAvailability = db.getAgentsAvailability();
+//		Vector<String> agentIds = new Vector<String>();
+//		agentIds.add(agentId);
+//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
+//	}
 	
 	@PUT
 	@Path("/setCurrentActivityId")
