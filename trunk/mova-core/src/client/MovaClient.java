@@ -130,6 +130,12 @@ public class MovaClient {
 		resource.get(String.class);
 	}
 	
+	public void getItemsAvailability(String agentId) {
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/getItemsAvailability");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+	
 	// ACTIVITY
 	
 	/**
@@ -270,7 +276,13 @@ public class MovaClient {
 	}
 	
 	public void getAllAgents(String agentId) {
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAllAgents");
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAllAgents");
+		resource.getReference().addQueryParameter("agentId", agentId);
+		resource.get();
+	}
+	
+	public void getAgentsAvailability(String agentId) {
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentsAvailability");
 		resource.getReference().addQueryParameter("agentId", agentId);
 		resource.get();
 	}

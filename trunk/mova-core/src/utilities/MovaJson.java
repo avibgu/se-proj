@@ -1,6 +1,11 @@
 package utilities;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import utilities.Location;
@@ -201,10 +206,37 @@ public class MovaJson {
 			return agents;
 		}
 		
-		for(int i = 0; i < itemsArray.length; i++){
+		for(int i = 0; (null != itemsArray ) && i < itemsArray.length; i++){
 			agents.add(itemsArray[i]);
 		}
 		
 		return agents;
+	}
+	
+	public Map<String, Date> jsonToAvailabilty(String json) {
+
+		Map<String, Date> map = new HashMap<String, Date>();
+		String[] idsAndDates = null;
+		
+		try{
+			idsAndDates = _gson.fromJson(json, String[].class);
+		}
+		
+		catch(JsonSyntaxException e){
+			return map;
+		}
+		
+		for(int i = 0; (null != idsAndDates ) && i < idsAndDates.length; i++){
+			
+			String[] tmp = idsAndDates[i].split("\t");
+			
+			try {
+				map.put(tmp[0], DateFormat.getInstance().parse(tmp[1]));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return map;
 	}
 }
