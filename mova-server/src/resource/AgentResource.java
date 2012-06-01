@@ -146,7 +146,7 @@ public class AgentResource {
 		List<Agent> agents = db.getAllAgents();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ALL_OBJECTS);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_AGENTS);
 	}
 	
 		private String getAllObjects(String agentId){
