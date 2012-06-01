@@ -5,6 +5,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import state.ActivityState;
 import utilities.MovaJson;
 
@@ -91,11 +94,17 @@ public class Coordinator implements Observer {
 
 			case RECALCULATE_APPROVEMENT:
 
-				mActivities = new MovaJson().jsonToActivities((String) message
-						.getData());
+				JsonParser jp = new JsonParser();
+	      		JsonObject j = (JsonObject)jp.parse((String) message.getData());
+	      		
+	      		String activities = j.get("activities").getAsString();
+	      		String agents = j.get("agents").getAsString();
+	      		String items = j.get("items").getAsString();
 
-				mMovaClient.getAllAgents(mMyID);
-				mMovaClient.getItems(mMyID);
+	      		mActivities = new MovaJson().jsonToActivities(activities);
+				mAgents = new MovaJson().jsonToAgents(agents);
+				mItems = new MovaJson().jsonToItems(items);
+
 				recalculate();
 
 				break;
