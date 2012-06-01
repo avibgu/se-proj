@@ -107,7 +107,7 @@ public class DBHandler {
 			mStmt.execute("delete from " + mItemTableName);
 			mStmt.execute("delete from " + mItemTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeTableName);
-			mStmt.execute("delete from " + mAgentTypeTableName);
+//			mStmt.execute("delete from " + mAgentTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeItemsTableName);
 			mStmt.execute("delete from " + mActivityTypeAgentsTableName);
 			mStmt.execute("delete from " + mActivityAgentsTableName);
@@ -545,7 +545,8 @@ public class DBHandler {
 
 				Agent agent = new Agent(new AgentType(results.getString("agent_type")));
 				agent.setId(results.getString("agent_id"));
-				agent.setCurrentActivityId(results.getInt("activity_id"));
+				//TODO
+				//agent.setCurrentActivityId(Integer.valueOf(results.getString("activity_id")));
 				agents.add(agent);
 			}
 			
@@ -944,10 +945,14 @@ public class DBHandler {
 		try {
 			
 			mStmt = mConn.createStatement();
+//			ResultSet results = mStmt.executeQuery("select * from "
+//					+ mActivityTableName + "," + mActivityAgentsTableName +"," + mActivityItemsTableName +
+//					" where " + mActivityTableName+".ACTIVITY_ID = " + mActivityAgentsTableName+".ACTIVITY_ID AND "
+//					+ mActivityTableName+".ACTIVITY_ID = " + mActivityItemsTableName+".ACTIVITY_ID ");
+			
 			ResultSet results = mStmt.executeQuery("select * from "
-					+ mActivityTableName + "," + mActivityAgentsTableName +"," + mActivityItemsTableName +
-					"where " + mActivityTableName+".ACTIVITY_ID = " + mActivityAgentsTableName+".ACTIVITY_ID AND "
-					+ mActivityTableName+".ACTIVITY_ID = " + mActivityItemsTableName+".ACTIVITY_ID ");
+					+ mActivityTableName + " where ACTIVITY_STATE <> 'COMPLETED'"  );
+			
 			
 			while (results.next()) {
 				
