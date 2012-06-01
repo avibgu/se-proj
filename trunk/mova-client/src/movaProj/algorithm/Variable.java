@@ -3,25 +3,28 @@ package movaProj.algorithm;
 import java.util.List;
 
 import actor.Activity;
+import actor.Agent;
+import actor.Item;
 
-public class Variable implements Comparable<Variable>{
+public class Variable implements Comparable<Variable> {
 
-	protected Activity	mActivity;
-	protected Domain	mDomain;
-	
+	protected Activity mActivity;
+	protected Domain mDomain;
+
 	public Variable(Activity pActivity) {
-		
+
 		mActivity = pActivity;
 		mDomain = new Domain(mActivity);
 	}
-	
-	public Variable(Activity pActivity, String pMyID, List<Activity> pActivities) {
+
+	public Variable(Activity pActivity, String pMyID,
+			List<Activity> pActivities, List<Agent> pAgents, List<Item> pItems) {
 		mActivity = pActivity;
-		mDomain = new Domain(mActivity, pMyID, pActivities);
+		mDomain = new Domain(mActivity, pMyID, pActivities, pAgents, pItems);
 	}
 
 	public Domain getDomain() {
-//		return (Domain) mDomain.clone(); TODO
+		// return (Domain) mDomain.clone(); TODO
 		return mDomain;
 	}
 
@@ -30,8 +33,8 @@ public class Variable implements Comparable<Variable>{
 
 		if (!(pOther instanceof Variable))
 			return false;
-		
-		return ((Variable)pOther).mActivity.equals(mActivity);
+
+		return ((Variable) pOther).mActivity.equals(mActivity);
 	}
 
 	@Override

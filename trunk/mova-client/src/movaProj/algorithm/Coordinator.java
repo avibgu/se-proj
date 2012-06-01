@@ -13,17 +13,17 @@ import movaProj.agent.MovaMessage;
 
 import client.MovaClient;
 
-//import c2dm.C2dmController;
-
-//import type.MessageType;
-
 import actor.Activity;
+import actor.Agent;
+import actor.Item;
 
 public class Coordinator implements Observer {
 
+	private String mMyID;
 	private MovaClient mMovaClient;
 	private List<Activity> mActivities;
-	private Boolean recalculateApprovement;
+	private List<Agent> mAgents;
+	private List<Item> mItems;
 
 	public Coordinator() {
 
@@ -31,88 +31,42 @@ public class Coordinator implements Observer {
 		C2DMReceiver.addListener(this);
 	}
 
-	public boolean recalculate(String myID) {
-
-		notifyAboutStartingTheRecalculate(myID);
-
-//		// TODO: what to do when we shouldn't perform recalculate
-//		if (!recalculateApprovement)
-//			return false;					
-//		
-//		List<Activity> activities = getActivitiesFromDB(myID);
-//
-//		Vector<Variable> variables = new Vector<Variable>();
-//
-//		for (Activity activity : activities)
-//			if (activity.getState() == ActivityState.PENDING)
-//				variables.add(new Variable(activity, myID, activities));
-//
-//		CSPAlgorithm mAlgorithm = new CBJ(variables);
-//
-//		try {
-//
-//			mAlgorithm.solve();
-//
-//			if (mAlgorithm.isSolved()) {
-//
-//				updateDatabaseWithNewSchecdule(myID, mAlgorithm.getAssignment());
-//				notifyAboutFinishingTheRecalculate(myID);
-//			}
-//
-//			else
-//				; // TODO: what to do when there is no solution??..
-//		}
-//
-//		catch (Exception e) {
-//			// TODO: what to do when the algorithm fails??..
-//			e.printStackTrace();
-//		}
-//		
-//		return true;
-		return false;
-	}
-
-	private void notifyAboutStartingTheRecalculate(String myID) {
-		// notify all other Agent that we are starting coordinating,
-		// (provide coordination-id and order on the Agents?.. we are first..)
-
-		recalculateApprovement = null;
+	public void askRecalculate(String myID) {
 
 		mMovaClient.startRecalculate(myID);
-
-//		synchronized (this) {
-//
-//			while (null == recalculateApprovement) {
-//
-//				try {
-//					//this.wait();
-//					Thread.sleep(1000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		mMyID = myID;
 	}
 
-	private List<Activity> getActivitiesFromDB(String myID) {
+	public void recalculate() {
 
-		mActivities = null;
+		Vector<Variable> variables = new Vector<Variable>();
 
-		mMovaClient.getAllActivities(myID);
+		for (Activity activity : mActivities)
+			if (activity.getState() == ActivityState.PENDING)
+				variables.add(new Variable(activity, mMyID, mActivities,
+						mAgents, mItems));
 
-		synchronized (this) {
+		CSPAlgorithm mAlgorithm = new CBJ(variables);
 
-			while (null == mActivities) {
+		try {
 
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			mAlgorithm.solve();
+
+			if (mAlgorithm.isSolved()) {
+
+				updateDatabaseWithNewSchecdule(mMyID,
+						mAlgorithm.getAssignment());
+				mMovaClient.finishRecalculate(mMyID);
 			}
+
+			else
+				; // TODO: what to do when there is no solution??..
 		}
 
-		return mActivities;
+		catch (Exception e) {
+			// TODO: what to do when the algorithm fails??..
+			e.printStackTrace();
+		}
 	}
 
 	private void updateDatabaseWithNewSchecdule(String myID,
@@ -126,10 +80,6 @@ public class Coordinator implements Observer {
 		mMovaClient.sendSchedule(schedule, myID);
 	}
 
-	private void notifyAboutFinishingTheRecalculate(String myID) {
-		mMovaClient.finishRecalculate(myID);
-	}
-
 	@Override
 	public void update(Observable pObservable, Object pData) {
 
@@ -139,25 +89,14 @@ public class Coordinator implements Observer {
 
 			switch (message.getMessageType()) {
 
-			case GOT_ACTIVITIES:
-
-				synchronized (this) {
-
-					mActivities = new MovaJson()
-							.jsonToActivities((String) message.getData());
-					this.notifyAll();
-				}
-
-				break;
-
 			case RECALCULATE_APPROVEMENT:
 
-				synchronized (this) {
+				mActivities = new MovaJson().jsonToActivities((String) message
+						.getData());
 
-					recalculateApprovement = new MovaJson()
-							.jsonToBoolean((String) message.getData());
-					this.notifyAll();
-				}
+				mMovaClient.getAllAgents(mMyID);
+				mMovaClient.getItems(mMyID);
+				recalculate();
 
 				break;
 			}
