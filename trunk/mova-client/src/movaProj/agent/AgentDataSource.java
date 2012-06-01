@@ -30,6 +30,9 @@ public class AgentDataSource {
 	}
 	
 	public void insertAgent(Agent agent){
+		openToWrite();
+		database.delete(DatabaseHelper.agentTable, null, null);
+		close();
 		ContentValues cv = new ContentValues();
 	    cv.put(DatabaseHelper.agentColID, agent.getId());
 	    cv.put(DatabaseHelper.agentColStatus, "true");

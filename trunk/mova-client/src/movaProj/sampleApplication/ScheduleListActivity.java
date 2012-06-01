@@ -79,6 +79,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		
 		Button logoutButton = (Button) this.findViewById(R.id.changeStatusButton);
 		logoutButton.setOnClickListener(this);
+		Button recalculateButton = (Button) this.findViewById(R.id.initialButton);
+		recalculateButton.setOnClickListener(this);
 
 	}
 
@@ -111,15 +113,25 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			final String activityId = schedule1.get(info.position).getId();
 			final long activityOldEndTime = schedule1.get(info.position).getEndTime().getTime();
 			dialog.setContentView(R.layout.picker);
-			dialog.setTitle("Postpone activity deadline");
+			dialog.setTitle("Postpone Activity");
  
-			Button postponeButton = (Button) this.findViewById(R.id.numberPickerOkButton);
+			Button postponeButton = (Button) dialog.findViewById(R.id.numberPickerOkButton);
 			// if button is clicked, close the custom dialog
 			postponeButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					MovaAndroidClient.postponeActivity(activityId, 15*60*1000, activityOldEndTime);
+					NumberPicker picker = (NumberPicker) dialog.findViewById(R.id.numberPickerComponent);
+					MovaAndroidClient.postponeActivity(activityId, (picker.mCurrent)*60*1000, activityOldEndTime);
+				}
+			});
+			Button cancelButton = (Button) dialog.findViewById(R.id.numberPickerCancelButton);
+			// if button is clicked, close the custom dialog
+			cancelButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					
 				}
 			});
  

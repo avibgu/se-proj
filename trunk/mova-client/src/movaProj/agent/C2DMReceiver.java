@@ -71,7 +71,7 @@ public class C2DMReceiver extends BroadcastReceiver
 			 	 String message = extras.getString("message");
 		         Log.d("CD2M", "received message: " + message);
 		         MessageType messageType = MessageType.valueOf(extras.getString("messageType"));
-		        
+		     	Log.d("CD2M",messageType.toString());
 		         switch (messageType){
 		         	case DELETE_ITEM:
 		         		deleteItem(context, intent, message);
@@ -122,7 +122,7 @@ public class C2DMReceiver extends BroadcastReceiver
 //		         		break;
 		         	case RECALCULATE_APPROVEMENT:
 		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_APPROVEMENT, message));
-//		         		break;
+		         		break;
 		         	default:
 		         		System.out.println("Unsupported message");
 		         }
