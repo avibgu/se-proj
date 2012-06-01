@@ -40,7 +40,7 @@ public class Coordinator implements Observer {
 		mMyID = myID;
 	}
 
-	public void recalculate() {
+	private void recalculate() {
 
 		Vector<Variable> variables = new Vector<Variable>();
 
