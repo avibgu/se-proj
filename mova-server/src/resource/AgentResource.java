@@ -196,15 +196,25 @@ public class AgentResource {
 	
 	@GET
 	@Path("/startRecalculate")
-	public void startRecalculate(@QueryParam("agentId") String agentId){
-		Boolean approvement = DBHandler.canStartNewRecalculte();
-		Vector<String> agentsIds = new Vector<String>();
-		agentsIds.add(agentId);
-		approvement = true;	
-		if (approvement){
-			C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentId),null, MessageType.RECALCULATE_START);
-			C2dmController.getInstance().sendMessageToDevice("3", getAllObjects(agentId),agentsIds, MessageType.RECALCULATE_APPROVEMENT);
-		}
+	public void startRecalculate(@QueryParam("agentId") final String agentId){
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Boolean approvement = DBHandler.canStartNewRecalculte();
+				Vector<String> agentsIds = new Vector<String>();
+				agentsIds.add(agentId);
+				approvement = true;	
+				if (approvement){
+					C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentId),null, MessageType.RECALCULATE_START);
+					String allObjects = getAllObjects(agentId);					
+					C2dmController.getInstance().sendMessageToDevice("3", allObjects, agentsIds, MessageType.RECALCULATE_APPROVEMENT);
+					
+					System.err.println(allObjects);	//TODO
+				}
+			}
+		}).start();
 	}
 	
 	@GET
