@@ -149,9 +149,7 @@ public class AgentResource {
 		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ALL_OBJECTS);
 	}
 	
-	@GET
-	@Path("/getAllObjects")
-	public void getAllObjects(@PathParam("agentId") String agentId){
+		private String getAllObjects(String agentId){
 		List<Agent> agents = db.getAllAgents();
 		List<Activity> activities = db.getAllActivities();
 		List<Item> items = db.getItems();
@@ -164,7 +162,7 @@ public class AgentResource {
 		j.addProperty("items", movaJson.createJsonObj(items));
 
 		
-		C2dmController.getInstance().sendMessageToDevice("3",j.toString() ,agentIds, MessageType.GOT_ALL_OBJECTS);
+		return j.toString();
 	}
 //	
 //	@GET
@@ -202,10 +200,11 @@ public class AgentResource {
 		Boolean approvement = DBHandler.canStartNewRecalculte();
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(approvement),agentsIds, MessageType.RECALCULATE_APPROVEMENT);
-		
-		if (approvement)
-			C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(approvement),null, MessageType.RECALCULATE_START);
+			
+		if (approvement){
+			C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentId),null, MessageType.RECALCULATE_START);
+			C2dmController.getInstance().sendMessageToDevice("3", getAllObjects(agentId),agentsIds, MessageType.RECALCULATE_APPROVEMENT);
+		}
 	}
 	
 	@GET
