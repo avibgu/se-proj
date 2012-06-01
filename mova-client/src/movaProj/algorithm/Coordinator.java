@@ -35,40 +35,41 @@ public class Coordinator implements Observer {
 
 		notifyAboutStartingTheRecalculate(myID);
 
-		// TODO: what to do when we shouldn't perform recalculate
-		if (!recalculateApprovement)
-			return false;					
-		
-		List<Activity> activities = getActivitiesFromDB(myID);
-
-		Vector<Variable> variables = new Vector<Variable>();
-
-		for (Activity activity : activities)
-			if (activity.getState() == ActivityState.PENDING)
-				variables.add(new Variable(activity, myID, activities));
-
-		CSPAlgorithm mAlgorithm = new CBJ(variables);
-
-		try {
-
-			mAlgorithm.solve();
-
-			if (mAlgorithm.isSolved()) {
-
-				updateDatabaseWithNewSchecdule(myID, mAlgorithm.getAssignment());
-				notifyAboutFinishingTheRecalculate(myID);
-			}
-
-			else
-				; // TODO: what to do when there is no solution??..
-		}
-
-		catch (Exception e) {
-			// TODO: what to do when the algorithm fails??..
-			e.printStackTrace();
-		}
-		
-		return true;
+//		// TODO: what to do when we shouldn't perform recalculate
+//		if (!recalculateApprovement)
+//			return false;					
+//		
+//		List<Activity> activities = getActivitiesFromDB(myID);
+//
+//		Vector<Variable> variables = new Vector<Variable>();
+//
+//		for (Activity activity : activities)
+//			if (activity.getState() == ActivityState.PENDING)
+//				variables.add(new Variable(activity, myID, activities));
+//
+//		CSPAlgorithm mAlgorithm = new CBJ(variables);
+//
+//		try {
+//
+//			mAlgorithm.solve();
+//
+//			if (mAlgorithm.isSolved()) {
+//
+//				updateDatabaseWithNewSchecdule(myID, mAlgorithm.getAssignment());
+//				notifyAboutFinishingTheRecalculate(myID);
+//			}
+//
+//			else
+//				; // TODO: what to do when there is no solution??..
+//		}
+//
+//		catch (Exception e) {
+//			// TODO: what to do when the algorithm fails??..
+//			e.printStackTrace();
+//		}
+//		
+//		return true;
+		return false;
 	}
 
 	private void notifyAboutStartingTheRecalculate(String myID) {
@@ -79,17 +80,18 @@ public class Coordinator implements Observer {
 
 		mMovaClient.startRecalculate(myID);
 
-		synchronized (this) {
-
-			while (null == recalculateApprovement) {
-
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+//		synchronized (this) {
+//
+//			while (null == recalculateApprovement) {
+//
+//				try {
+//					//this.wait();
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 	}
 
 	private List<Activity> getActivitiesFromDB(String myID) {

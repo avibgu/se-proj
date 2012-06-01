@@ -53,7 +53,7 @@ public class MovaClient {
 	
 	private URI getBaseURI() {
 		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://192.168.123.24:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 	}
 	
@@ -121,7 +121,7 @@ public class MovaClient {
 	public void deleteItem(String itemId){
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteItem");
 		resource.getReference().addQueryParameter("itemId", itemId);
-		resource.get();
+		resource.get(String.class);
 	}
 	
 	public void getItems(String agentId){
@@ -199,7 +199,7 @@ public class MovaClient {
 	public void postponeActivity(String activityId, long newFinishTime){
 		JsonObject j = new JsonObject();
 		j.addProperty("activityId", activityId);
-		j.addProperty("addedTime", newFinishTime);
+		j.addProperty("newFinishTime", newFinishTime);
 //		mService.path("activities").path("postponeActivity").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
 //		.post();
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/postponeActivity");
@@ -212,13 +212,13 @@ public class MovaClient {
 		queryParams.add("agentId", agentId);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentSchedule");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get();
+		resource.get(String.class);
 	}
 	
 	public void getAllActivities(String agentId){
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAllActivities");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get();
+		resource.get(String.class);
 	}
 	
 	// AGENT
@@ -278,7 +278,7 @@ public class MovaClient {
 	public void getAllAgents(String agentId) {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAllAgents");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get();
+		resource.get(String.class);
 	}
 	
 //	public void getAgentsAvailability(String agentId) {
@@ -322,13 +322,14 @@ public class MovaClient {
 	public void startRecalculate(String agentId) {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/startRecalculate");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get();
+		resource.get(String.class);
 	}
 
+	
 	public void finishRecalculate(String agentId) {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/finishRecalculate");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get();
+		resource.get(String.class);
 	}
 
 	
