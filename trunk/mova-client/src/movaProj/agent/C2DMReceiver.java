@@ -111,15 +111,6 @@ public class C2DMReceiver extends BroadcastReceiver
 		         		insertItems(message,context);
 		         		notifyObservers(new MovaMessage(MessageType.ITEMS_LIST, message));
 		         		break;
-		         	case GOT_ALL_AGENTS:
-		         		notifyObservers(new MovaMessage(MessageType.GOT_ALL_AGENTS, message));
-		         		break;
-//		         	case AGENTS_AVAILABILITY:
-//		         		notifyObservers(new MovaMessage(MessageType.AGENTS_AVAILABILITY, message));
-//		         		break;
-//		         	case ITEMS_AVAILABILITY:
-//		         		notifyObservers(new MovaMessage(MessageType.ITEMS_AVAILABILITY, message));
-//		         		break;
 		         	case RECALCULATE_APPROVEMENT:
 		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_APPROVEMENT, message));
 		         		break;

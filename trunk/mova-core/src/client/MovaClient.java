@@ -281,12 +281,6 @@ public class MovaClient {
 		resource.get(String.class);
 	}
 	
-	public void getAllObjects(String agentId) {
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAllObjects");
-		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get(String.class);
-	}
-	
 //	public void getAgentsAvailability(String agentId) {
 //		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentsAvailability");
 //		resource.getReference().addQueryParameter("agentId", agentId);
