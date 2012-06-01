@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,6 +16,7 @@ import utilities.Location;
 import utilities.MovaJson;
 import actor.Activity;
 import actor.Agent;
+import actor.Item;
 import c2dm.C2dmController;
 
 import com.google.gson.JsonObject;
@@ -146,7 +146,25 @@ public class AgentResource {
 		List<Agent> agents = db.getAllAgents();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ALL_AGENTS);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ALL_OBJECTS);
+	}
+	
+	@GET
+	@Path("/getAllObjects")
+	public void getAllObjects(@PathParam("agentId") String agentId){
+		List<Agent> agents = db.getAllAgents();
+		List<Activity> activities = db.getAllActivities();
+		List<Item> items = db.getItems();
+		Vector<String> agentIds = new Vector<String>();
+		agentIds.add(agentId);
+					
+		JsonObject j = new JsonObject();
+		j.addProperty("agents", movaJson.createJsonObj(agents));
+		j.addProperty("activities", movaJson.createJsonObj(activities));
+		j.addProperty("items", movaJson.createJsonObj(items));
+
+		
+		C2dmController.getInstance().sendMessageToDevice("3",j.toString() ,agentIds, MessageType.GOT_ALL_OBJECTS);
 	}
 //	
 //	@GET
