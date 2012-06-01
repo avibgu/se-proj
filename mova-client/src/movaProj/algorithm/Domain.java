@@ -28,7 +28,7 @@ import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
-public class Domain implements Cloneable, Observer {
+public class Domain implements Cloneable {
 
 	private static final long HOUR = 1000 * 60 * 60;
 
@@ -60,88 +60,71 @@ public class Domain implements Cloneable, Observer {
 
 	protected MovaClient mMovaClient;
 
+	@Deprecated
 	public Domain(Activity pActivity) {
-		this(pActivity, "", null);
+		this(pActivity, "", null, null, null);
 	}
 
-	public Domain(Activity pActivity, String pMyID, List<Activity> pActivities) {
-
-		C2DMReceiver.addListener(this);
+	public Domain(Activity pActivity, String pMyID, List<Activity> pActivities,
+			List<Agent> pAgents, List<Item> pItems) {
 
 		mActivity = pActivity;
 		mMyID = pMyID;
-
-		getItemsAndAgentsFromDB();
-		initValues(pActivities);
+		initItemsAndAgents(pActivities, pAgents, pItems);
+		initValues();
 	}
 
-	private void getItemsAndAgentsFromDB() {
+	private void initItemsAndAgents(List<Activity> pActivities,
+			List<Agent> pAgents, List<Item> pItems) {
 
-		mAgentsMap = null;
+		mAgentsMap = new HashMap<AgentType, List<Agent>>();
 
-		mMovaClient.getAllAgents(mMyID);
+		for (Agent agent : pAgents) {
 
-		synchronized (this) {
+			List<Agent> tAgents = mAgentsMap.get(agent.getType());
 
-			while (null == mAgentsMap) {
+			if (null == tAgents) {
 
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				tAgents = new ArrayList<Agent>();
+				mAgentsMap.put(agent.getType(), tAgents);
 			}
+
+			tAgents.add(agent);
 		}
 
-		mItemsMap = null;
+		mItemsMap = new HashMap<ItemType, List<Item>>();
 
-		mMovaClient.getItems(mMyID);
+		for (Item item : pItems) {
 
-		synchronized (this) {
+			List<Item> tItems = mItemsMap.get(item.getType());
 
-			while (null == mItemsMap) {
+			if (null == tItems) {
 
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				tItems = new ArrayList<Item>();
+				mItemsMap.put(item.getType(), tItems);
 			}
+
+			tItems.add(item);
 		}
 
-		// mAgentsAvailability = null;
-		//
-		// mMovaClient.getAgentsAvailability(mMyID);
-		//
-		// synchronized (this) {
-		//
-		// while (null == mAgentsAvailability) {
-		//
-		// try {
-		// this.wait();
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
-		//
-		// mItemsAvailability = null;
-		//
-		// mMovaClient.getItemsAvailability(mMyID);
-		//
-		// synchronized (this) {
-		//
-		// while (null == mItemsAvailability) {
-		//
-		// try {
-		// this.wait();
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
+		mAgentsAvailability = new HashMap<String, Date>();
+		mItemsAvailability = new HashMap<String, Date>();
+
+		for (Activity activity : pActivities) {
+
+			if (activity.getState() == ActivityState.IN_PROGRESS) {
+
+				for (String agentID : activity.getParticipatingAgentIds())
+					mAgentsAvailability.put(agentID,
+							activity.getActualEndTime());
+
+				for (String itemID : activity.getParticipatingItemIds())
+					mItemsAvailability.put(itemID, activity.getActualEndTime());
+			}
+		}
 	}
 
+	@Deprecated
 	public Domain(Activity pActivity, Map<String, Value> pValues,
 			List<List<Agent>> pAgents, List<List<Item>> pItems,
 			List<List<Integer>> pAgentsIndexes,
@@ -152,7 +135,7 @@ public class Domain implements Cloneable, Observer {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected void initValues(List<Activity> pActivities) {
+	protected void initValues() {
 
 		mValues = new HashMap<String, Value>();
 
@@ -174,7 +157,7 @@ public class Domain implements Cloneable, Observer {
 			mAgentsSizes.add(allAgentsOfThisType.size());
 
 			for (int i = 0; i < numOfrequiredAgents; i++)
-				tList.add(new Integer(i));
+				tList.add(Integer.valueOf(i));
 
 			mAgentsIndexes.add(tList);
 		}
@@ -197,7 +180,7 @@ public class Domain implements Cloneable, Observer {
 			mItemsSizes.add(allItemsOfThisType.size());
 
 			for (int i = 0; i < numOfrequiredItems; i++)
-				tList.add(new Integer(i));
+				tList.add(Integer.valueOf(i));
 
 			mItemsIndexes.add(tList);
 		}
@@ -214,21 +197,6 @@ public class Domain implements Cloneable, Observer {
 		}
 
 		mEmpty = false;
-
-		mAgentsAvailability = new HashMap<String, Date>();
-		mItemsAvailability = new HashMap<String, Date>();
-		
-		for (Activity activity : pActivities) {
-
-			if (activity.getState() == ActivityState.IN_PROGRESS){
-				
-				for (String agentID : activity.getParticipatingAgentIds())
-					mAgentsAvailability.put(agentID, activity.getActualEndTime());
-				
-				for (String itemID : activity.getParticipatingItemIds())
-					mItemsAvailability.put(itemID, activity.getActualEndTime());
-			}
-		}
 	}
 
 	public Value nextValue() {
@@ -369,6 +337,7 @@ public class Domain implements Cloneable, Observer {
 	}
 
 	@Override
+	@Deprecated
 	protected Domain clone() {
 
 		// TODO
@@ -398,93 +367,5 @@ public class Domain implements Cloneable, Observer {
 
 	public boolean isEmpty() {
 		return mEmpty;
-	}
-
-	@Override
-	public void update(Observable pObservable, Object pData) {
-
-		if (pData instanceof MovaMessage) {
-
-			MovaMessage message = (MovaMessage) pData;
-
-			switch (message.getMessageType()) {
-
-			case GOT_ALL_AGENTS:
-
-				synchronized (this) {
-
-					mAgentsMap = new HashMap<AgentType, List<Agent>>();
-
-					Vector<Agent> agents = new MovaJson()
-							.jsonToAgents((String) message.getData());
-
-					for (Agent agent : agents) {
-
-						List<Agent> tAgents = mAgentsMap.get(agent.getType());
-
-						if (null == tAgents) {
-
-							tAgents = new ArrayList<Agent>();
-							mAgentsMap.put(agent.getType(), tAgents);
-						}
-
-						tAgents.add(agent);
-					}
-
-					this.notifyAll();
-				}
-
-				break;
-
-			case ITEMS_LIST:
-
-				synchronized (this) {
-
-					mItemsMap = new HashMap<ItemType, List<Item>>();
-
-					Vector<Item> items = new MovaJson()
-							.jsonToItems((String) message.getData());
-
-					for (Item item : items) {
-
-						List<Item> tItems = mItemsMap.get(item.getType());
-
-						if (null == tItems) {
-
-							tItems = new ArrayList<Item>();
-							mItemsMap.put(item.getType(), tItems);
-						}
-
-						tItems.add(item);
-					}
-
-					this.notifyAll();
-				}
-
-				break;
-			//
-			// case AGENTS_AVAILABILITY:
-			//
-			// synchronized (this) {
-			//
-			// mAgentsAvailability = new MovaJson()
-			// .jsonToAvailabilty((String) message.getData());
-			// this.notifyAll();
-			// }
-			//
-			// break;
-			//
-			// case ITEMS_AVAILABILITY:
-			//
-			// synchronized (this) {
-			//
-			// mItemsAvailability = new MovaJson()
-			// .jsonToAvailabilty((String) message.getData());
-			// this.notifyAll();
-			// }
-			//
-			// break;
-			}
-		}
 	}
 }
