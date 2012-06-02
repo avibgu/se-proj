@@ -182,14 +182,11 @@ public class C2dmController {
 				int code = request.getResponseCode();
 
 				if (code == 200) {
-					// TODO: check for an error and if so, handle
-
+					System.out.println("SUCCESS");
 				} else if (code == 503) {
-					// TODO: check for Retry-After header; use exponential
-					// backoff and try again
-
+					System.out.println("FAILED2");
 				} else if (code == 401) {
-					// TODO: get a new auth token
+					System.out.println("FAILED3");
 				}
 			}
 		} catch (MalformedURLException e) {

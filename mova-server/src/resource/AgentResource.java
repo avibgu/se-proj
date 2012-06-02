@@ -69,8 +69,11 @@ public class AgentResource {
 		db.insertAgentType(agent.getType().toString());
 		boolean ans = db.insertAgent(agent.getId(), agent.getType().toString(), true,agent.getRegistrationId());
 		
+		// Get items
+		Vector<Item> items = db.getItems();
+		
 		if (ans){
-			C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsIds,MessageType.REGISTER_SUCCESS);
+			C2dmController.getInstance().sendMessageToDevice("3", "",agentsIds,MessageType.REGISTER_SUCCESS);
 		}else{
 			C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsIds,MessageType.REGISTER_FAILED);
 		}
@@ -149,18 +152,33 @@ public class AgentResource {
 		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_AGENTS);
 	}
 	
+	@GET
+	@Path("/getAllActivities")
+	public void getAllActivities(@PathParam("agentId") String agentId){
+		List<Activity> agents = db.getAllActivities();
+		Vector<String> agentIds = new Vector<String>();
+		agentIds.add(agentId);
+		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ACTIVITIES);
+	}
+	
 		private String getAllObjects(String agentId){
 		List<Agent> agents = db.getAllAgents();
 		List<Activity> activities = db.getAllActivities();
-		List<Item> items = db.getItems();
+		
+	//	System.err.println("Activities before json: " + activities);
+		
+	//	List<Item> items = db.getItems();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
 					
 		JsonObject j = new JsonObject();
-		j.addProperty("agents", movaJson.createJsonObj(agents));
+		
 		j.addProperty("activities", movaJson.createJsonObj(activities));
-		j.addProperty("items", movaJson.createJsonObj(items));
-
+		
+		System.err.println("Activities after json: " + j.toString());
+		
+		j.addProperty("agents", movaJson.createJsonObj(agents));
+	//	j.addProperty("items", movaJson.createJsonObj(items));
 		
 		return j.toString();
 	}
@@ -207,11 +225,10 @@ public class AgentResource {
 				agentsIds.add(agentId);
 				approvement = true;	
 				if (approvement){
-					C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentId),null, MessageType.RECALCULATE_START);
-					String allObjects = getAllObjects(agentId);					
-					C2dmController.getInstance().sendMessageToDevice("3", allObjects, agentsIds, MessageType.RECALCULATE_APPROVEMENT);
-					
-					System.err.println(allObjects);	//TODO
+				//	C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentId),null, MessageType.RECALCULATE_START);
+					getAllActivities(agentId);		
+					getAllAgents(agentId);					
+				
 				}
 			}
 		}).start();
