@@ -51,6 +51,7 @@ public class DBHandler {
     private static final ReentrantReadWriteLock	mRwl = new ReentrantReadWriteLock();
     private static final Lock					mRead = mRwl.readLock();
     private static final Lock					mWrite = mRwl.writeLock();
+    private static final Lock 					mWriteLock2 = new ReentrantReadWriteLock().writeLock();
     
     private static Boolean[]					isRecalculating = new Boolean[]{false};
     
@@ -73,12 +74,15 @@ public class DBHandler {
     private static void createConnection(){
         
     	try{
+    		mWriteLock2.lock();
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             //Get a connection
             mConn = DriverManager.getConnection(mDbURL); 
+            mWriteLock2.unlock();
         }
         catch (Exception e){
             e.printStackTrace();
+            mWriteLock2.unlock();
         }
     }
     
