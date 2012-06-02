@@ -144,7 +144,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			final List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this); 
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
-					android.R.layout.simple_list_item_1,displayedSchedule);
+					R.layout.list_item,displayedSchedule);
 			listView.setAdapter(adapter);
 			break;
 		default:
@@ -186,7 +186,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this);
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
-					android.R.layout.simple_list_item_1,displayedSchedule);
+					R.layout.list_item,displayedSchedule);
 			ListView listView = (ListView) findViewById(R.id.mylist);
 			listView.setAdapter(adapter);
 			break;
