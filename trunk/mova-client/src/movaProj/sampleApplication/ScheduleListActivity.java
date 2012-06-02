@@ -154,7 +154,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	}
 	
 	private String convertTimeToString(int time){
-		if (time > 0 && time < 10){
+		if (time >= 0 && time < 10){
 			return "0" + time;
 		}else{
 			return String.valueOf(time);
