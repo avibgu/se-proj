@@ -58,6 +58,6 @@ public class MovaAndroidClient {
 	}
 	
 	public static void recalculate(Activity activity){
-		new Coordinator().askRecalculate(new AgentDataSource(activity).getAgentId());
+		new Coordinator(activity).askRecalculate(new AgentDataSource(activity).getAgentId());
 	}
 }
