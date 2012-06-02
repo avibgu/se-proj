@@ -87,7 +87,7 @@ public class ActivityDataSource {
 		
 		
 		public List<actor.Activity> getSchedule() {
-			//insertDummyActivities();
+			insertDummyActivities();
 			openToRead();
 			List<actor.Activity> schedule = new ArrayList<actor.Activity>();
 			Cursor cursor = database.query(DatabaseHelper.scheduleTable,
@@ -109,22 +109,19 @@ public class ActivityDataSource {
 		
 		private void insertDummyActivities(){
 			List<Activity> schedule = new ArrayList<Activity>();
-			Activity act1 = new Activity("BLA", new Timestamp(2012,12,5,10,5,8,45), new Timestamp(2012,12,5,12,5,8,45), 0, null, null, null, "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #1");
+			Activity act1 = new Activity("Lecture", new Timestamp(2012,6,7,10,0,8,45), new Timestamp(2012,6,7,11,0,8,45), 0, null, null, null,  "Lecturer: Prof. Dan Schneider\nProfessor Schneider discusses the local, regional, and international actions that are already beginning to address global warming and describe other actions that could be taken, if there were political will to substantially reduce the magnitude of the risks.", "Global Warming Lecture");
 			Set<String> itemsids = new HashSet<String>();
-			itemsids.add("5d367716-d973-4f6a-a528-938d32a428eb");
-			itemsids.add("e815177d-9c77-4921-8281-b1f0164abafb");
-//			itemsids.add("9120d700-ead6-4547-abf7-f9d686ef7860");
+			itemsids.add("fe708c5b-d182-4703-b41f-37daa0f477fa");
+			itemsids.add("6f0c984f-b6bf-4d8f-8bf4-ae1d780215c9");
+			itemsids.add("7f3e33e0-1f46-42bd-9a00-95a1ce6e5be0");
 			act1.setParticipatingItemIds(itemsids);
 			schedule.add(act1);
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,12,5,8,45), new Timestamp(2012,12,5,13,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #2"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #3"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null,  "Hi Test activity bla bla bla bla bla bla bla bla", "Activity #4"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #5"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #6"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #7"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #8"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #9"));
-			schedule.add(new Activity("BLA", new Timestamp(2012,12,5,13,5,8,45), new Timestamp(2012,12,5,15,5,8,45), 0, null, null, null, null, "Activity #10"));
+			schedule.add(new Activity("Breakfast", new Timestamp(2012,6,7,11,0,8,45), new Timestamp(2012,6,7,12,0,8,45), 0, null, null, null,  "Breakfast at the conference lobby", "Breakfast"));
+			schedule.add(new Activity("Lecture", new Timestamp(2012,6,7,12,0,8,45), new Timestamp(2012,6,7,14,0,8,45), 0, null, null, null,  "Lecturer: Prof. Lee James\nProfessor James discuss the popular recent reseaches about global warming. ", "Recent Reasearches overview"));
+			schedule.add(new Activity("Lunch", new Timestamp(2012,6,7,14,0,8,45), new Timestamp(2012,6,7,15,30,8,45), 0, null, null, null, "Lunch at the conference lobby", "Lunch"));
+			schedule.add(new Activity("Lecture", new Timestamp(2012,6,7,15,0,8,45), new Timestamp(2012,6,7,16,0,8,45), 0, null, null, null, "Questions to the Global Warming experts", "Experts Panel"));
+			schedule.add(new Activity("Break", new Timestamp(2012,6,7,16,0,8,45), new Timestamp(2012,6,7,16,15,8,45), 0, null, null, null, null, "Coffe break"));
+			schedule.add(new Activity("Lecture", new Timestamp(2012,6,7,16,15,8,45), new Timestamp(2012,6,7,17,0,8,45), 0, null, null, null, "Conference Summary", "Summary"));
 			createSchedule(schedule);
 		}
 		

@@ -5,11 +5,24 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.41"
         android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="Climate Changes Conference Schedule"
+        android:gravity="center_horizontal"
+        android:textSize="24dp"
+        android:textColor="#3399FF">
+
+        <requestFocus />
+    </TextView>
    
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mylist"
     android:layout_width="match_parent"
-    android:layout_height="400dp" >
+    android:layout_height="400dp" 
+    >
 
 	</ListView>
 	
