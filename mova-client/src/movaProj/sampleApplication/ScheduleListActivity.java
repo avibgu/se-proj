@@ -15,6 +15,7 @@ import actor.Item;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -53,6 +54,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
+//				view.setBackgroundColor(Color.parseColor("#75D1FF"));
 				actor.Activity activity = schedule.get(position);
 				Set<String> itemsId = activity.getParticipatingItemIds();
 				Vector<String> displayedItems = new Vector<String>();
