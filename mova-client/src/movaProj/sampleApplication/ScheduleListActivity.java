@@ -44,8 +44,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		schedule1 = schedule;
 		setContentView(R.layout.schedule_list);
 		String[] displayedSchedule = prepareDisplayedSchedule(schedule);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1,displayedSchedule);
+		ArrayAdapter<String> adapter = new MyArrayAdapter(this,
+				R.layout.list_item,displayedSchedule);
 		ListView listView = (ListView) findViewById(R.id.mylist);
 		listView.setAdapter(adapter);
 		
@@ -143,7 +143,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			ListView listView = (ListView) findViewById(R.id.mylist);
 			final List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this); 
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
 					android.R.layout.simple_list_item_1,displayedSchedule);
 			listView.setAdapter(adapter);
 			break;
@@ -168,7 +168,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			ans[i] = "< " +curActivity.getStartTime().getHours() + ":" + 
 					 convertTimeToString(curActivity.getStartTime().getMinutes()) + " - " +
 					 convertTimeToString(curActivity.getEndTime().getHours())+ ":" + 
-					 convertTimeToString(curActivity.getEndTime().getMinutes()) + " >  " + 
+					 convertTimeToString(curActivity.getEndTime().getMinutes()) + " >  \n" + 
 					 curActivity.getName();
 		}
 		
@@ -185,7 +185,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		case GOT_SCHEDULE:
 			List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this);
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
 					android.R.layout.simple_list_item_1,displayedSchedule);
 			ListView listView = (ListView) findViewById(R.id.mylist);
 			listView.setAdapter(adapter);
