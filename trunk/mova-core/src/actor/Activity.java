@@ -141,8 +141,8 @@ public class Activity implements Cloneable {
 		mState = ActivityState.PENDING;
 		mStartTime = pStartTime;
 		mEndTime = pEndTime;
-		mActualStartTime = null;
-		mActualEndTime = null;
+		mActualStartTime = pStartTime;
+		mActualEndTime = pEndTime;
 		mEstimateTime = pEstimateTime;
 		mRequiredAgents = pRequiredAgents;
 		mRequiredItems = pRequiredItems;
