@@ -13,15 +13,15 @@
         android:text="Climate Changes Conference Schedule"
         android:gravity="center_horizontal"
         android:textSize="24dp"
-        android:textColor="#3399FF">
+        android:textColor="#3399FF"
+        android:layout_marginTop="10dp">
 
-        <requestFocus />
-    </TextView>
+     </TextView>
    
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mylist"
     android:layout_width="match_parent"
-    android:layout_height="400dp" 
+    android:layout_height="350dp" 
     >
 
 	</ListView>
