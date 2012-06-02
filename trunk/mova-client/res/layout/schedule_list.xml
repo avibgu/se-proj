@@ -1,59 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scheduleLayout"
+    android:id="@+id/scheduleLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.41"
+    android:orientation="vertical" >
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.41"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/editText1"
+        <TextView
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="center_horizontal"
+            android:text="Climate Changes Conference Schedule"
+            android:textColor="#3399FF"
+            android:textSize="24dp" >
+        </TextView>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/mylist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:text="Climate Changes Conference Schedule"
-        android:gravity="center_horizontal"
-        android:textSize="24dp"
-        android:textColor="#3399FF"
-        android:layout_marginTop="10dp">
+        android:layout_height="350dp" >
+    </ListView>
 
-     </TextView>
-   
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mylist"
-    android:layout_width="match_parent"
-    android:layout_height="350dp" 
-    >
-
-	</ListView>
-	
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/scheduleLayout2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="bottom" 
         android:layout_gravity="bottom"
         android:layout_marginTop="20dp"
-        >
-        
- 	<Button
+        android:gravity="bottom"
+        android:orientation="horizontal" >
+
+        <Button
             android:id="@+id/changeStatusButton"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@string/LogoutString" 
             android:layout_gravity="bottom"
             android:layout_marginBottom="0dp"
-            />
- 	
- 	<Button
+            android:text="@string/LogoutString" />
+
+        <Button
             android:id="@+id/initialButton"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="Initial Application" 
             android:layout_gravity="bottom"
             android:layout_marginBottom="0dp"
-            />
- 	
+            android:text="Initial Application" />
     </LinearLayout>
-    
+
 </LinearLayout>
