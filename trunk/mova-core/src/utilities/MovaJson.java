@@ -152,7 +152,7 @@ public class MovaJson {
 	 * @return a vector of deserialized activities. Returns an empty vector if json is not a JSON vector activities
 	 */
 	public List<Activity> jsonToActivities(String json){
-		Vector<Activity> activities = new Vector<Activity>();
+		List<Activity> activities = new Vector<Activity>();
 		Activity[] activityArray = null;
 		try{
 			activityArray = _gson.fromJson(json, Activity[].class);

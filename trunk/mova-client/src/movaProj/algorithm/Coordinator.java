@@ -5,20 +5,15 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import movaProj.agent.C2DMReceiver;
+import movaProj.agent.ItemDataSource;
+import movaProj.agent.MovaMessage;
 import state.ActivityState;
 import utilities.MovaJson;
-
-import movaProj.agent.C2DMReceiver;
-import movaProj.agent.MovaMessage;
-
-import client.MovaClient;
-
 import actor.Activity;
 import actor.Agent;
 import actor.Item;
+import client.MovaClient;
 
 public class Coordinator implements Observer {
 
@@ -27,21 +22,27 @@ public class Coordinator implements Observer {
 	private List<Activity> mActivities;
 	private List<Agent> mAgents;
 	private List<Item> mItems;
-
-	public Coordinator() {
-
+	private boolean mGotActivities;
+	private boolean mGotAgents;
+	private android.app.Activity mActivity;
+	
+	public Coordinator(android.app.Activity activity) {
+		mActivity = activity;
 		mMovaClient = new MovaClient();
 		C2DMReceiver.addListener(this);
 	}
 
 	public void askRecalculate(String myID) {
-
+		mGotActivities = false;
+		mGotAgents = false;
 		mMovaClient.startRecalculate(myID);
 		mMyID = myID;
 	}
 
 	private void recalculate() {
-
+		
+		mItems = new ItemDataSource(mActivity).getItems();
+		
 		Vector<Variable> variables = new Vector<Variable>();
 
 		for (Activity activity : mActivities)
@@ -89,24 +90,31 @@ public class Coordinator implements Observer {
 		if (pData instanceof MovaMessage) {
 
 			MovaMessage message = (MovaMessage) pData;
+			String messageData = (String) (message.getData());
+					
+ 			switch (message.getMessageType()) {
+			
+			case GOT_ACTIVITIES:
+				
+				mActivities = new MovaJson().jsonToActivities(messageData);
+				
+				mGotActivities = true;
+				 
+				if (mGotAgents){
+					recalculate();
+				}
 
-			switch (message.getMessageType()) {
-
-			case RECALCULATE_APPROVEMENT:
-
-				JsonParser jp = new JsonParser();
-	      		JsonObject j = (JsonObject)jp.parse((String) message.getData());
-	      		
-	      		String activities = j.get("activities").getAsString();
-	      		String agents = j.get("agents").getAsString();
-	      		String items = j.get("items").getAsString();
-
-	      		mActivities = new MovaJson().jsonToActivities(activities);
-				mAgents = new MovaJson().jsonToAgents(agents);
-				mItems = new MovaJson().jsonToItems(items);
-
-				recalculate();
-
+				break;
+						
+			case GOT_AGENTS:
+				
+		   		mAgents = new MovaJson().jsonToAgents(messageData);
+				
+		   		mGotAgents = true;
+		   		
+				if (mGotActivities){
+					recalculate();
+				}
 				break;
 			}
 		}

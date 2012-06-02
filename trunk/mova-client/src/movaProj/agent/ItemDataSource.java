@@ -1,5 +1,7 @@
 package movaProj.agent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import state.ItemState;
@@ -124,6 +126,28 @@ public class ItemDataSource {
 		close();
 		
 		return item;
+	}
+	
+	public List<Item> getItems(){
+		List<Item> items = new ArrayList<Item>();
+		openToRead();
+		Cursor itemCur = database.query(DatabaseHelper.itemTable, new String[] {DatabaseHelper.itemColID,DatabaseHelper.itemColType,DatabaseHelper.itemLongitudeCol, DatabaseHelper.itemLatitudeCol,
+				 DatabaseHelper.itemColState}, null, null, null, null, null);
+		itemCur.moveToFirst();
+		while (!itemCur.isAfterLast()){
+			Item item;
+			item = new Item(new ItemType(itemCur.getString(1)));
+			item.setId(itemCur.getString(0));
+			item.setLocation(new Location(itemCur.getInt(2), itemCur.getInt(3)));
+			item.setState(ItemState.valueOf(itemCur.getString(4)));
+			items.add(item);
+			itemCur.moveToNext();
+		}
+		
+		itemCur.close();
+		close();
+		
+		return items;
 	}
 	
 	public void insertItemTypes(Vector<String> types){
