@@ -14,6 +14,10 @@ import movaProj.agent.R;
 import actor.Item;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,9 +32,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import client.MovaClient;
 
@@ -191,6 +193,20 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 					R.layout.list_item,displayedSchedule);
 			ListView listView = (ListView) findViewById(R.id.mylist);
 			listView.setAdapter(adapter);
+			String app_name = (String)this.getText(R.string.app_name);
+			NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // Create a notification using android stat_notify_chat icon. 
+                Notification notification = new Notification(android.R.drawable.stat_notify_chat,"New Schedule", 0);
+     
+                // Create a pending intent to call the HomeActivity when the notification is clicked
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, -1, new Intent(this, MovaAgentActivity.class), PendingIntent.FLAG_UPDATE_CURRENT); // 
+                notification.when = System.currentTimeMillis();
+                notification.flags |= Notification.FLAG_AUTO_CANCEL; 
+                // Set the notification and register the pending intent to it
+                notification.setLatestEventInfo(this, app_name, "Your schedule has been changed", pendingIntent); //
+     
+                // Trigger the notification
+                notificationManager.notify(0, notification);
 			break;
 		default:
 			break;

@@ -17,7 +17,7 @@
         android:label="@string/app_name" android:debuggable="true">
         <activity
             android:label="@string/app_name"
-            android:name="movaProj.sampleApplication.ScheduleListActivity" >
+            android:name="movaProj.sampleApplication.RegistrationDialogActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,10 +27,11 @@
       <activity  android:name = "movaProj.sampleApplication.CreateActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.MovaActivityDetails" > </activity>
       <activity  android:name = "movaProj.sampleApplication.InsertAgentTypeActivity" > </activity>
-      <activity  android:name = "movaProj.sampleApplication.RegistrationDialogActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.MovaAgentActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.ActivityLongClickList" > </activity>
       <activity  android:name = "movaProj.sampleApplication.NumberPicker" > </activity>
+      <activity  android:name = "movaProj.sampleApplication.ScheduleListActivity" > </activity>
+      
 
         <receiver
             android:name=".C2DMReceiver"

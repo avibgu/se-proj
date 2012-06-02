@@ -41,8 +41,10 @@ public class ActivityDataSource {
 		    cv1.put(DatabaseHelper.activityColType, movaAct.getType().toString());
 		    cv1.put(DatabaseHelper.activityColDescription, movaAct.getDescription());
 		    cv1.put(DatabaseHelper.activityColID, movaAct.getId());
-		    cv1.put(DatabaseHelper.activityColStartTime, movaAct.getStartTime().getTime());
-		    cv1.put(DatabaseHelper.activityColEndTime, movaAct.getEndTime().getTime());
+		    if (movaAct.getActualStartTime() != null && movaAct.getActualEndTime() != null){
+			    cv1.put(DatabaseHelper.activityColStartTime, movaAct.getActualStartTime().getTime());
+			    cv1.put(DatabaseHelper.activityColEndTime, movaAct.getActualEndTime().getTime());
+		    }
 		    cv1.put(DatabaseHelper.activityColEstimatedTime, movaAct.getEstimateTime());
 		    cv1.put(DatabaseHelper.activityColState, movaAct.getState().toString());
 		    
@@ -109,15 +111,17 @@ public class ActivityDataSource {
 		
 		private void insertDummyActivities(){
 			List<Activity> schedule = new ArrayList<Activity>();
-			Activity act1 = new Activity("Lecture", new Timestamp(2012,6,7,10,0,8,45), new Timestamp(2012,6,7,11,0,8,45), 0, null, null, null,  "Lecturer: Prof. Dan Schneider\nProfessor Schneider discusses the local, regional, and international actions that are already beginning to address global warming and describe other actions that could be taken, if there were political will to substantially reduce the magnitude of the risks.", "Global Warming Lecture");
+			Activity act1 = new Activity("Lecture", new Timestamp(2012,6,7,10,0,8,45), new Timestamp(2012,6,7,11,0,8,45), 0, null, null, null,  "Lecturer: Prof. Dana Schneider\nProfessor Schneider discusses the local, regional, and international actions that are already beginning to address global warming and describe other actions that could be taken, if there were political will to substantially reduce the magnitude of the risks.", "Global Warming Lecture");
 			Set<String> itemsids = new HashSet<String>();
 			itemsids.add("fe708c5b-d182-4703-b41f-37daa0f477fa");
 			itemsids.add("6f0c984f-b6bf-4d8f-8bf4-ae1d780215c9");
 			itemsids.add("7f3e33e0-1f46-42bd-9a00-95a1ce6e5be0");
 			act1.setParticipatingItemIds(itemsids);
+			act1.setActualStartTime(new Timestamp(2012,6,7,10,0,8,45));
+			act1.setActualEndTime(new Timestamp(2012,6,7,11,0,8,45));
 			schedule.add(act1);
 			schedule.add(new Activity("Breakfast", new Timestamp(2012,6,7,11,0,8,45), new Timestamp(2012,6,7,12,0,8,45), 0, null, null, null,  "Breakfast at the conference lobby", "Breakfast"));
-			schedule.add(new Activity("Lecture", new Timestamp(2012,6,7,12,0,8,45), new Timestamp(2012,6,7,14,0,8,45), 0, null, null, null,  "Lecturer: Prof. Lee James\nProfessor James discuss the popular recent reseaches about global warming. ", "Recent Reasearches overview"));
+			schedule.add(new Activity("Lecture", new Timestamp(2012,6,7,12,0,8,45), new Timestamp(2012,6,7,14,0,8,45), 0, null, null, null,  "Lecturer: Prof. Lee James\nProfessor James discuss the popular recent reseaches about global warming. ", "Recent Researches overview"));
 			schedule.add(new Activity("Lunch", new Timestamp(2012,6,7,14,0,8,45), new Timestamp(2012,6,7,15,30,8,45), 0, null, null, null, "Lunch at the conference lobby", "Lunch"));
 			schedule.add(new Activity("Lecture", new Timestamp(2012,6,7,15,0,8,45), new Timestamp(2012,6,7,16,0,8,45), 0, null, null, null, "Questions to the Global Warming experts", "Experts Panel"));
 			schedule.add(new Activity("Break", new Timestamp(2012,6,7,16,0,8,45), new Timestamp(2012,6,7,16,15,8,45), 0, null, null, null, null, "Coffe break"));
@@ -133,8 +137,8 @@ public class ActivityDataSource {
 			ans.setDescription(cursor1.getString(2));
 			ans.setType(cursor1.getString(3));
 			ans.setState(ActivityState.valueOf((cursor1.getString(4))));
-			ans.setStartTime(new Timestamp(cursor1.getLong(5)));
-			ans.setEndTime(new Timestamp(cursor1.getLong(6)));
+			ans.setActualStartTime(new Timestamp(cursor1.getLong(5)));
+			ans.setActualEndTime(new Timestamp(cursor1.getLong(6)));
 			ans.setEstimateTime(cursor1.getLong(7));
 			cursor2.moveToFirst();
 			Set<String> participantsItems = new HashSet<String>();

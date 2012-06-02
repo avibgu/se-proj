@@ -52,11 +52,10 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		return UriBuilder.fromUri("http://10.0.0.5:8080/mova-server").build();
-//		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://192.168.123.24:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://10.0.0.1:8080/mova-server").build();
+		return UriBuilder.fromUri("http://10.0.0.6:8080/mova-server").build();
 	}
 	
 	// ITEMS

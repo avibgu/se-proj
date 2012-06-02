@@ -37,6 +37,8 @@ public class MovaActivityDetails extends Activity implements OnClickListener{
 	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	        		R.layout.activity_details_items_list,items);
 	        ListView listView = (ListView) findViewById(R.id.activityDetailsItemslist);
+	        listView.setVerticalScrollBarEnabled(false);
+	        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 			listView.setAdapter(adapter);
 	        
 	        Button okButton = (Button)this.findViewById(R.id.okButton);
