@@ -22,16 +22,22 @@
         </TextView>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/mylist"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/mylist"
+            android:layout_width="match_parent"
+            android:layout_height="350dp" >
+        </ListView>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/scheduleLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:layout_marginTop="20dp"
         android:gravity="bottom"
@@ -40,17 +46,15 @@
         <Button
             android:id="@+id/changeStatusButton"
             android:layout_width="160dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="0dp"
             android:text="@string/LogoutString" />
 
         <Button
             android:id="@+id/initialButton"
             android:layout_width="160dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="0dp"
             android:text="Initial Application" />
     </LinearLayout>
 
