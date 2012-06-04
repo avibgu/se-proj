@@ -44,6 +44,20 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this); 
+		String app_name = (String)this.getText(R.string.app_name);
+		NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        // Create a notification using android stat_notify_chat icon. 
+        Notification notification = new Notification(android.R.drawable.stat_notify_chat,"New Schedule", 0);
+
+        // Create a pending intent to call the HomeActivity when the notification is clicked
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, -1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT); // 
+        notification.when = System.currentTimeMillis();
+        notification.flags |= Notification.FLAG_AUTO_CANCEL; 
+        // Set the notification and register the pending intent to it
+        notification.setLatestEventInfo(this, app_name, "Your schedule has been changed", pendingIntent); //
+
+        // Trigger the notification
+        notificationManager.notify(0, notification);
 		schedule1 = schedule;
 		setContentView(R.layout.schedule_list);
 		String[] displayedSchedule = prepareDisplayedSchedule(schedule);
@@ -63,7 +77,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 				for (String itemId : itemsId){
 					ItemDataSource itemDataSource = new ItemDataSource(parent.getContext());
 					Item item = itemDataSource.getItem(itemId);
-					displayedItems.add(item.getType() + "  " + item.getLocation().getLongitude() + ":" + item.getLocation().getLatitude());
+					displayedItems.add(item.getType() + "  : Conference Room A" );
 				}
 				Intent i = new Intent(ScheduleListActivity.this,
 						MovaActivityDetails.class);
@@ -169,10 +183,10 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		String[] ans = new String[schedule.size()];
 		for (int i=0 ; i < schedule.size() ; ++i){
 			actor.Activity curActivity = schedule.get(i);
-			ans[i] = "< " +curActivity.getStartTime().getHours() + ":" + 
-					 convertTimeToString(curActivity.getStartTime().getMinutes()) + " - " +
-					 convertTimeToString(curActivity.getEndTime().getHours())+ ":" + 
-					 convertTimeToString(curActivity.getEndTime().getMinutes()) + " >  \n" + 
+			ans[i] = "< " +curActivity.getActualStartTime().getHours() + ":" + 
+					 convertTimeToString(curActivity.getActualStartTime().getMinutes()) + " - " +
+					 convertTimeToString(curActivity.getActualEndTime().getHours())+ ":" + 
+					 convertTimeToString(curActivity.getActualEndTime().getMinutes()) + " >  \n" + 
 					 curActivity.getName();
 		}
 		
@@ -196,17 +210,17 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			String app_name = (String)this.getText(R.string.app_name);
 			NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             // Create a notification using android stat_notify_chat icon. 
-                Notification notification = new Notification(android.R.drawable.stat_notify_chat,"New Schedule", 0);
-     
-                // Create a pending intent to call the HomeActivity when the notification is clicked
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, -1, new Intent(this, MovaAgentActivity.class), PendingIntent.FLAG_UPDATE_CURRENT); // 
-                notification.when = System.currentTimeMillis();
-                notification.flags |= Notification.FLAG_AUTO_CANCEL; 
-                // Set the notification and register the pending intent to it
-                notification.setLatestEventInfo(this, app_name, "Your schedule has been changed", pendingIntent); //
-     
-                // Trigger the notification
-                notificationManager.notify(0, notification);
+            Notification notification = new Notification(android.R.drawable.stat_notify_chat,"New Schedule", 0);
+ 
+            // Create a pending intent to call the HomeActivity when the notification is clicked
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, -1, new Intent(this, MovaAgentActivity.class), PendingIntent.FLAG_UPDATE_CURRENT); // 
+            notification.when = System.currentTimeMillis();
+            notification.flags |= Notification.FLAG_AUTO_CANCEL; 
+            // Set the notification and register the pending intent to it
+            notification.setLatestEventInfo(this, app_name, "Your schedule has been changed", pendingIntent); //
+ 
+            // Trigger the notification
+            notificationManager.notify(0, notification);
 			break;
 		default:
 			break;
