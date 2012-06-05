@@ -213,7 +213,7 @@ public class Domain implements Cloneable {
 			value = constructValueFromIndexes();
 
 			incrementIndexes();
-		} while (null != value);
+		} while (null == value);
 
 		// mValues.put(hashKey, value);
 		// }
@@ -286,13 +286,15 @@ public class Domain implements Cloneable {
 				requiredItems.add(mItems.get(i).get(index));
 
 		for (Agent agent : requiredAgents)
-			if (mAgentsAvailability.get(agent.getId()).after(
-					mTimes.get(mTimesIndex).first))
+			if (mAgentsAvailability.containsKey(agent.getId())
+					&& mAgentsAvailability.get(agent.getId()).after(
+							mTimes.get(mTimesIndex).first))
 				return null;
 
 		for (Item item : requiredItems)
-			if (mItemsAvailability.get(item.getId()).after(
-					mTimes.get(mTimesIndex).first))
+			if (mItemsAvailability.containsKey(item.getId())
+					&& mItemsAvailability.get(item.getId()).after(
+							mTimes.get(mTimesIndex).first))
 				return null;
 
 		return new Value(mActivity, mActivity.getId(),
