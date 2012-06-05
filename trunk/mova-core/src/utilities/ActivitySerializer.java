@@ -24,7 +24,7 @@ public class ActivitySerializer implements JsonSerializer<Activity>{
 		jsonItem.addProperty("type", activity.getType());
 		jsonItem.addProperty("state", activity.getState().toString());
 		jsonItem.addProperty("startTime", activity.getStartTime().toString());
-		jsonItem.addProperty("endTime", activity.getStartTime().toString());
+		jsonItem.addProperty("endTime", activity.getEndTime().toString());
 		jsonItem.addProperty("estimatedTime", activity.getEstimateTime());
 		
 		JsonArray requiredAgents = new JsonArray();
