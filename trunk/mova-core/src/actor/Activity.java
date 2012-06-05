@@ -479,8 +479,12 @@ public class Activity implements Cloneable {
 		for (String activityID : mRequiredActivityIds)
 			requiredActivities.add(activityID);
 		
-		return new Activity(mType, (Timestamp)mStartTime.clone(), (Timestamp)mEndTime.clone(),
+		Activity activity = new Activity(mType, (Timestamp)mStartTime.clone(), (Timestamp)mEndTime.clone(),
 				mEstimateTime, requiredAgents, requiredItems,
 				requiredActivities, mDescription, mName);
+		
+		activity.setId(mId);
+		
+		return activity;
 	}
 }
