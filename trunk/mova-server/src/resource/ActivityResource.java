@@ -51,13 +51,25 @@ public class ActivityResource {
 	 * @param jsonObject a json object that holds the agent ids of the relevant agents
 	 * and the activity to send
 	 */
-	@POST
+	@PUT
 	@Path("/sendScheduledActivities")
 	public void sendScheduledActivities(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String jsonActivities =  j.get("activities").getAsString();
-		Vector<String> jsonIds = null;
+		
+		MovaJson mj = new MovaJson();
+		List<Activity> activities = mj.jsonToActivities(jsonActivities);
+		
+		for (Activity activity : activities) {
+			db.deleteActivity(activity.getId());
+			db.insertActivity(activity);
+		}
+		
+		Vector<String> jsonIds = new Vector<String>();
+		for (Activity activity : activities) {
+			jsonIds.add(activity.getId());
+		}
 		
 		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.GOT_SCHEDULE);
 	}
@@ -84,6 +96,7 @@ public class ActivityResource {
 	@Path("/addActivity")
 	public void addActivity(String jsonObject){
 		Activity activity = mj.jsonToActivity(jsonObject);
+		db.insertActivityType(activity.getType());
 		db.insertActivity(activity);
 		
 		// Recalculate?

@@ -7,6 +7,19 @@ DROP TABLE APP.ACTIVITYTYPES;
 DROP TABLE APP.AGENTTYPES;
 DROP TABLE APP.ITEMTYPES;
 
+DROP TABLE APP.agents;
+DROP TABLE APP.activities;
+DROP TABLE APP.items;
+DROP TABLE APP.itemTypes;
+DROP TABLE APP.activityTypes;
+DROP TABLE APP.agentTypes;
+DROP TABLE APP.activityTypeItems;
+DROP TABLE APP.activityTypeAgents;
+DROP TABLE APP.activityAgents;
+DROP TABLE APP.activityItems;
+DROP TABLE APP.agentLocations;
+DROP TABLE APP.itemLocations;
+
 DELETE FROM APP.agents;
 DELETE FROM APP.activities;
 DELETE FROM APP.items;

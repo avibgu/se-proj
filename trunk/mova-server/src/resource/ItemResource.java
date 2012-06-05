@@ -126,7 +126,7 @@ public class ItemResource {
 	 */
 	@PUT
 	@Path("/createItemType")
-	@Consumes(MediaType.APPLICATION_JSON)
+	//@Consumes(MediaType.APPLICATION_JSON)
 	public void createItemType(String jsonObject){
 		db.insertItemType(jsonObject);
 	}
