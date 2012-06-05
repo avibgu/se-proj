@@ -111,7 +111,7 @@ public class DBHandler {
 			mStmt.execute("delete from " + mItemTableName);
 			mStmt.execute("delete from " + mItemTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeTableName);
-//			mStmt.execute("delete from " + mAgentTypeTableName);
+			mStmt.execute("delete from " + mAgentTypeTableName);
 			mStmt.execute("delete from " + mActivityTypeItemsTableName);
 			mStmt.execute("delete from " + mActivityTypeAgentsTableName);
 			mStmt.execute("delete from " + mActivityAgentsTableName);
@@ -122,7 +122,7 @@ public class DBHandler {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
 		} catch (SQLException sqlExcept) {
-			System.out.println("insertAgentType - database access error");
+			System.out.println("deleteData - database access error");
 		}
 		
 		shutdown();
@@ -658,8 +658,8 @@ public class DBHandler {
 					+ activity.getId() + "'" + "," + "'" + activity.getName() + "'" + "," + "'" + activity.getDescription() 
 					+ "'" + "," + "'" + activity.getType() + "'" + "," + "'" + activity.getState().toString()
 					+ "'" + "," + "'" + activity.getStartTime() + "'" + "," + "'" + activity.getEndTime() + 
-					"'" + "," + estimatedTime + "'" + "," + "'" + activity.getActualStartTime() + "'" + "," + "'" 
-					+ activity.getActualEndTime() + ")");
+					"'" + "," + estimatedTime + "," + "'" + activity.getActualStartTime() + "'" + "," + "'" 
+					+ activity.getActualEndTime() + "'" + ")");
 			mStmt.close();
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
