@@ -55,11 +55,16 @@ public class ActivityDeserializer implements JsonDeserializer<Activity> {
 		String description = jobject.get("description").getAsString();
 		String name = jobject.get("name").getAsString();
 		
+		Timestamp actualStartTime = Timestamp.valueOf(jobject.get("actualStartTime").getAsString());
+		Timestamp actualEndTime = Timestamp.valueOf(jobject.get("actualEndTime").getAsString());
+		
 		Activity a = new Activity(type, startTime, endTime, estimateTime, requiredAgents, requiredItems, requiredActivityIds, description, name);
 		a.setId(id);
 		a.setState(ActivityState.valueOf(activityState));
 		a.assignAgents(participatingAgentIds);
 		a.assignItems(participatingItemIds);
+		a.setActualStartTime(actualStartTime);
+		a.setActualEndTime(actualEndTime);
 		
 		return a;
 	}

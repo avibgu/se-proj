@@ -59,6 +59,9 @@ public class ActivitySerializer implements JsonSerializer<Activity>{
 		jsonItem.addProperty("description", activity.getDescription());
 		jsonItem.addProperty("name", activity.getName());
 		
+		jsonItem.addProperty("actualStartTime", activity.getActualStartTime().toString());
+		jsonItem.addProperty("actualEndTime", activity.getActualEndTime().toString());
+		
 		return jsonItem;
 	}
 	
