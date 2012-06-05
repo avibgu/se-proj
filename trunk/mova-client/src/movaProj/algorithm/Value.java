@@ -144,7 +144,7 @@ public class Value {
 		}
 		
 		activity.setActualStartTime(new Timestamp(mActualStartTime.getTime()));
-		activity.setActualStartTime(new Timestamp(mActualStartTime.getTime()));
+		activity.setActualEndTime(new Timestamp(mActualEndTime.getTime()));
 		
 		Set<String> agentsIDs = new HashSet<String>();
 		
