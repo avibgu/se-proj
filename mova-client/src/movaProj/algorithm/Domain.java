@@ -31,6 +31,7 @@ import actor.Item;
 public class Domain implements Cloneable {
 
 	private static final long HOUR = 1000 * 60 * 60;
+	private static final long QUARTER_HOUR = 1000 * 60 * 15;
 
 	protected String mMyID;
 
@@ -190,7 +191,7 @@ public class Domain implements Cloneable {
 
 		for (long i = Math.max(mActivity.getStartTime().getTime(),
 				new Date().getTime()); i + mActivity.getEstimateTime() < mActivity
-				.getEndTime().getTime(); i += HOUR) {
+				.getEndTime().getTime(); i += QUARTER_HOUR) {
 
 			mTimes.add(new Pair<Date, Date>(new Date(i), new Date(i
 					+ mActivity.getEstimateTime())));
