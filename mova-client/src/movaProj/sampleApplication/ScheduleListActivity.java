@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import movaProj.agent.AgentDataSource;
+import movaProj.agent.C2DMReceiver;
 import movaProj.agent.ItemDataSource;
 import movaProj.agent.MovaAndroidClient;
 import movaProj.agent.MovaMessage;
@@ -100,6 +101,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		Button recalculateButton = (Button) this.findViewById(R.id.initialButton);
 		recalculateButton.setOnClickListener(this);
 
+		//TODO: ask Shiran..
+		C2DMReceiver.addListener(this);
 	}
 
 	@Override
