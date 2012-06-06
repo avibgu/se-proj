@@ -52,7 +52,7 @@ public class MovaAndroidClient {
 		intent.putExtra("sender", "movaC2DM@gmail.com");
 		activity.startService(intent);
 		
-		MovaAndroidClient.recalculate(activity);
+		//MovaAndroidClient.recalculate(activity);
 	}
 	
 	public static void registerAgent(Activity activity, String pRegistrationId, String pAgentType){
