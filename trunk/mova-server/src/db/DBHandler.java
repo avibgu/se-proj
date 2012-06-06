@@ -1856,8 +1856,8 @@ public class DBHandler {
 		// Conference Regsitration
 		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
 		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
-		requiredAgents.put(new AgentType(AgentType.SECRETARY), 1);
-		requiredAgents.put(new AgentType(AgentType.SECURITY_OFFICER), 1);
+//		requiredAgents.put(new AgentType(AgentType.SECRETARY), 1);
+//		requiredAgents.put(new AgentType(AgentType.SECURITY_OFFICER), 1);
 		Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
 		Set<String> requiredActivities = new HashSet<String>();
 		String description = "Registration";
@@ -1868,15 +1868,15 @@ public class DBHandler {
 				requiredActivities, description, name);
 		
 		insertAgentType(AgentType.COORDINATOR);
-		insertAgentType(AgentType.SECRETARY);
-		insertAgentType(AgentType.SECURITY_OFFICER);
+//		insertAgentType(AgentType.SECRETARY);
+//		insertAgentType(AgentType.SECURITY_OFFICER);
 		insertActivityType(ActivityType.CONFERENCE_REGISTRATION);
 		insertActivity(a1);
 		
 		// Presentation 1
 		requiredAgents = new HashMap<AgentType, Integer>();
 		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
-		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
+//		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
 		requiredItems = new HashMap<ItemType, Integer>();
 		requiredItems.put(new ItemType(ItemType.LAPTOP), 1);
 		requiredActivities = new HashSet<String>();
@@ -1888,13 +1888,13 @@ public class DBHandler {
 				endTime, estimateTime, requiredAgents, requiredItems, 
 				requiredActivities, description, name);
 		
-		insertAgentType(AgentType.LECTURER);
+//		insertAgentType(AgentType.LECTURER);
 		insertActivityType(ActivityType.PRESENTATION);
 		insertActivity(a2);
 				
 		// Lunch
 		requiredAgents = new HashMap<AgentType, Integer>();
-		requiredAgents.put(new AgentType(AgentType.LOGISTIC_MANAGER), 1);
+//		requiredAgents.put(new AgentType(AgentType.LOGISTIC_MANAGER), 1);
 		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
 		requiredItems = new HashMap<ItemType, Integer>();
 		requiredActivities = new HashSet<String>();
@@ -1907,82 +1907,82 @@ public class DBHandler {
 				endTime, estimateTime, requiredAgents, requiredItems, 
 				requiredActivities, description, name);
 		
-		insertAgentType(AgentType.LOGISTIC_MANAGER);
+//		insertAgentType(AgentType.LOGISTIC_MANAGER);
 		insertActivityType(ActivityType.LUNCH);
 		insertActivity(a3);
 		
 		// Discussion 1
 		requiredAgents = new HashMap<AgentType, Integer>();
 		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
-		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
+//		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
 		requiredItems = new HashMap<ItemType, Integer>();
 		requiredActivities = new HashSet<String>();
 		requiredActivities.add(a1.getId());
 		description = "Discussion 1";
 		name = "Discussion 1";
 		
-		Activity a4 = new Activity(ActivityType.DISCUSSION, startTime,
-				endTime, estimateTime, requiredAgents, requiredItems, 
-				requiredActivities, description, name);
-		
-		insertActivityType(ActivityType.DISCUSSION);
-		insertActivity(a4);
-		
-		// Presentation 2
-		requiredAgents = new HashMap<AgentType, Integer>();
-		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
-		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
-		requiredItems = new HashMap<ItemType, Integer>();
-		requiredItems.put(new ItemType(ItemType.LAPTOP), 1);
-		requiredItems.put(new ItemType(ItemType.LAZER_CURSOR), 1);
-		requiredItems.put(new ItemType(ItemType.MOUSE), 1);
-		requiredActivities = new HashSet<String>();
-		requiredActivities.add(a1.getId());
-		requiredActivities.add(a2.getId());
-		description = "Presentation 2";
-		name = "Presentation 2";
-		
-		Activity a5 = new Activity(ActivityType.PRESENTATION, startTime,
-				endTime, estimateTime, requiredAgents, requiredItems, 
-				requiredActivities, description, name);
-		
-		insertActivity(a5);
-		
-		// Discussion 2
-		requiredAgents = new HashMap<AgentType, Integer>();
-		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
-		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
-		requiredItems = new HashMap<ItemType, Integer>();
-		requiredActivities = new HashSet<String>();
-		requiredActivities.add(a1.getId());
-		requiredActivities.add(a4.getId());
-		description = "Discussion 2";
-		name = "Discussion 2";
-		
-		Activity a6 = new Activity(ActivityType.DISCUSSION, startTime,
-				endTime, estimateTime, requiredAgents, requiredItems, 
-				requiredActivities, description, name);
-		
-		insertActivity(a6);
-		
-		// Tour
-		requiredAgents = new HashMap<AgentType, Integer>();
-		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
-		requiredAgents.put(new AgentType(AgentType.SECURITY_OFFICER), 1);
-		requiredAgents.put(new AgentType(AgentType.LOGISTIC_MANAGER), 1);
-		requiredItems = new HashMap<ItemType, Integer>();
-		requiredActivities = new HashSet<String>();
-		requiredActivities.add(a1.getId());
-		requiredActivities.add(a2.getId());
-		description = "Tour";
-		name = "Tour";
-		
-		Activity a7 = new Activity(ActivityType.TOUR, startTime,
-				endTime, estimateTime, requiredAgents, requiredItems, 
-				requiredActivities, description, name);
-		
-		insertActivityType(ActivityType.TOUR);
-		insertActivity(a7);
+//		Activity a4 = new Activity(ActivityType.DISCUSSION, startTime,
+//				endTime, estimateTime, requiredAgents, requiredItems, 
+//				requiredActivities, description, name);
+//		
+//		insertActivityType(ActivityType.DISCUSSION);
+//		insertActivity(a4);
+//		
+//		// Presentation 2
+//		requiredAgents = new HashMap<AgentType, Integer>();
+//		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
+//		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
+//		requiredItems = new HashMap<ItemType, Integer>();
+//		requiredItems.put(new ItemType(ItemType.LAPTOP), 1);
+//		requiredItems.put(new ItemType(ItemType.LAZER_CURSOR), 1);
+//		requiredItems.put(new ItemType(ItemType.MOUSE), 1);
+//		requiredActivities = new HashSet<String>();
+//		requiredActivities.add(a1.getId());
+//		requiredActivities.add(a2.getId());
+//		description = "Presentation 2";
+//		name = "Presentation 2";
+//		
+//		Activity a5 = new Activity(ActivityType.PRESENTATION, startTime,
+//				endTime, estimateTime, requiredAgents, requiredItems, 
+//				requiredActivities, description, name);
+//		
+//		insertActivity(a5);
+//		
+//		// Discussion 2
+//		requiredAgents = new HashMap<AgentType, Integer>();
+//		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
+//		requiredAgents.put(new AgentType(AgentType.LECTURER), 1);
+//		requiredItems = new HashMap<ItemType, Integer>();
+//		requiredActivities = new HashSet<String>();
+//		requiredActivities.add(a1.getId());
+//		requiredActivities.add(a4.getId());
+//		description = "Discussion 2";
+//		name = "Discussion 2";
+//		
+//		Activity a6 = new Activity(ActivityType.DISCUSSION, startTime,
+//				endTime, estimateTime, requiredAgents, requiredItems, 
+//				requiredActivities, description, name);
+//		
+//		insertActivity(a6);
+//		
+//		// Tour
+//		requiredAgents = new HashMap<AgentType, Integer>();
+//		requiredAgents.put(new AgentType(AgentType.COORDINATOR), 1);
+//		requiredAgents.put(new AgentType(AgentType.SECURITY_OFFICER), 1);
+//		requiredAgents.put(new AgentType(AgentType.LOGISTIC_MANAGER), 1);
+//		requiredItems = new HashMap<ItemType, Integer>();
+//		requiredActivities = new HashSet<String>();
+//		requiredActivities.add(a1.getId());
+//		requiredActivities.add(a2.getId());
+//		description = "Tour";
+//		name = "Tour";
+//		
+//		Activity a7 = new Activity(ActivityType.TOUR, startTime,
+//				endTime, estimateTime, requiredAgents, requiredItems, 
+//				requiredActivities, description, name);
+//		
+//		insertActivityType(ActivityType.TOUR);
+//		insertActivity(a7);
 		
 		System.out.println("Inserted initial data - 7 activities and 7 items");
 	}

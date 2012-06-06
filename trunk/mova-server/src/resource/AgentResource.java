@@ -140,25 +140,35 @@ public class AgentResource {
 		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
 	}
 
+//	@GET
+//	@Path("/getAllAgents")
+//	public void getAllAgents(@PathParam("agentId") String agentId){
+//		List<Agent> agents = db.getAllAgents();
+//		Vector<String> agentIds = new Vector<String>();
+//		agentIds.add(agentId);
+//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_AGENTS);
+//	}
+	
 	@GET
 	@Path("/getAllAgents")
-	public void getAllAgents(@PathParam("agentId") String agentId){
-		List<Agent> agents = db.getAllAgents();
-		Vector<String> agentIds = new Vector<String>();
-		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_AGENTS);
+	public String getAllAgentsHTTP(@PathParam("agentId") String agentId){
+		return new MovaJson().createJsonObj(db.getAllAgents());
 	}
 	
-	@GET
-	@Path("/getAllActivities")
-	public void getAllActivities(@PathParam("agentId") String agentId){
-		List<Activity> agents = db.getAllActivities();
-		Vector<String> agentIds = new Vector<String>();
-		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ACTIVITIES);
+//	@GET
+//	@Path("/getAllActivities")
+//	public void getAllActivities(@PathParam("agentId") String agentId){
+//		List<Activity> agents = db.getAllActivities();
+//		Vector<String> agentIds = new Vector<String>();
+//		agentIds.add(agentId);
+//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ACTIVITIES);
+//	}
+	
+	public String getAllActivitiesHTTP(@PathParam("agentId") String agentId){
+		return new MovaJson().createJsonObj(db.getAllActivities());
 	}
 	
-		private String getAllObjects(String agentId){
+	private String getAllObjects(String agentId){
 		List<Agent> agents = db.getAllAgents();
 		List<Activity> activities = db.getAllActivities();
 		
@@ -211,24 +221,31 @@ public class AgentResource {
 	
 	@GET
 	@Path("/startRecalculate")
-	public void startRecalculate(@QueryParam("agentId") final String agentId){
-		
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				Boolean approvement = DBHandler.canStartNewRecalculte();
-				Vector<String> agentsIds = new Vector<String>();
-				agentsIds.add(agentId);
-				approvement = true;	
-				if (approvement){
-				//	C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentId),null, MessageType.RECALCULATE_START);
-					getAllActivities(agentId);		
-					getAllAgents(agentId);					
-				
-				}
-			}
-		}).start();
+	public String startRecalculate(@QueryParam("agentId") final String agentId) {
+		//
+		// new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		Boolean approvement = DBHandler.canStartNewRecalculte();
+		Vector<String> agentsIds = new Vector<String>();
+		agentsIds.add(agentId);
+		approvement = true;
+		if (approvement) {
+			// C2dmController.getInstance().sendMessageToDevice("3", new
+			// MovaJson().createJsonObj(agentId),null,
+			// MessageType.RECALCULATE_START);
+			// getAllActivitiesHTTP(agentId);
+			// getAllAgents(agentId);
+			JsonObject j = new JsonObject();
+			j.addProperty("activities", getAllActivitiesHTTP(agentId));
+			j.addProperty("agents", getAllAgentsHTTP(agentId));
+			return j.toString();
+		}
+		// }
+		// }).start();
+
+		return "";
 	}
 	
 	@GET
