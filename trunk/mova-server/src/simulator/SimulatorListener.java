@@ -29,8 +29,8 @@ public class SimulatorListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		DBHandler db = DBHandler.getInstance();
-		db.deleteData();
+		//DBHandler db = DBHandler.getInstance();
+		//db.deleteData();
 		World.InitWorld();
 	}
 

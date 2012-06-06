@@ -48,11 +48,11 @@ public class Simulator {
 		mItems = new HashMap<String, Item>();
 		db = DBHandler.getInstance();
 		for (Entity item : _items) {
-			db.insertItemType(((Item) item).getType().toString());
-			db.insertItem((Item) item);
+			//db.insertItemType(((Item) item).getType().toString());
+			//db.insertItem((Item) item);
 			mItems.put(item.getId(), (Item) item);
 		}
-		
+		//db.insertInitialData();
 	}
 	/**
 	 * Returns the only instance of the simulator
@@ -211,5 +211,9 @@ public class Simulator {
 				+ " was changed to " + newStatus + " by the " + agentType + " Agent at "
 				+ format.format(date);
 		_domain.addMessage(message);
+	}
+	
+	public static void deleteSimulator(){
+		mSimulator = null;
 	}
 }
