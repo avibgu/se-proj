@@ -1499,7 +1499,7 @@ public class DBHandler {
 					+ " WHERE " + mActivityAgentsTableName + ".ACTIVITY_ID = " 
 					+ mActivityTableName + ".ACTIVITY_ID AND " 
 					+ mActivityAgentsTableName + ".AGENT_ID = " + "'" + pAgentId + "'"
-					+ " ORDER BY START_TIME ASC");
+					+ " ORDER BY ACTUAL_START_TIME ASC");
 
 			while (results.next()) {
 				String activityId = results.getString("ACTIVITY_ID");
