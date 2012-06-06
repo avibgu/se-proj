@@ -52,11 +52,8 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
-		return UriBuilder.fromUri("http://192.168.123.5:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://10.0.0.2:8080/mova-server").build();
-		//return UriBuilder.fromUri("http://132.72.255.163:8080/mova-server").build();
+		return UriBuilder.fromUri("http://132.72.249.196:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -198,10 +195,10 @@ public class MovaClient {
 		resource.put(jAc.toString());
 	}
 	
-	public void postponeActivity(String activityId, long newFinishTime){
+	public void postponeActivity(String activityId, long addedTime){
 		JsonObject j = new JsonObject();
 		j.addProperty("activityId", activityId);
-		j.addProperty("newFinishTime", newFinishTime);
+		j.addProperty("addedTime", addedTime);
 //		mService.path("activities").path("postponeActivity").queryParams(queryParams).type(MediaType.APPLICATION_JSON)
 //		.post();
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/postponeActivity");

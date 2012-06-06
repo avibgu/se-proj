@@ -114,8 +114,10 @@ public class ActivityResource {
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String activityId = j.get("activityId").getAsString(); 
-		String newFinishTime = j.get("newFinishTime").getAsString();
-		db.updateActivityDeadline(activityId, Timestamp.valueOf(newFinishTime));
+		String addedTime = j.get("addedTime").getAsString();
+		Timestamp currentEndTime = db.getActivityDeadline(activityId);
+		String newFinishTime = (currentEndTime.getTime() + addedTime).toString();
+		db.updateActivityDeadline(activityId, Timestamp.valueOf(currentEndTime.getTime() + addedTime));
 		simulator.postoneActivityMessage(activityId, newFinishTime);
 		// Recalculate.
 		
