@@ -141,7 +141,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 				public void onClick(View v) {
 					dialog.dismiss();
 					NumberPicker picker = (NumberPicker) dialog.findViewById(R.id.numberPickerComponent);
-					MovaAndroidClient.postponeActivity(activityId, (picker.mCurrent)*60*1000, activityOldEndTime);
+					MovaAndroidClient.postponeActivity(activityId, (picker.mCurrent)*60*1000, activityOldEndTime, getParent());
 				}
 			});
 			Button cancelButton = (Button) dialog.findViewById(R.id.numberPickerCancelButton);
@@ -234,20 +234,20 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		String agentId = new AgentDataSource(this).getAgentId();
 		switch (v.getId()) {
 		case R.id.changeStatusButton:
-			new MovaClient().changeAgentStatus(agentId,false);
+			MovaAndroidClient.changeAgentStatus(agentId,false,this);
 			setContentView(R.layout.login);
 			Button loginButton = (Button) this.findViewById(R.id.loginButton);
 			loginButton.setOnClickListener(this);
 			break;
 		case R.id.loginButton:
-			new MovaClient().changeAgentStatus(agentId,true);
+			MovaAndroidClient.changeAgentStatus(agentId,true,this);
 			Intent i = new Intent(ScheduleListActivity.this,
 					ScheduleListActivity.class);
 					startActivity(i);
 			break;
 		case R.id.initialButton:
 			MovaAndroidClient.recalculate(this);
-			break;
+			break;	//TODO: remove it..
 		case R.id.numberPickerOkButton:
 			NumberPicker numberPicker = (NumberPicker) this.findViewById(R.id.numberPickerComponent);
 			int addedTime = numberPicker.getCurrent();
