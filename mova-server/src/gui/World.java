@@ -4,12 +4,18 @@
  */
 package gui;
 
+import actor.Entity;
+import actor.Item;
 import configuration.ConfigurationManager;
 import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
+
+import db.DBHandler;
 
 import simulator.NewDomain;
+import simulator.Simulator;
 
 /**
  *
@@ -177,6 +183,15 @@ public class World extends javax.swing.JFrame implements Observer{
         ConfigurationManager config = new ConfigurationManager();
         NewDomain domain = config.loadParameters();
         Controller controller = new Controller(domain);
+        DBHandler db = DBHandler.getInstance();
+        db.deleteData();
+        Vector<Entity> items = _domain.getEntities().elementAt(1);
+        for (Entity item : items) {
+			db.insertItemType(((Item) item).getType().toString());
+			db.insertItem((Item) item);
+		}
+        db.insertInitialData();
+        Simulator.deleteSimulator();
         new World(controller).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_RestartButtonActionPerformed
@@ -281,6 +296,14 @@ public class World extends javax.swing.JFrame implements Observer{
         ConfigurationManager config = new ConfigurationManager();
         NewDomain domain = config.loadParameters();
         final Controller controller = new Controller(domain);
+        DBHandler db = DBHandler.getInstance();
+        db.deleteData();
+        Vector<Entity> items = domain.getEntities().elementAt(1);
+        for (Entity item : items) {
+			db.insertItemType(((Item) item).getType().toString());
+			db.insertItem((Item) item);
+		}
+        db.insertInitialData();
         /*
          * Create and display the form
          */

@@ -62,8 +62,10 @@ public class ActivityResource {
 		List<Activity> activities = mj.jsonToActivities(jsonActivities);
 		
 		for (Activity activity : activities) {
-			db.deleteActivity(activity.getId());
-			db.insertActivity(activity);
+			if(activity.getState() == ActivityState.PENDING){
+				db.deleteActivity(activity.getId());
+				db.insertActivity(activity);
+			}
 		}
 		
 		Vector<String> jsonIds = new Vector<String>();
@@ -114,7 +116,7 @@ public class ActivityResource {
 		String activityId = j.get("activityId").getAsString(); 
 		String newFinishTime = j.get("newFinishTime").getAsString();
 		db.updateActivityDeadline(activityId, Timestamp.valueOf(newFinishTime));
-		
+		simulator.postoneActivityMessage(activityId, newFinishTime);
 		// Recalculate.
 		
 	}

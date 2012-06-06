@@ -8,6 +8,7 @@ public class AgentType {
 	public transient static final String NETWORK_MANAGER = "NETWORK_MANAGER";
 	public transient static final String LOGISTIC_MANAGER = "LOGISTIC_MANAGER";
 	public transient static final String SOUND_MANAGER = "SOUND_MANAGER";
+	public transient static final String LECTURER = "LECTURER";
 	public transient static final String RFID = "RFID";
 	
 	protected String mType;

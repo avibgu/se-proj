@@ -101,8 +101,6 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		Button recalculateButton = (Button) this.findViewById(R.id.initialButton);
 		recalculateButton.setOnClickListener(this);
 		C2DMReceiver.addListener(this);
-		//TODO: ask Shiran..
-		C2DMReceiver.addListener(this);
 	}
 
 	@Override
