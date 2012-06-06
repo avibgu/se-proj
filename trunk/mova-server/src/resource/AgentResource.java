@@ -237,6 +237,6 @@ public class AgentResource {
 		DBHandler.finishRecalculte();
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", null, null, MessageType.RECALCULATE_FINISH);
+		C2dmController.getInstance().sendMessageToDevice("3", "", null, MessageType.RECALCULATE_FINISH);
 	}	
 }
