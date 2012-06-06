@@ -89,7 +89,7 @@ public class ActivityDataSource {
 		
 		
 		public List<actor.Activity> getSchedule() {
-			insertDummyActivities();
+//			insertDummyActivities();	TODO: Shiran...
 			openToRead();
 			List<actor.Activity> schedule = new ArrayList<actor.Activity>();
 			Cursor cursor = database.query(DatabaseHelper.scheduleTable,
