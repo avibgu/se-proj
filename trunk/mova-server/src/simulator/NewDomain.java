@@ -62,80 +62,89 @@ public class NewDomain extends DefaultTableModel{
     private void initializeRooms() {
         //Entrance and Lobby
         Vector<Location> lobbyMargins = new Vector<Location>();
-        lobbyMargins.addAll(initializeLocationRange(10, 21, 34));
-        lobbyMargins.addAll(initializeLocationRange(11, 21, 22));
-        lobbyMargins.addAll(initializeLocationRange(11, 25, 30));
-        lobbyMargins.addAll(initializeLocationRange(11, 33, 33));
-        lobbyMargins.addAll(initializeLocationRange(12, 21, 22));
-        lobbyMargins.addAll(initializeLocationRange(12, 26, 29));
-        lobbyMargins.addAll(initializeLocationRange(13, 26, 29));
+        String roomName = "Lobby";
+        lobbyMargins.addAll(initializeLocationRange(10, 21, 34, roomName));
+        lobbyMargins.addAll(initializeLocationRange(11, 21, 22, roomName));
+        lobbyMargins.addAll(initializeLocationRange(11, 25, 30, roomName));
+        lobbyMargins.addAll(initializeLocationRange(11, 33, 33, roomName));
+        lobbyMargins.addAll(initializeLocationRange(12, 21, 22, roomName));
+        lobbyMargins.addAll(initializeLocationRange(12, 26, 29, roomName));
+        lobbyMargins.addAll(initializeLocationRange(13, 26, 29, roomName));
         Room lobby = new Room("Lobby", lobbyMargins);
 
         //Air Court
         Vector<Location> courtMargins = new Vector<Location>();
-        courtMargins.addAll(initializeLocationRange(4, 23, 32));
-        courtMargins.addAll(initializeLocationRange(5, 23, 32));
-        courtMargins.addAll(initializeLocationRange(6, 23, 32));
-        courtMargins.addAll(initializeLocationRange(7, 23, 32));
-        courtMargins.addAll(initializeLocationRange(8, 23, 32));
-        courtMargins.addAll(initializeLocationRange(9, 23, 32));
+        roomName = "Air Court";
+        courtMargins.addAll(initializeLocationRange(4, 23, 32, roomName));
+        courtMargins.addAll(initializeLocationRange(5, 23, 32, roomName));
+        courtMargins.addAll(initializeLocationRange(6, 23, 32, roomName));
+        courtMargins.addAll(initializeLocationRange(7, 23, 32, roomName));
+        courtMargins.addAll(initializeLocationRange(8, 23, 32, roomName));
+        courtMargins.addAll(initializeLocationRange(9, 23, 32, roomName));
         Room court = new Room("Air Court", courtMargins);
 
         //ExecutiveBoardroom
         Vector<Location> executiveBoardroomMargins = new Vector<Location>();
-        executiveBoardroomMargins.addAll(initializeLocationRange(1, 23, 32));
-        executiveBoardroomMargins.addAll(initializeLocationRange(2, 23, 32));
-        executiveBoardroomMargins.addAll(initializeLocationRange(3, 24, 32));
+        roomName = "Executive Boardroom";
+        executiveBoardroomMargins.addAll(initializeLocationRange(1, 23, 32, roomName));
+        executiveBoardroomMargins.addAll(initializeLocationRange(2, 23, 32, roomName));
+        executiveBoardroomMargins.addAll(initializeLocationRange(3, 24, 32, roomName));
         Room executiveBoardroom = new Room("Executive Boardroom", executiveBoardroomMargins);
 
         //Conference Room B
         Vector<Location> conferenceRoomBMargins = new Vector<Location>();
-        conferenceRoomBMargins.addAll(initializeLocationRange(10, 15, 19));
-        conferenceRoomBMargins.addAll(initializeLocationRange(11, 16, 19));
-        conferenceRoomBMargins.addAll(initializeLocationRange(12, 14, 19));
-        conferenceRoomBMargins.addAll(initializeLocationRange(13, 14, 19));
-        conferenceRoomBMargins.addAll(initializeLocationRange(14, 14, 19));
+        roomName = "Conference Room B";
+        conferenceRoomBMargins.addAll(initializeLocationRange(10, 15, 19, roomName));
+        conferenceRoomBMargins.addAll(initializeLocationRange(11, 16, 19, roomName));
+        conferenceRoomBMargins.addAll(initializeLocationRange(12, 14, 19, roomName));
+        conferenceRoomBMargins.addAll(initializeLocationRange(13, 14, 19, roomName));
+        conferenceRoomBMargins.addAll(initializeLocationRange(14, 14, 19, roomName));
         Room conferenceRoomB = new Room("Conference Room B", conferenceRoomBMargins);
 
         //Conference Lobby
         Vector<Location> conferenceLobbyMargins = new Vector<Location>();
-        conferenceLobbyMargins.addAll(initializeLocationRange(4, 9, 12));
-        conferenceLobbyMargins.addAll(initializeLocationRange(5, 11, 21));
-        conferenceLobbyMargins.addAll(initializeLocationRange(6, 12, 21));
-        conferenceLobbyMargins.addAll(initializeLocationRange(7, 11, 21));
-        conferenceLobbyMargins.addAll(initializeLocationRange(8, 10, 11));
-        conferenceLobbyMargins.addAll(initializeLocationRange(8, 15, 21));
-        conferenceLobbyMargins.addAll(initializeLocationRange(9, 15, 21));
+        roomName = "Conference Lobby";
+        conferenceLobbyMargins.addAll(initializeLocationRange(4, 9, 12, roomName));
+        conferenceLobbyMargins.addAll(initializeLocationRange(5, 11, 21, roomName));
+        conferenceLobbyMargins.addAll(initializeLocationRange(6, 12, 21, roomName));
+        conferenceLobbyMargins.addAll(initializeLocationRange(7, 11, 21, roomName));
+        conferenceLobbyMargins.addAll(initializeLocationRange(8, 10, 11, roomName));
+        conferenceLobbyMargins.addAll(initializeLocationRange(8, 15, 21, roomName));
+        conferenceLobbyMargins.addAll(initializeLocationRange(9, 15, 21, roomName));
         Room conferenceLobby = new Room("Conference Lobby", conferenceLobbyMargins);
 
          //Lounge
         Vector<Location> loungeMargins = new Vector<Location>();
-        loungeMargins.addAll(initializeLocationRange(3, 16, 21));
-        loungeMargins.addAll(initializeLocationRange(4, 16, 21));
+        roomName = "Lounge";
+        loungeMargins.addAll(initializeLocationRange(3, 16, 21, roomName));
+        loungeMargins.addAll(initializeLocationRange(4, 16, 21, roomName));
         Room lounge = new Room("Lounge", loungeMargins);
 
         //Main Office
         Vector<Location> mainOfficeMargins = new Vector<Location>();
-        mainOfficeMargins.addAll(initializeLocationRange(2, 12, 15));
-        mainOfficeMargins.addAll(initializeLocationRange(3, 12, 15));
-        mainOfficeMargins.addAll(initializeLocationRange(4, 13, 15));
+        roomName = "Main Office";
+        mainOfficeMargins.addAll(initializeLocationRange(2, 12, 15, roomName));
+        mainOfficeMargins.addAll(initializeLocationRange(3, 12, 15, roomName));
+        mainOfficeMargins.addAll(initializeLocationRange(4, 13, 15, roomName));
         Room mainOffice = new Room("Main Office", mainOfficeMargins);
 
         //Auditorium
         Vector<Location> auditoriumMargins = new Vector<Location>();
-        auditoriumMargins.addAll(initializeLocationRange(8, 2, 10));
-        auditoriumMargins.addAll(initializeLocationRange(9, 2, 10));
-        auditoriumMargins.addAll(initializeLocationRange(10, 2, 14));
-        auditoriumMargins.addAll(initializeLocationRange(11, 2, 13));
-        auditoriumMargins.addAll(initializeLocationRange(12, 2, 13));
-        auditoriumMargins.addAll(initializeLocationRange(13, 2, 12));
+        roomName = "Auditorium";
+        auditoriumMargins.addAll(initializeLocationRange(8, 2, 10, roomName));
+        auditoriumMargins.addAll(initializeLocationRange(9, 2, 10, roomName));
+        auditoriumMargins.addAll(initializeLocationRange(10, 2, 14, roomName));
+        auditoriumMargins.addAll(initializeLocationRange(11, 2, 13, roomName));
+        auditoriumMargins.addAll(initializeLocationRange(12, 2, 13, roomName));
+        auditoriumMargins.addAll(initializeLocationRange(13, 2, 12, roomName));
         Room auditorium = new Room("Auditorium", auditoriumMargins);
 
         //Conference Room A
         Vector<Location> conferenceRoomAMargins = new Vector<Location>();
-        conferenceRoomAMargins.addAll(initializeLocationRange(5, 2, 10));
-        conferenceRoomAMargins.addAll(initializeLocationRange(6, 2, 10));
-        conferenceRoomAMargins.addAll(initializeLocationRange(7, 2, 9));
+        roomName = "Conference Room A";
+        conferenceRoomAMargins.addAll(initializeLocationRange(5, 2, 10, roomName));
+        conferenceRoomAMargins.addAll(initializeLocationRange(6, 2, 10, roomName));
+        conferenceRoomAMargins.addAll(initializeLocationRange(7, 2, 9, roomName));
         Room conferenceRoomA = new Room("Conference Room A", conferenceRoomAMargins);
 
         Vector<Room> rooms = new Vector<Room>();
@@ -175,10 +184,12 @@ public class NewDomain extends DefaultTableModel{
         mMovaMap.setDoors(doors);
     }
 
-    private Vector<Location> initializeLocationRange(int row, int start, int end){
+    private Vector<Location> initializeLocationRange(int row, int start, int end, String roomName){
         Vector<Location> locationRange = new Vector<Location>();
         for (int i = start; i <= end; i++) {
-            locationRange.add(new Location(row, i));
+            Location location = new Location(row, i);
+            location.setRoom(roomName);
+        	locationRange.add(location);
         }
         return locationRange;
     }
