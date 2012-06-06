@@ -33,9 +33,10 @@ public class MovaAndroidClient {
 		new MovaClient().changeActivityStatus(activityId, ActivityState.COMPLETED); // Send to the server.
 	}
 	
-	public static void postponeActivity(String activityId, long addedTime, long oldEndTime){
+	public static void postponeActivity(String activityId, long addedTime, long oldEndTime, Activity androidActivity){
 		long addedTimeInMilliseconds = addedTime * 60000;
 		new MovaClient().postponeActivity(activityId, oldEndTime+addedTimeInMilliseconds);
+		recalculate(androidActivity);
 	}
 	
 	public static void startActivity(Activity activity, String activityId){
@@ -49,6 +50,8 @@ public class MovaAndroidClient {
 				PendingIntent.getBroadcast(activity, 0, new Intent(), 0));
 		intent.putExtra("sender", "movaC2DM@gmail.com");
 		activity.startService(intent);
+		
+		MovaAndroidClient.recalculate(activity);
 	}
 	
 	public static void registerAgent(Activity activity, String pRegistrationId, String pAgentType){
@@ -59,5 +62,10 @@ public class MovaAndroidClient {
 	
 	public static void recalculate(Activity activity){
 		new Coordinator(activity).askRecalculate(new AgentDataSource(activity).getAgentId());
+	}
+
+	public static void changeAgentStatus(String pAgentId, boolean pB, Activity activity) {
+		new MovaClient().changeAgentStatus(pAgentId, pB);
+		recalculate(activity);
 	}
 }

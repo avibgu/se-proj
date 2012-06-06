@@ -25,7 +25,7 @@ public class Coordinator implements Observer {
 	private boolean mGotActivities;
 	private boolean mGotAgents;
 	private android.app.Activity mActivity;
-	
+
 	public Coordinator(android.app.Activity activity) {
 		mActivity = activity;
 		mMovaClient = new MovaClient();
@@ -40,37 +40,44 @@ public class Coordinator implements Observer {
 	}
 
 	private void recalculate() {
-		
-		mItems = new ItemDataSource(mActivity).getItems();
-		
-		Vector<Variable> variables = new Vector<Variable>();
 
-		for (Activity activity : mActivities)
-			if (activity.getState() == ActivityState.PENDING)
-				variables.add(new Variable(activity, mMyID, mActivities,
-						mAgents, mItems));
+		new Thread(new Runnable() {
 
-		CSPAlgorithm mAlgorithm = new CBJ(variables);
+			@Override
+			public void run() {
 
-		try {
+				mItems = new ItemDataSource(mActivity).getItems();
 
-			mAlgorithm.solve();
+				Vector<Variable> variables = new Vector<Variable>();
 
-			if (mAlgorithm.isSolved()) {
+				for (Activity activity : mActivities)
+					if (activity.getState() == ActivityState.PENDING)
+						variables.add(new Variable(activity, mMyID,
+								mActivities, mAgents, mItems));
 
-				updateDatabaseWithNewSchecdule(mMyID,
-						mAlgorithm.getAssignment());
-				mMovaClient.finishRecalculate(mMyID);
+				CSPAlgorithm mAlgorithm = new CBJ(variables);
+
+				try {
+
+					mAlgorithm.solve();
+
+					if (mAlgorithm.isSolved()) {
+
+						updateDatabaseWithNewSchecdule(mMyID,
+								mAlgorithm.getAssignment());
+						mMovaClient.finishRecalculate(mMyID);
+					}
+
+					else
+						; // TODO: what to do when there is no solution??..
+				}
+
+				catch (Exception e) {
+					// TODO: what to do when the algorithm fails??..
+					e.printStackTrace();
+				}
 			}
-
-			else
-				; // TODO: what to do when there is no solution??..
-		}
-
-		catch (Exception e) {
-			// TODO: what to do when the algorithm fails??..
-			e.printStackTrace();
-		}
+		}).start();
 	}
 
 	private void updateDatabaseWithNewSchecdule(String myID,
@@ -91,28 +98,28 @@ public class Coordinator implements Observer {
 
 			MovaMessage message = (MovaMessage) pData;
 			String messageData = (String) (message.getData());
-					
- 			switch (message.getMessageType()) {
-			
+
+			switch (message.getMessageType()) {
+
 			case GOT_ACTIVITIES:
-				
+
 				mActivities = new MovaJson().jsonToActivities(messageData);
-				
+
 				mGotActivities = true;
-				 
-				if (mGotAgents){
+
+				if (mGotAgents) {
 					recalculate();
 				}
 
 				break;
-						
+
 			case GOT_AGENTS:
-				
-		   		mAgents = new MovaJson().jsonToAgents(messageData);
-				
-		   		mGotAgents = true;
-		   		
-				if (mGotActivities){
+
+				mAgents = new MovaJson().jsonToAgents(messageData);
+
+				mGotAgents = true;
+
+				if (mGotActivities) {
 					recalculate();
 				}
 				break;

@@ -38,6 +38,5 @@ public class RegistrationDialogActivity extends Activity implements OnClickListe
 	public void onClick(View arg0) {
 		MovaAndroidClient.register(this);
 		setContentView(R.layout.progress_bar);
-		
 	}
 }
