@@ -120,7 +120,6 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	public boolean onContextItemSelected(MenuItem item) {
 	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 	  int menuItemIndex = item.getItemId();
-	  
 	  switch (menuItemIndex){
 	  	case 0: // Start Activity
 			MovaAndroidClient.startActivity(this, schedule1.get(info.position).getId());
@@ -141,7 +140,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 				public void onClick(View v) {
 					dialog.dismiss();
 					NumberPicker picker = (NumberPicker) dialog.findViewById(R.id.numberPickerComponent);
-					MovaAndroidClient.postponeActivity(activityId, (picker.mCurrent)*60*1000, activityOldEndTime, getParent());
+					//MovaAndroidClient.postponeActivity(activityId, (picker.mCurrent)*60*1000, activityOldEndTime);
+					MovaAndroidClient.postponeActivity(ScheduleListActivity.this, activityId, picker.mCurrent);
 				}
 			});
 			Button cancelButton = (Button) dialog.findViewById(R.id.numberPickerCancelButton);
@@ -251,10 +251,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		case R.id.numberPickerOkButton:
 			NumberPicker numberPicker = (NumberPicker) this.findViewById(R.id.numberPickerComponent);
 			int addedTime = numberPicker.getCurrent();
-			long addedTimeInMilliseconds = addedTime * 60000;
-//			mEstimateTime = mEstimateTime + addedTime;
-//			mEndTime.setTime(mEndTime.getTime() + addedTimeInMilliseconds);
-//			new MovaClient().postponeActivity(activityId, newFinishTime);
+
 			break;
 		}
 	

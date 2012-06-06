@@ -33,10 +33,11 @@ public class MovaAndroidClient {
 		new MovaClient().changeActivityStatus(activityId, ActivityState.COMPLETED); // Send to the server.
 	}
 	
-	public static void postponeActivity(String activityId, long addedTime, long oldEndTime, Activity androidActivity){
-		long addedTimeInMilliseconds = addedTime * 60000;
-		new MovaClient().postponeActivity(activityId, oldEndTime+addedTimeInMilliseconds);
-		recalculate(androidActivity);
+	public static void postponeActivity(Activity activity, String activityId, long addedTime){
+		
+		
+		new MovaClient().postponeActivity(activityId,addedTime);
+		recalculate(activity);
 	}
 	
 	public static void startActivity(Activity activity, String activityId){
