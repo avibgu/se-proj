@@ -59,7 +59,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
 //				view.setBackgroundColor(Color.parseColor("#75D1FF"));
-				actor.Activity activity = schedule.get(position);
+				actor.Activity activity = schedule1.get(position);
 				Set<String> itemsId = activity.getParticipatingItemIds();
 				Vector<String> displayedItems = new Vector<String>();
 				for (String itemId : itemsId){
@@ -147,8 +147,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			MovaAndroidClient.completeActivity(this, schedule1.get(info.position).getId());
 			Toast.makeText(getApplicationContext(), "Activity Mark as Completed", Toast.LENGTH_LONG);
 			ListView listView = (ListView) findViewById(R.id.mylist);
-			final List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this); 
-			String[] displayedSchedule = prepareDisplayedSchedule(schedule);
+			schedule1 = MovaAndroidClient.getSchedule(this); 
+			String[] displayedSchedule = prepareDisplayedSchedule(schedule1);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
 					R.layout.list_item,displayedSchedule);
 			listView.setAdapter(adapter);
@@ -189,8 +189,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		Intent i;
 		switch (message.getMessageType()) {
 		case GOT_SCHEDULE:
-			List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this);
-			String[] displayedSchedule = prepareDisplayedSchedule(schedule);
+			schedule1 = MovaAndroidClient.getSchedule(this);
+			String[] displayedSchedule = prepareDisplayedSchedule(schedule1);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
 					R.layout.list_item,displayedSchedule);
 			ListView listView = (ListView) findViewById(R.id.mylist);
