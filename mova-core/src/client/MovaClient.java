@@ -212,7 +212,7 @@ public class MovaClient {
 	public void getSchedule(String agentId){
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentSchedule");
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAgentSchedule");
 		resource.getReference().addQueryParameter("agentId", agentId);
 		resource.get(String.class);
 	}
