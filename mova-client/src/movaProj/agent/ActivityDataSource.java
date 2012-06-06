@@ -79,7 +79,7 @@ public class ActivityDataSource {
 			
 		}
 		
-		private void removeOldSchedule() {
+		public void removeOldSchedule() {
 			openToWrite();
 			database.delete(DatabaseHelper.scheduleTable, null, null);
 			database.delete(DatabaseHelper.activityTable, null, null);
