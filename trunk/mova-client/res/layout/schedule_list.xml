@@ -55,7 +55,7 @@
             android:layout_width="160dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:text="Initial Application" />
+            android:text="Get Schedule" />
     </LinearLayout>
 
 </LinearLayout>
