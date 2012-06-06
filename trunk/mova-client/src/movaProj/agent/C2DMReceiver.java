@@ -102,7 +102,7 @@ public class C2DMReceiver extends BroadcastReceiver
 		         	case RECALCULATE_FINISH:
 		         		//TODO Avi..
 		         		notifyObservers(new MovaMessage(MessageType.RECALCULATE_FINISH, null));
-		         		getNewSchedule(context);
+		         		gotSchedule(context, intent, getNewSchedule(context));
 		         		break;
 		         	case STATIC_TYPES:
 		         		insertStaticTypes(message,context);
@@ -145,8 +145,8 @@ public class C2DMReceiver extends BroadcastReceiver
 			context.startActivity(i);
 		}
 
-		private void getNewSchedule(Context context) {
-			movaClient.getSchedule(new AgentDataSource(context).getAgentId());
+		private String getNewSchedule(Context context) {
+			return movaClient.getSchedule(new AgentDataSource(context).getAgentId());
 		}
 
 		private void distributeItemState(Context context, Intent intent,
@@ -179,8 +179,10 @@ public class C2DMReceiver extends BroadcastReceiver
 		private void gotSchedule(Context context, Intent intent, String message) {
 			JsonParser jp = new JsonParser();
       		//String j = jp.parse(message).getAsJsonArray().getAsString();
+      		JsonObject j = (JsonObject) jp.parse(message);
+    		String activities = j.get("activities").getAsString();
       	
-            List<actor.Activity> schedule = new MovaJson().jsonToActivities(message);
+            List<actor.Activity> schedule = new MovaJson().jsonToActivities(activities);
             new ActivityDataSource(context).createSchedule(schedule);
             notifyObservers(new MovaMessage(MessageType.GOT_SCHEDULE, null)); 
 		}

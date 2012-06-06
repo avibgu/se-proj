@@ -5,10 +5,14 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import movaProj.agent.C2DMReceiver;
 import movaProj.agent.ItemDataSource;
 import movaProj.agent.MovaMessage;
 import state.ActivityState;
+import utilities.Location;
 import utilities.MovaJson;
 import actor.Activity;
 import actor.Agent;
@@ -35,8 +39,21 @@ public class Coordinator implements Observer {
 	public void askRecalculate(String myID) {
 		mGotActivities = false;
 		mGotAgents = false;
-		mMovaClient.startRecalculate(myID);
 		mMyID = myID;
+		String activitiesAndAgents = mMovaClient.startRecalculate(myID);
+		initActivitiesAndAgents(activitiesAndAgents);
+		recalculate();
+	}
+
+	private void initActivitiesAndAgents(String pActivitiesAndAgents) {
+		
+		JsonParser jp = new JsonParser();
+		JsonObject j = (JsonObject) jp.parse(pActivitiesAndAgents);
+
+		MovaJson mj = new MovaJson();
+		
+		mActivities = mj.jsonToActivities(j.get("activities").getAsString());
+		mAgents = mj.jsonToAgents(j.get("agents").getAsString());
 	}
 
 	private void recalculate() {
@@ -46,18 +63,18 @@ public class Coordinator implements Observer {
 			@Override
 			public void run() {
 
-				mItems = new ItemDataSource(mActivity).getItems();
+				try {
+					
+					mItems = new ItemDataSource(mActivity).getItems();
 
-				Vector<Variable> variables = new Vector<Variable>();
+					Vector<Variable> variables = new Vector<Variable>();
 
-				for (Activity activity : mActivities)
-					if (activity.getState() == ActivityState.PENDING)
-						variables.add(new Variable(activity, mMyID,
+					for (Activity activity : mActivities)
+						if (activity.getState() == ActivityState.PENDING)
+							variables.add(new Variable(activity, mMyID,
 								mActivities, mAgents, mItems));
 
-				CSPAlgorithm mAlgorithm = new CBJ(variables);
-
-				try {
+					CSPAlgorithm mAlgorithm = new CBJ(variables);
 
 					mAlgorithm.solve();
 
@@ -108,7 +125,7 @@ public class Coordinator implements Observer {
 				mGotActivities = true;
 
 				if (mGotAgents) {
-					recalculate();
+//					recalculate();
 				}
 
 				break;
@@ -120,7 +137,7 @@ public class Coordinator implements Observer {
 				mGotAgents = true;
 
 				if (mGotActivities) {
-					recalculate();
+//					recalculate();
 				}
 				break;
 			}
