@@ -83,6 +83,7 @@ public class ActivityDataSource {
 			openToWrite();
 			database.delete(DatabaseHelper.scheduleTable, null, null);
 			database.delete(DatabaseHelper.activityTable, null, null);
+			database.delete(DatabaseHelper.activityItemsTable, null, null);
 			close();
 		}
 
