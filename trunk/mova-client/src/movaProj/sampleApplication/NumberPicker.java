@@ -376,7 +376,7 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
                 return result;
             }
             int val = getSelectedPos(result);
-
+            mCurrent = val;
             /* Ensure the user can't type in a value greater
              * than the max allowed. We have to allow less than min
              * as the user might want to delete some numbers
