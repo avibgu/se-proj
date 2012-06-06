@@ -52,8 +52,12 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
+//		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+//		return UriBuilder.fromUri("http://192.168.43.24:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
-		return UriBuilder.fromUri("http://132.72.249.196:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://10.0.0.2:8080/mova-server").build();
+//		return UriBuilder.fromUri("http://132.72.250.101:8080/mova-server").build();
+		return UriBuilder.fromUri("http://192.168.1.9:8080/mova-server").build();
 	}
 	
 	// ITEMS
@@ -206,12 +210,13 @@ public class MovaClient {
 	}
 	
 	
-	public void getSchedule(String agentId){
+	public String getSchedule(String agentId){
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAgentSchedule");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get(String.class);
+		String response = resource.get(String.class);
+		return response;
 	}
 	
 	public void getAllActivities(String agentId){
@@ -318,10 +323,11 @@ public class MovaClient {
 		resource.put(type);
 	}
 
-	public void startRecalculate(String agentId) {
+	public String startRecalculate(String agentId) {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/startRecalculate");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get(String.class);
+		String response = resource.get(String.class);
+		return response;
 	}
 
 	
