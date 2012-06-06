@@ -73,7 +73,7 @@ public class ActivityResource {
 			jsonIds.add(activity.getId());
 		}
 		
-		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.GOT_SCHEDULE);
+//		C2dmController.getInstance().sendMessageToDevice("3", jsonActivities,jsonIds,MessageType.GOT_SCHEDULE);
 	}
 	/**
 	 * Changes an activity status
@@ -114,10 +114,10 @@ public class ActivityResource {
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String activityId = j.get("activityId").getAsString(); 
-		String addedTime = j.get("addedTime").getAsString();
+		long addedTime = j.get("addedTime").getAsLong();
 		Timestamp currentEndTime = db.getActivityDeadline(activityId);
-		String newFinishTime = (currentEndTime.getTime() + addedTime).toString();
-		db.updateActivityDeadline(activityId, Timestamp.valueOf(currentEndTime.getTime() + addedTime));
+		String newFinishTime = String.valueOf(currentEndTime.getTime() + addedTime);
+		db.updateActivityDeadline(activityId, new Timestamp(currentEndTime.getTime() + addedTime));
 		simulator.postoneActivityMessage(activityId, newFinishTime);
 		// Recalculate.
 		
@@ -143,11 +143,14 @@ public class ActivityResource {
 	
 	@GET
 	@Path("/getAgentSchedule")
-	public void getAgentSchedule(@QueryParam("agentId") String agentId){
+	public String getAgentSchedule(@QueryParam("agentId") String agentId){
+		
 		Vector<Activity> schedule = db.getAgentSchedule(agentId);
-		Vector<String> agentIds = new Vector<String>();
-		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(schedule),agentIds,MessageType.GOT_SCHEDULE);
+		
+		JsonObject j = new JsonObject();
+		j.addProperty("activities", new MovaJson().createJsonObj(schedule));
+		
+		return j.toString();
 	}
 	
 	@GET
