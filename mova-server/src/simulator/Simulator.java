@@ -101,6 +101,7 @@ public class Simulator {
 		String name = db.getActivityName(pId);
 		String message = "The activity \"" + name + "\"" + " status changed to " + pState;
 		_domain.addMessage(message);
+		changeAgentLocationMessage(((Agent) _agents.elementAt(agentIndex-1)).getId(), new Location(2, 24));
 	}
 	/**
 	 * Creates a new activity in the simulator and adds a new relevant message log
@@ -136,7 +137,7 @@ public class Simulator {
 		}
 		
 		Agent agent = mAgents.get(pId);
-		agent.setMyItems(simulatedItems);
+		//agent.setMyItems(simulatedItems);
 		_domain.walkAgent(agent, oldLocation, pNewLocation);
 		db.updateAgentLocation(pId, pNewLocation);
 	}

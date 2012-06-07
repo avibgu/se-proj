@@ -185,7 +185,7 @@ public class World extends javax.swing.JFrame implements Observer{
         Controller controller = new Controller(domain);
         DBHandler db = DBHandler.getInstance();
         db.deleteData();
-        Vector<Entity> items = _domain.getEntities().elementAt(1);
+        Vector<Entity> items = domain.getEntities().elementAt(1);
         for (Entity item : items) {
 			db.insertItemType(((Item) item).getType().toString());
 			db.insertItem((Item) item);

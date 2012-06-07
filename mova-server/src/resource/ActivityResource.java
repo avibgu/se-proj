@@ -88,6 +88,7 @@ public class ActivityResource {
 		String id = j.get("activityId").getAsString(); 
 		ActivityState state = ActivityState.valueOf(j.get("state").getAsString());
 		db.updateActivityState(id, state.toString());
+		simulator.changeActivityStatusMessage(id, state);
 	}
 	/**
 	 *
