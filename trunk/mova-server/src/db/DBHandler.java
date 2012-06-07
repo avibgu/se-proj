@@ -732,6 +732,26 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
+	
+	public void updateActivityDuration(String pActivityId, long newDuration) {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			int duration = (int)newDuration;
+			mStmt = mConn.createStatement();
+			mStmt.execute("update " + mActivityTableName + " set ESTIMATE_TIME = "
+					+ duration + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("updateActivityDeadline - database access error" +
+					", no activity id in the system: " + pActivityId);
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
 	/**
 	 * Updates the activity's state: IN_PROGRESS, COMPLETED or PENDING 
 	 * @param pActivityId the id of the activity to update it's state
@@ -805,7 +825,7 @@ public class DBHandler {
 					+ mActivityTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
 
 			results.next();
-			deadline = results.getTimestamp(1);
+			deadline = results.getTimestamp("ACTUAL_END_TIME");
 			
 			results.close();
 			mStmt.close();
@@ -817,6 +837,32 @@ public class DBHandler {
 		mRead.unlock();
 		
 		return deadline;
+	}
+	
+	public int getActivityDuration(String pActivityId) {
+		
+		mRead.lock();
+		createConnection();
+		
+		int ans=0;	
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select ESTIMATE_TIME from "
+					+ mActivityTableName + " WHERE ACTIVITY_ID = " + "'" + pActivityId + "'");
+
+			results.next();
+			ans = results.getInt("ESTIMATE_TIME");
+			
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getActivityDuration - database access error or no agents in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		
+		return ans;
 	}
 	/**
 	 * Gets the activity state

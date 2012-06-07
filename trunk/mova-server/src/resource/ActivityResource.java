@@ -116,10 +116,11 @@ public class ActivityResource {
 		String activityId = j.get("activityId").getAsString(); 
 		long addedTime = j.get("addedTime").getAsLong();
 		Timestamp currentEndTime = db.getActivityDeadline(activityId);
-		//String newFinishTime = String.valueOf(currentEndTime.getTime() + addedTime);
-		Timestamp newFinishTime = new Timestamp(currentEndTime.getTime() + addedTime);
-		db.updateActivityDeadline(activityId, new Timestamp(currentEndTime.getTime() + addedTime));
-		simulator.postoneActivityMessage(activityId, newFinishTime.toString());
+		int currentEstimatedTime = db.getActivityDuration(activityId);
+		String newFinishTime = String.valueOf(currentEndTime.getTime() + addedTime);
+		db.updateActivityDeadline(activityId, new Timestamp(currentEndTime.getTime() + addedTime*60*1000));
+		db.updateActivityDuration(activityId, currentEstimatedTime+addedTime*60*1000);
+		simulator.postoneActivityMessage(activityId, newFinishTime);
 		// Recalculate.
 		
 	}
