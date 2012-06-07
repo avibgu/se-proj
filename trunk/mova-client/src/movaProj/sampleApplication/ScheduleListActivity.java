@@ -189,7 +189,8 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		Intent i;
 		switch (message.getMessageType()) {
 		case GOT_SCHEDULE:
-			schedule1 = MovaAndroidClient.getSchedule(this);
+			List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this);
+			schedule1 = schedule;
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule1);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
 					R.layout.list_item,displayedSchedule);
