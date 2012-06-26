@@ -8,14 +8,19 @@ import actor.Entity;
 import actor.Item;
 import configuration.ConfigurationManager;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+
+import javax.swing.JTable;
 
 import db.DBHandler;
 
 import simulator.NewDomain;
 import simulator.Simulator;
+import state.ItemState;
 
 /**
  *
@@ -71,6 +76,7 @@ public class World extends javax.swing.JFrame implements Observer{
         domainTable.setModel(_domain);
         domainTable.setAlignmentX(2.0F);
         domainTable.setAlignmentY(1.0F);
+        domainTable.setCellSelectionEnabled(true);
         domainTable.setFocusable(false);
         domainTable.setIntercellSpacing(new java.awt.Dimension(3, 3));
         domainTable.setOpaque(false);
@@ -81,6 +87,21 @@ public class World extends javax.swing.JFrame implements Observer{
         WatermarkViewport vp = new WatermarkViewport(bgPainter);
         vp.setView(domainTable);
         jScrollPane1.setViewport(vp);
+        domainTable.addMouseListener(new MouseAdapter() {
+        	@Override
+            public void mouseClicked(MouseEvent e) {
+        		final JTable target = (JTable)e.getSource();
+                final int row = target.getSelectedRow();
+                final int column = target.getSelectedColumn();
+                String itemId = (String) target.getValueAt(row, column);
+                if(itemId.contains("Item")){
+	                itemId = itemId.substring(itemId.indexOf("-")+ 1);
+	                if(!itemId.equals(""))
+	                	_controller.updateItemState(itemId);
+                }
+            	super.mouseClicked(e);
+            }
+        });
 
         stopButton.setText("Stop");
         stopButton.addActionListener(new java.awt.event.ActionListener() {

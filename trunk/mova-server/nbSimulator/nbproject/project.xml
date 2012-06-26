@@ -3,9 +3,10 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>SEProjAPI</name>
+            <name>nbSimulator</name>
             <source-roots>
-                <root id="src.dir" name="src"/>
+                <root id="src.mova-core.dir"/>
+                <root id="src.dir"/>
             </source-roots>
             <test-roots/>
         </data>
