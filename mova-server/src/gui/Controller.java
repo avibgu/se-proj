@@ -32,4 +32,8 @@ public class Controller {
 	public void stop() {
 		_domain.stop();
 	}
+	
+	public void updateItemState(String itemId){
+		_sim.updateItemState(itemId);
+	}
 }

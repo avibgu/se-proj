@@ -2,25 +2,22 @@ package resource;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
-import client.MovaClient;
-
 public class ActivityResourceTest {
-	
-	private MovaClient _mc;
-	
-	@BeforeClass
-    public void setUp() throws Exception{
-		_mc = new MovaClient();
-    }
-	
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
 	@Test
 	public void testSendActivity() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSendScheduledActivities() {
 		fail("Not yet implemented");
 	}
 
@@ -29,8 +26,34 @@ public class ActivityResourceTest {
 		fail("Not yet implemented");
 	}
 
-	@AfterClass
-    public static void tearDown() throws IOException{
+	@Test
+	public void testAddActivity() {
+		fail("Not yet implemented");
+	}
 
-    }
+	@Test
+	public void testPostponeActivity() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCreateActivityType() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDeleteActivityType() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetAgentSchedule() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetAllActivities() {
+		fail("Not yet implemented");
+	}
+
 }

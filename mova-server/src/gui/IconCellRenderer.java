@@ -87,17 +87,4 @@ public class IconCellRenderer  implements TableCellRenderer{
         	return false;
     }
     
-//    private void colorCells(String value, JLabel cell, JTable table, int row, int column) {
-//		for(int i = 0; i < table.getRowCount(); i++)
-//			for(int j = 0; j < table.getColumnCount(); j++){
-//				if(calcDistance(row, column, i, j) <= _domain.getScanDistance() && ((String)table.getValueAt(i, j)).contains("Sensor"))
-//					cell.setBackground(Color.GREEN);
-//			}
-//    }
-
-//    private double calcDistance(int row1 , int column1, int row2 , int column2) {
-//		double latitudeDiff = row1 - row2;
-//		double longitudeDiff = column1 - column2;
-//		return Math.sqrt(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff);
-//    }
 }

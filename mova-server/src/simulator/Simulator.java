@@ -157,11 +157,28 @@ public class Simulator {
 	 * @param newStatus the new status of the item
 	 * @param agentId the id of the agent that changed the item's status
 	 */
-	public void updateItemState(String itemId, String newStatus, String agentId) {
+	public void addItemStateMessage(String itemId, String newStatus, String agentId) {
+		Item item = mItems.get(itemId);
+		String message = "";
+		if(agentId.equals("")){
+			message = "The state of Item " + item.getType().toString()
+					+ " was changed to " + newStatus + " at "
+					+ format.format(date);
+		}
+		else
+		{
+			String agentType = db.getAgentType(agentId);
+			message = "The state of Item " + item.getType().toString()
+					+ " was changed to " + newStatus + " by the " + agentType + " Agent at "
+					+ format.format(date);
+		}
+		_domain.addMessage(message);
+	}
+	
+	public void updateItemState(String itemId, String newStatus, String agentId){
 		Item item = mItems.get(itemId);
 		ItemState newState = ItemState.valueOf(newStatus);
 		Location itemLocation = item.getLocation();
-		String agentType = db.getAgentType(agentId);
 		String stringItem = (String) _domain.getValueAt(itemLocation.getLongitude(), itemLocation.getLatitude());
 		switch (newState) {
 		case AVAILABLE:
@@ -207,11 +224,24 @@ public class Simulator {
 			}
 			break;
 		}
-		
-		String message = "The state of Item " + item.getType().toString()
-				+ " was changed to " + newStatus + " by the " + agentType + " Agent at "
-				+ format.format(date);
-		_domain.addMessage(message);
+			addItemStateMessage(itemId, newStatus, "");
+	}
+	
+	public void updateItemState(String itemId){
+		ItemState state = db.getItemState(itemId);
+		switch (state) {
+		case AVAILABLE:
+			state = ItemState.UNAVAILABLE;
+			break;
+		case UNAVAILABLE:
+			state = ItemState.BUSY;
+			break;
+		case BUSY:
+			state = ItemState.AVAILABLE;
+			break;
+		}
+		db.updateItemState(itemId, state.toString(), "");
+		updateItemState(itemId, state.toString(), "");
 	}
 	
 	public static void deleteSimulator(){
