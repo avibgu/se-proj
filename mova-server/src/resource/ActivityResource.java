@@ -153,7 +153,8 @@ public class ActivityResource {
 		JsonObject j = new JsonObject();
 		j.addProperty("activities", new MovaJson().createJsonObj(schedule));
 		
-		return j.toString();
+		//return j.toString();
+		return new MovaJson().createJsonObj(schedule);
 	}
 	
 	@GET
