@@ -177,12 +177,12 @@ public class C2DMReceiver extends BroadcastReceiver
 		}
 
 		private void gotSchedule(Context context, Intent intent, String message) {
-			JsonParser jp = new JsonParser();
+			//JsonParser jp = new JsonParser();
       		//String j = jp.parse(message).getAsJsonArray().getAsString();
-      		JsonObject j = (JsonObject) jp.parse(message);
-    		String activities = j.get("activities").getAsString();
+      		//JsonObject j = (JsonObject) jp.parse(message);
+    		//String activities = j.get("activities").getAsString();
       	
-            List<actor.Activity> schedule = new MovaJson().jsonToActivities(activities);
+            List<actor.Activity> schedule = new MovaJson().jsonToActivities(message);
             new ActivityDataSource(context).createSchedule(schedule);
             notifyObservers(new MovaMessage(MessageType.GOT_SCHEDULE, null)); 
 		}

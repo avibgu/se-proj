@@ -71,20 +71,19 @@ public class ActivityResourceTest {
 		agentIds.add("1");
 		mc.sendActivity(a1, agentIds);
 	}
+	
 	@Test//Didn't Pass
 	public void testSendScheduledActivities() {
-		ActivityType type1 = new ActivityType(ActivityType.CONFERENCE_REGISTRATION);
-		ActivityType type2 = new ActivityType(ActivityType.DISCUSSION);
-		db.insertActivityType(type1.toString());
-		db.insertActivityType(type2.toString());
 		Activity a1 = createTestActivity();
-		a1.setType(type1.toString());
+		db.deleteActivity(a1.getId());
 		Activity a2 = createTestActivity();
-		a2.setType(type2.toString());
+		db.deleteActivity(a2.getId());
 		
+		Set<String> pParticipatingAgentIds = new HashSet<String>();
 		Agent agent1 = createTestAgent();
-		db.insertAgentType(agent1.getType().toString());
-		db.insertAgent(agent1.getId(), agent1.getType().toString(), true, "322");
+		pParticipatingAgentIds.add(agent1.getId());
+		a1.setParticipatingAgentIds(pParticipatingAgentIds);
+		a2.setParticipatingAgentIds(pParticipatingAgentIds);
 		
 		db.insertActivity(a1);
 		db.insertActivity(a2);
@@ -97,15 +96,12 @@ public class ActivityResourceTest {
 		String stringSchedule = mc.getSchedule(agent1.getId());
 		List<Activity> acs = mj.jsonToActivities(stringSchedule);
 		
-		db.deleteAgent(agent1.getId());
-		db.deleteAgentType(agent1.getType().toString());
-		db.deleteActivity(a1.getId());
-		db.deleteActivity(a2.getId());
-		db.deleteActivityType(a1.getType());
-		db.deleteActivityType(a2.getType());
+		deleteTestAgent(agent1);
+		deleteTestActivity(a1);
+		deleteTestActivity(a2);
 		db.deleteItem(ItemType.BOARD);
-		assertEquals(a1.getId(), acs.get(0));
-		assertEquals(a2.getId(), acs.get(1));
+		assertEquals(a1.getId(), acs.get(0).getId());
+		assertEquals(a2.getId(), acs.get(1).getId());
 
 	}
 
@@ -168,12 +164,31 @@ public class ActivityResourceTest {
 		assertFalse(types.contains(ActivityType.CONFERENCE_REGISTRATION));
 	}
 
-	@Test
+	@Test//Passed
 	public void testGetAgentSchedule() {
-		fail("Not yet implemented");
+		Activity a1 = createTestActivity();
+		db.deleteActivity(a1.getId());
+		Activity a2 = createTestActivity();
+		db.deleteActivity(a2.getId());
+		
+		Set<String> pParticipatingAgentIds = new HashSet<String>();
+		Agent agent1 = createTestAgent();
+		pParticipatingAgentIds.add(agent1.getId());
+		a1.setParticipatingAgentIds(pParticipatingAgentIds);
+		a2.setParticipatingAgentIds(pParticipatingAgentIds);
+		
+		db.insertActivity(a1);
+		db.insertActivity(a2);
+		Vector<Activity> schedule = db.getAgentSchedule(agent1.getId());
+		assertEquals(a1.getId(), schedule.elementAt(0).getId());
+		assertEquals(a2.getId(), schedule.elementAt(1).getId());
+		
+		deleteTestAgent(agent1);
+		deleteTestActivity(a1);
+		deleteTestActivity(a2);
 	}
 
-	@Test
+	@Test//Passed
 	public void testGetAllActivities() {
 		Activity a1 = createTestActivity();
 		Activity a2 = createTestActivity();
@@ -219,6 +234,14 @@ public class ActivityResourceTest {
 		AgentType pType = new AgentType(AgentType.LECTURER);
 		Agent a1 = new Agent(pType);
 		
+		db.insertAgentType(pType.getType());
+		db.insertAgent(a1.getId(), pType.getType(), true, "121");
+		
 		return a1;
+	}
+	
+	private void deleteTestAgent(Agent agent){
+		db.deleteAgent(agent.getId());
+		db.deleteAgentType(agent.getType().getType());
 	}
 }
