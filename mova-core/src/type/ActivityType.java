@@ -50,4 +50,9 @@ public class ActivityType {
 	public static String[] values() {
 		return new String[]{CONFERENCE_REGISTRATION,TOUR,LUNCH,PRESENTATION,DISCUSSION};
 	}
+	
+	@Override
+	public String toString() {
+		return mType;
+	}
 }
