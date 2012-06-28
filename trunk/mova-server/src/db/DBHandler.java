@@ -1894,7 +1894,7 @@ public class DBHandler {
 	}
 	
 	public void insertInitialData(){
-		Date date = new Date();
+		/*Date date = new Date();
 		Timestamp startTime = new Timestamp(date.getTime());
 		Timestamp endTime = new Timestamp(startTime.getTime() + 1000*60*60*7);
 		long estimateTime = 1000*60*60;
@@ -2030,6 +2030,6 @@ public class DBHandler {
 //		insertActivityType(ActivityType.TOUR);
 //		insertActivity(a7);
 		
-		System.out.println("Inserted initial data - 7 activities and 7 items");
+		System.out.println("Inserted initial data - 7 activities and 7 items");*/
 	}
 }
