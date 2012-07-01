@@ -95,7 +95,7 @@ public class DBHandler {
             //Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
             //Get a connection
-            mConn = DriverManager.getConnection(mDbURL, "root", ""); 
+            mConn = DriverManager.getConnection(mDbURL, "mova", "mova"); 
             mWriteLock2.unlock();
         }
         catch (Exception e){
