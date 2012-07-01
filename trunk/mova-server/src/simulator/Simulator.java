@@ -7,11 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import c2dm.C2dmController;
+
 import db.DBHandler;
 
 import state.ActivityState;
 import state.ItemState;
+import type.MessageType;
 import utilities.Location;
+import utilities.MovaJson;
 
 import actor.Activity;
 import actor.Agent;
@@ -38,6 +42,7 @@ public class Simulator {
 	private static int agentIndex = 0;
 	private static DateFormat format = new SimpleDateFormat("HH:mm");
 	private static Date date = new Date();
+	private static Vector<Integer> _agentIndexes;
 	
 	private Simulator(){
 		_entities = _domain.getEntities();
@@ -47,6 +52,7 @@ public class Simulator {
 		mAgents = new HashMap<String, Agent>();
 		mItems = new HashMap<String, Item>();
 		db = DBHandler.getInstance();
+		_agentIndexes = new Vector<Integer>();
 		for (Entity item : _items) {
 			//db.insertItemType(((Item) item).getType().toString());
 			//db.insertItem((Item) item);
@@ -77,7 +83,7 @@ public class Simulator {
 	 * @param pId the id of the new agent
 	 */
 	public void registerAgentMessage(String pId){
-		if(agentIndex < _agents.size()){
+		/*if(agentIndex < _agents.size()){
 			Agent agent = (Agent) _agents.elementAt(agentIndex);
 			String type = db.getAgentType(pId);
 			agent.setId(pId);
@@ -90,8 +96,35 @@ public class Simulator {
 			_domain.setValueAt(agent.toString(), agent.getLocation().getLongitude(), agent.getLocation().getLatitude());
 			
 			agentIndex++;
+		}*/
+		
+		if(!_agents.isEmpty()){
+			Agent agent = (Agent) _agents.remove(0);
+			String type = db.getAgentType(pId);
+			agent.setId(pId);
+			agent.setRepresentation(type);
+			db.insertAgentLocation(pId, agent.getLocation());
+			mAgents.put(pId, agent);
+			
+			String message = "An new " + type + " agent registered to the system at " + format.format(date); 
+			_domain.addMessage(message);
+			_domain.setValueAt(agent.toString(), agent.getLocation().getLongitude(), agent.getLocation().getLatitude());
 		}
 	}
+	
+	
+	public void deleteAgent(String pAgentId){
+		Agent agent = mAgents.remove(pAgentId);
+		String type = db.getAgentType(pAgentId);
+		_agents.add(agent);
+		db.deleteAgentLocation(pAgentId);
+		
+		String message = "The " + type + " agent was deleted from the system at " + format.format(date); 
+		_domain.addMessage(message);
+		_domain.setValueAt("", agent.getLocation().getLongitude(), agent.getLocation().getLatitude());
+		db.deleteAgent(pAgentId);
+	}
+	
 	/**
 	 * Changes the activity in the simulator and adds a new relevant message log
 	 * @param pId the id of the activity
@@ -246,5 +279,11 @@ public class Simulator {
 	
 	public static void deleteSimulator(){
 		mSimulator = null;
+	}
+
+	public void distributeItems(Map<String, Item> changedLocationItems){
+		
+		String items = new MovaJson().itemsToJson(changedLocationItems.values());
+		C2dmController.getInstance().sendMessageToDevice("3", items,null,MessageType.DISTRIBUTE_ITEM_LOCATION);
 	}
 }
