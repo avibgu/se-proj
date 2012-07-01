@@ -487,4 +487,9 @@ public class Activity implements Cloneable {
 		
 		return activity;
 	}
+	
+	@Override
+	public boolean equals(Object pActivity) {
+		return mId.equals(((Activity)pActivity).getId());
+	}
 }

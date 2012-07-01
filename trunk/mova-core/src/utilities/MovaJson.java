@@ -2,6 +2,7 @@ package utilities;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ public class MovaJson {
 	 * @param items a vector of items to serialize
 	 * @return JSON represented string of the items vector
 	 */
-	public String itemsToJson(Vector<Item> items){
+	public String itemsToJson(Collection<Item> items){
 		return _gson.toJson(items);
 	}
 	
