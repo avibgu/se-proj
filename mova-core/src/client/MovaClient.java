@@ -1,6 +1,7 @@
 package client;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.core.MediaType;
@@ -122,15 +123,16 @@ public class MovaClient {
 	}
 	
 	public void deleteItem(String itemId){
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteItem");
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteItem/" + itemId);
 		resource.getReference().addQueryParameter("itemId", itemId);
-		resource.get(String.class);
+		resource.delete();
 	}
 	
-	public void getItems(String agentId){
+	public Vector<Item> getItems(String agentId){
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/getItems");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get(String.class);
+		String response = resource.get(String.class);
+		return new MovaJson().jsonToItems(response);
 	}
 	
 //	public void getItemsAvailability(String agentId) {
@@ -223,10 +225,11 @@ public class MovaClient {
 		return response;
 	}
 	
-	public void getAllActivities(String agentId){
+	public List<Activity> getAllActivities(String agentId){
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/getAllActivities");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get(String.class);
+		String response = resource.get(String.class);
+		return new MovaJson().jsonToActivities(response);
 	}
 	
 	// AGENT
@@ -271,7 +274,7 @@ public class MovaClient {
 	public void deleteAgent(String agentId){
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("agentId", agentId);
-		ClientResource resource = new ClientResource(getBaseURI().toString() + "/items/deleteAgent");
+		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/deleteAgent");
 		resource.getReference().addQueryParameter("agentId", agentId);
 		resource.delete();
 	}
@@ -283,10 +286,11 @@ public class MovaClient {
 		resource.put(j.toString());
 	}
 	
-	public void getAllAgents(String agentId) {
+	public Vector<Agent> getAllAgents(String agentId) {
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAllAgents");
 		resource.getReference().addQueryParameter("agentId", agentId);
-		resource.get(String.class);
+		String response = resource.get(String.class);
+		return new MovaJson().jsonToAgents(response);
 	}
 	
 //	public void getAgentsAvailability(String agentId) {
