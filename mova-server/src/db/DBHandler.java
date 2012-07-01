@@ -34,19 +34,33 @@ import actor.Item;
  */
 public class DBHandler {
 	
-	private static String						mDbURL = "jdbc:derby://localhost:1527/ServerDB;create=true";
-    private static String						mAgentTableName = "app.agents";
-    private static String						mAgentTypeTableName = "app.agentTypes";
-    private static String						mActivityTableName = "app.activities";
-    private static String						mActivityTypeTableName = "app.activityTypes";
-    private static String						mActivityTypeAgentsTableName = "app.activityTypeAgents";
-    private static String						mActivityTypeItemsTableName = "app.activityTypeItems";
-    private static String						mItemTableName = "app.items";
-    private static String						mItemTypeTableName = "app.itemTypes";
-    private static String						mActivityAgentsTableName = "app.activityAgents";
-    private static String						mActivityItemsTableName = "app.activityItems";
-    private static String						mAgentLocationsTableName = "app.agentLocations";
-    private static String						mItemLocationsTableName = "app.itemLocations";
+//	private static String						mDbURL = "jdbc:derby://localhost:1527/ServerDB;create=true";
+//    private static String						mAgentTableName = "app.agents";
+//    private static String						mAgentTypeTableName = "app.agentTypes";
+//    private static String						mActivityTableName = "app.activities";
+//    private static String						mActivityTypeTableName = "app.activityTypes";
+//    private static String						mActivityTypeAgentsTableName = "app.activityTypeAgents";
+//    private static String						mActivityTypeItemsTableName = "app.activityTypeItems";
+//    private static String						mItemTableName = "app.items";
+//    private static String						mItemTypeTableName = "app.itemTypes";
+//    private static String						mActivityAgentsTableName = "app.activityAgents";
+//    private static String						mActivityItemsTableName = "app.activityItems";
+//    private static String						mAgentLocationsTableName = "app.agentLocations";
+//    private static String						mItemLocationsTableName = "app.itemLocations";
+    
+    private static String						mDbURL = "jdbc:mysql://localhost:3306/mysqldatabase";
+    private static String						mAgentTableName = "agents";
+    private static String						mAgentTypeTableName = "agentTypes";
+    private static String						mActivityTableName = "activities";
+    private static String						mActivityTypeTableName = "activityTypes";
+    private static String						mActivityTypeAgentsTableName = "activityTypeAgents";
+    private static String						mActivityTypeItemsTableName = "activityTypeItems";
+    private static String						mItemTableName = "items";
+    private static String						mItemTypeTableName = "itemTypes";
+    private static String						mActivityAgentsTableName = "activityAgents";
+    private static String						mActivityItemsTableName = "activityItems";
+    private static String						mAgentLocationsTableName = "agentLocations";
+    private static String						mItemLocationsTableName = "itemLocations";
    
     private static Connection					mConn = null;
     private static Statement					mStmt = null;
@@ -78,9 +92,10 @@ public class DBHandler {
         
     	try{
     		mWriteLock2.lock();
-            Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
+            //Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
+    		Class.forName("com.mysql.jdbc.Driver").newInstance();
             //Get a connection
-            mConn = DriverManager.getConnection(mDbURL); 
+            mConn = DriverManager.getConnection(mDbURL, "root", ""); 
             mWriteLock2.unlock();
         }
         catch (Exception e){

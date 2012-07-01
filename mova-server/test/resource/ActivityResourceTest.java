@@ -26,7 +26,7 @@ import utilities.MovaJson;
 import client.MovaClient;
 import db.DBHandler;
 
-public class ActivityResourceTest {
+public class ActivityResourceTest {//Passed
 	
 	private MovaClient mc;
 	private DBHandler db;
@@ -70,9 +70,10 @@ public class ActivityResourceTest {
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add("1");
 		mc.sendActivity(a1, agentIds);
+		deleteTestActivity(a1);
 	}
 	
-	@Test//Didn't Pass
+	@Test//Passed
 	public void testSendScheduledActivities() {
 		Activity a1 = createTestActivity();
 		db.deleteActivity(a1.getId());
@@ -119,7 +120,7 @@ public class ActivityResourceTest {
 		deleteTestActivity(a1);
 	}
 
-	@Test
+	@Test//Passed
 	public void testAddActivity() {
 		Activity a1 = createTestActivity();
 		
@@ -179,9 +180,13 @@ public class ActivityResourceTest {
 		
 		db.insertActivity(a1);
 		db.insertActivity(a2);
+		Vector<Activity> acs = new Vector<Activity>();
+		acs.add(a1);
+		acs.add(a2);
+		
 		Vector<Activity> schedule = db.getAgentSchedule(agent1.getId());
-		assertEquals(a1.getId(), schedule.elementAt(0).getId());
-		assertEquals(a2.getId(), schedule.elementAt(1).getId());
+		
+		assertTrue(schedule.containsAll(acs));
 		
 		deleteTestAgent(agent1);
 		deleteTestActivity(a1);
@@ -193,10 +198,13 @@ public class ActivityResourceTest {
 		Activity a1 = createTestActivity();
 		Activity a2 = createTestActivity();
 		
-		List<Activity> acs = db.getAllActivities();
+		Vector<Activity> acs = new Vector<Activity>();
+		acs.add(a1);
+		acs.add(a2);
 		
-		assertEquals(a1.getId(), acs.get(0).getId());
-		assertEquals(a2.getId(), acs.get(1).getId());
+		List<Activity> allAcs = db.getAllActivities();
+		
+		assertTrue(allAcs.containsAll(acs));
 		
 		deleteTestActivity(a1);
 		deleteTestActivity(a2);

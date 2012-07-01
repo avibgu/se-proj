@@ -73,6 +73,7 @@ public class ItemScanner implements Runnable {
 	                mDomain.changeItemsLocation(changedLocationItems);
 	                String message = mSensorAgent.getType().toString() + " Sensor identified new items: ";
 	            	createIdentifiedItemsMessage(message, changedLocationItems);
+	            	Simulator.getInstance(mDomain).distributeItems(changedLocationItems);
 				}
 			}
 			try {

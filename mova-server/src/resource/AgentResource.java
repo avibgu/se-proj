@@ -81,8 +81,9 @@ public class AgentResource {
 	 * @param agentId the agent id
 	 */
 	@DELETE
-	@Path("/deleteAgent/{id}")
-	public void deleteAgent(@PathParam("id") String agentId){
+	@Path("/deleteAgent")
+	public void deleteAgent(@QueryParam("agentId") String agentId){
+		simulator.deleteAgent(agentId);
 		db.deleteAgent(agentId);
 	}
 	/**
@@ -207,7 +208,8 @@ public class AgentResource {
 //		agentIds.add(agentId);
 //		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
 //	}
-	
+
+	//TODO is this needed??? nobody is using this method
 	@PUT
 	@Path("/setCurrentActivityId")
 	public void setCurrentActivityId(String jsonObject){
