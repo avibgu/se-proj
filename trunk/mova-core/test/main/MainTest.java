@@ -17,7 +17,6 @@ import utilities.MovaJson;
 
 import actor.Activity;
 import actor.Agent;
-import actor.Manager;
 
 
 public class MainTest {
@@ -33,20 +32,20 @@ public class MainTest {
 	@Test
 	public void test() {
 
-		Manager manager = new Manager();
-		
-		manager.setAgentTypes(null);
-		manager.setItemTypes(null);
-		
-		manager.setActivityTypes(null);
-		
-		Set<Activity> activitiesInstances = new HashSet<Activity>();
-		
-		// TODO: create dynamic activities..
-		
-		manager.addActivitiesInstances(activitiesInstances);
-		
-		manager.startApplication();
+//		Manager manager = new Manager();
+//		
+//		manager.setAgentTypes(null);
+//		manager.setItemTypes(null);
+//		
+//		manager.setActivityTypes(null);
+//		
+//		Set<Activity> activitiesInstances = new HashSet<Activity>();
+//		
+//		// TODO: create dynamic activities..
+//		
+//		manager.addActivitiesInstances(activitiesInstances);
+//		
+//		manager.startApplication();
 	}
 	
 	@Test
