@@ -466,19 +466,19 @@ public class NewDomain extends DefaultTableModel{
 
 		Runnable is1 = new ItemScanner(rfidAgent1, this, _observers, _nScanDistance);
 		_itemScanners.add(is1);
-		new Thread(is1).start();
+		//new Thread(is1).start();
 
 		Runnable is2 = new ItemScanner(rfidAgent2, this, _observers, _nScanDistance);
 		_itemScanners.add(is2);
-		new Thread(is2).start();
+		//new Thread(is2).start();
 
 		Runnable is3 = new ItemScanner(rfidAgent3, this, _observers, _nScanDistance);
 		_itemScanners.add(is3);
-		new Thread(is3).start();
+		//new Thread(is3).start();
 
 		Runnable is4 = new ItemScanner(rfidAgent4, this, _observers, _nScanDistance);
 		_itemScanners.add(is4);
-		new Thread(is4).start();
+		//new Thread(is4).start();
 
 		return sensorAgents;
 	}
@@ -489,6 +489,10 @@ public class NewDomain extends DefaultTableModel{
                 _locations[i][j] = "";
             }
         }
+    }
+    
+    public Vector<Runnable> getItemScanners(){
+    	return _itemScanners;
     }
 
     // Overridden Methods

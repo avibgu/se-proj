@@ -76,7 +76,9 @@ public class Simulator {
 	}
 	
 	public void start() {
-
+		for (Runnable itemScanner : _domain.getItemScanners()) {
+			new Thread(itemScanner).start();
+		}
 	}
 	/**
 	 * Registers a new agent in the simulator and presents it in the virtual world

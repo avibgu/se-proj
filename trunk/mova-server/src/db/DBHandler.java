@@ -550,7 +550,12 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
-
+	
+	/**
+	 * Returns a list of all agents
+	 * It returns a list of all agents with the data: id, type and registration id only!
+	 * @return a list of all agents
+	 */
 	public List<Agent> getAllAgents() {
 
 		mRead.lock();
@@ -568,6 +573,7 @@ public class DBHandler {
 
 				Agent agent = new Agent(new AgentType(results.getString("agent_type")));
 				agent.setId(results.getString("agent_id"));
+				agent.setRegistrationId(results.getString("registration_id"));
 				//TODO
 				//agent.setCurrentActivityId(Integer.valueOf(results.getString("activity_id")));
 				agents.add(agent);
