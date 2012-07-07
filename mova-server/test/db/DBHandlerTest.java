@@ -5,6 +5,13 @@ package db;
 
 import static org.junit.Assert.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.junit.After;
@@ -12,7 +19,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import actor.Activity;
+import actor.Agent;
+
+import state.ActivityState;
 import type.AgentType;
+import type.ItemType;
 
 /**
  * @author Shai
@@ -55,14 +67,6 @@ public class DBHandlerTest {
 	}
 
 	/**
-	 * Test method for {@link db.DBHandler#insertAgentType(java.lang.String)}.
-	 */
-	@Test
-	public void testInsertAgentType() {
-		fail("Not yet implemented");
-	}
-
-	/**
 	 * Test method for {@link db.DBHandler#deleteAgentType(java.lang.String)}.
 	 */
 	@Test
@@ -101,6 +105,7 @@ public class DBHandlerTest {
 		db.deleteAgent("20");
 		ids = db.getAgentIds();
 		assertFalse(ids.contains("20"));
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -108,7 +113,15 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetAgentIds() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		db.insertAgent("21", new AgentType("COORDINATOR").toString(), true, "546");
+		Vector<String> ids = db.getAgentIds();
+		assertTrue(ids.contains("20"));
+		assertTrue(ids.contains("21"));
+		db.deleteAgent("20");
+		db.deleteAgent("21");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -116,7 +129,19 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetAgentActivityId() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setType("BLA");
+		db.insertActivity(ac);
+		db.changeAgentActivityId("20", ac.getId());
+		String activityId = db.getAgentActivityId("20");
+		assertEquals(ac.getId(), activityId);
+		db.deleteAgent("20");
+		db.deleteActivity(ac.getId());
+		db.deleteActivityType("BLA");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -124,7 +149,15 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetAgentStatus() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		boolean status = db.getAgentStatus("20");
+		assertEquals(true, status);
+		db.changeAgentStatus("20", false);
+		status = db.getAgentStatus("20");
+		assertEquals(false, status);
+		db.deleteAgent("20");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -132,7 +165,12 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetAgentRegistrationId() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		String regId = db.getAgentRegistrationId("20");
+		assertEquals("345345", regId);
+		db.deleteAgent("20");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -140,7 +178,12 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetAgentType() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		String type = db.getAgentType("20");
+		assertEquals("COORDINATOR", type);
+		db.deleteAgent("20");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -148,7 +191,13 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testChangeAgentStatus() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		assertTrue(db.getAgentStatus("20"));
+		db.changeAgentStatus("20", false);
+		assertFalse(db.getAgentStatus("20"));
+		db.deleteAgent("20");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -156,7 +205,13 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testChangeAgentActivityId() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		db.changeAgentActivityId("20", "1111");
+		String activityId1 = db.getAgentActivityId("20");
+		assertEquals("1111", activityId1);
+		db.deleteAgent("20");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -164,7 +219,13 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testChangeAgentRegistrationID() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		db.changeAgentRegistrationID("20", "3333");
+		String regId = db.getAgentRegistrationId("20");
+		assertEquals("3333", regId);
+		db.deleteAgent("20");
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -172,7 +233,13 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testDeleteAllAgents() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		db.insertAgent("21", new AgentType("COORDINATOR").toString(), true, "546");
+		db.deleteAllAgents();
+		Vector<String> ids = db.getAgentIds();
+		assertEquals(0, ids.size());
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -180,7 +247,18 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetAllAgents() {
-		fail("Not yet implemented");
+		db.insertAgentType("COORDINATOR");
+		db.insertAgent("20", new AgentType("COORDINATOR").toString(), true, "345345");
+		db.insertAgent("21", new AgentType("COORDINATOR").toString(), true, "546");
+		List<Agent> agents = db.getAllAgents();
+		assertEquals("20", agents.get(0).getId());
+		assertEquals("COORDINATOR", agents.get(0).getType().getType());
+		assertEquals("345345", agents.get(0).getRegistrationId());
+		assertEquals("21", agents.get(1).getId());
+		assertEquals("COORDINATOR", agents.get(1).getType().getType());
+		assertEquals("546", agents.get(1).getRegistrationId());
+		db.deleteAllAgents();
+		db.deleteAgentType("COORDINATOR");
 	}
 
 	/**
@@ -188,7 +266,10 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testInsertActivityType() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Vector<String> activityTypes = db.getActivityTypes();
+		assertTrue(activityTypes.contains("BLA"));
+		db.deleteActivityType("BLA");
 	}
 
 	/**
@@ -196,7 +277,12 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testDeleteActivityType() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Vector<String> activityTypes = db.getActivityTypes();
+		assertTrue(activityTypes.contains("BLA"));
+		db.deleteActivityType("BLA");
+		activityTypes = db.getActivityTypes();
+		assertFalse(activityTypes.contains("BLA"));
 	}
 
 	/**
@@ -204,7 +290,13 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetActivityTypes() {
-		fail("Not yet implemented");
+		db.insertActivityType("type1");
+		db.insertActivityType("type2");
+		Vector<String> activityTypes = db.getActivityTypes();
+		assertTrue(activityTypes.contains("type1"));
+		assertTrue(activityTypes.contains("type2"));
+		db.deleteActivityType("type1");
+		db.deleteActivityType("type2");
 	}
 
 	/**
@@ -212,15 +304,39 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testInsertActivity() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link db.DBHandler#deleteActivity(java.lang.String)}.
-	 */
-	@Test
-	public void testDeleteActivity() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setType("BLA");
+		db.insertActivity(ac);
+		Vector<String> names = db.getActivityNames();
+		assertTrue(names.contains("hey"));
+				
+		db.insertAgentType("COORDINATOR");
+		db.insertItemType("Stand");
+		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
+		requiredAgents.put(new AgentType("COORDINATOR"), 2);
+		Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(new ItemType("Stand"), 1);
+		Set<String> acs = new HashSet<String>();
+		acs.add(ac.getId());
+		Timestamp pStartTime = new Timestamp(new Date().getTime());
+		Timestamp pEndTime = new Timestamp(pStartTime.getTime() + (1000 * 60 * 60));
+		long pEstimateTime = 1000 * 60 * 60;
+		String pDescription = "desc";
+		String pName = "name";
+		Activity ac2 = new Activity("BLA", pStartTime, pEndTime, pEstimateTime, 
+				requiredAgents, requiredItems, acs, pDescription, pName); 
+		db.insertActivity(ac2);
+		
+		names = db.getActivityNames();
+		assertTrue(names.contains("name"));
+		
+		db.deleteActivity(ac.getId());
+		db.deleteActivity(ac2.getId());
+		db.deleteActivityType("BLA");
+		db.deleteAgentType("COORDINATOR");
+		db.deleteItemType("Stand");
+		//db.deleteData();
 	}
 
 	/**
@@ -228,7 +344,18 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testUpdateActivityDeadline() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setType("BLA");
+		db.insertActivity(ac);
+		Timestamp ts2 = db.getActivityDeadline(ac.getId());
+		long postponeBy = ts2.getTime() + 30*60*1000;
+		db.updateActivityDeadline(ac.getId(), new Timestamp(postponeBy));
+		ts2 = db.getActivityDeadline(ac.getId());
+		
+		assertEquals(postponeBy, ts2.getTime());
+		db.deleteActivity(ac.getId());
+		db.deleteActivityType("BLA");
 	}
 
 	/**
@@ -236,7 +363,16 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testUpdateActivityDuration() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setType("BLA");
+		db.insertActivity(ac);
+		db.updateActivityDuration(ac.getId(), 1000*60*60*2);
+		
+		assertEquals(1000*60*60*2, db.getActivityDuration(ac.getId()));
+		
+		db.deleteActivity(ac.getId());
+		db.deleteActivityType("BLA");
 	}
 
 	/**
@@ -244,7 +380,17 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testUpdateActivityState() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setType("BLA");
+		ac.setState(ActivityState.PENDING);
+		db.insertActivity(ac);
+		assertEquals(ActivityState.PENDING, db.getActivityState(ac.getId()));
+		db.updateActivityState(ac.getId(), ActivityState.IN_PROGRESS.toString());
+		assertEquals(ActivityState.IN_PROGRESS, db.getActivityState(ac.getId()));
+		
+		db.deleteActivity(ac.getId());
+		db.deleteActivityType("BLA");
 	}
 
 	/**
@@ -252,31 +398,15 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetActivityNames() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link db.DBHandler#getActivityDeadline(java.lang.String)}.
-	 */
-	@Test
-	public void testGetActivityDeadline() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link db.DBHandler#getActivityDuration(java.lang.String)}.
-	 */
-	@Test
-	public void testGetActivityDuration() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link db.DBHandler#getActivityState(java.lang.String)}.
-	 */
-	@Test
-	public void testGetActivityState() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setName("Hello");
+		ac.setType("BLA");
+		db.insertActivity(ac);
+		Vector<String> names = db.getActivityNames();
+		assertTrue(names.contains("Hello"));
+		db.deleteActivity(ac.getId());
+		db.deleteActivityType("BLA");
 	}
 
 	/**
@@ -284,7 +414,14 @@ public class DBHandlerTest {
 	 */
 	@Test
 	public void testGetActivityName() {
-		fail("Not yet implemented");
+		db.insertActivityType("BLA");
+		Activity ac = new Activity("hey");
+		ac.setType("BLA");
+		ac.setName("Hello");
+		assertEquals("Hello", db.getActivityName(ac.getId()));
+		
+		db.deleteActivity(ac.getId());
+		db.deleteActivityType("BLA");
 	}
 
 	/**

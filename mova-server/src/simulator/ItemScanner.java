@@ -22,7 +22,7 @@ public class ItemScanner implements Runnable {
 	protected NewDomain mDomain;
 	protected SensorAgent mSensorAgent;
 	protected Location mSensorLocation;
-	protected final long mRefreshRate = 1;
+	protected final long mRefreshRate = 10;
 	protected final double mScanDistance;
 	protected Vector<Item> mVisibleItems;
 	protected Map<String, Item> mIsibleItems;
@@ -44,12 +44,12 @@ public class ItemScanner implements Runnable {
 		mObservers = observers;
 		mScanDistance = scanDistance;
 		
-		mVisibleItems = mDomain.scanForItems(mSensorLocation, mScanDistance);
-		mIsibleItems = vectorToHashMap(mDomain.scanForItems(mSensorLocation, mScanDistance));
-		String message = mSensorAgent.getType().toString() + " Sensor identified items: ";
-		if(mIsibleItems.size() > 0){
-			createIdentifiedItemsMessage(message, mIsibleItems);
-		}
+//		mVisibleItems = mDomain.scanForItems(mSensorLocation, mScanDistance);
+//		mIsibleItems = vectorToHashMap(mDomain.scanForItems(mSensorLocation, mScanDistance));
+//		String message = mSensorAgent.getType().toString() + " Sensor identified items: ";
+//		if(mIsibleItems.size() > 0){
+//			createIdentifiedItemsMessage(message, mIsibleItems);
+//		}
 	}
 	
 	@Override
