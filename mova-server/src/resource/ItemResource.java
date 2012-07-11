@@ -71,7 +71,6 @@ public class ItemResource {
 	 */
 	@PUT
 	@Path("/distributeItemLocation")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void distributeItemLocation(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
@@ -84,7 +83,6 @@ public class ItemResource {
 	 */
 	@PUT
 	@Path("/distributeItemState")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void distributeItemState(String jsonObject){
 		JsonArray ids = new JsonArray();
 		Vector<String> agentsId = null;

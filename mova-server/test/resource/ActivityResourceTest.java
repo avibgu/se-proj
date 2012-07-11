@@ -61,7 +61,7 @@ public class ActivityResourceTest {//Passed
 		Activity a1 = new Activity("a1");
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add("1");
-		mc.sendActivity(a1, agentIds);
+		mc.sendActivity(a1);
 	}
 	
 	@Test//Passed
@@ -69,7 +69,7 @@ public class ActivityResourceTest {//Passed
 		Activity a1 = createTestActivity();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add("1");
-		mc.sendActivity(a1, agentIds);
+		mc.sendActivity(a1);
 		deleteTestActivity(a1);
 	}
 	

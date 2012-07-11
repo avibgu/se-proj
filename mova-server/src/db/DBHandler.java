@@ -61,6 +61,7 @@ public class DBHandler {
     private static String						mActivityItemsTableName = "activityItems";
     private static String						mAgentLocationsTableName = "agentLocations";
     private static String						mItemLocationsTableName = "itemLocations";
+    private static String						mC2dmTable = "c2dm";
    
     private static Connection					mConn = null;
     private static Statement					mStmt = null;
@@ -1170,6 +1171,28 @@ public class DBHandler {
 		shutdown();
 		mWrite.unlock();
 	}
+	
+	/**
+	 * Deletes the auth key in c2dm table
+	 */
+	public void deleteAuthKey() {
+		
+		mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("delete from " + mC2dmTable );
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("deleteC2dm - database access error" + sqlExcept.getMessage());
+					
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
 	/**
 	 * Updates the item state: AVAILABLE, UNAVAILABLE or BUSY
 	 * @pre the id pItemId must be in the system.
@@ -1914,8 +1937,50 @@ public class DBHandler {
 		}
 	}
 	
+	public String getAuthKey(){
+		mRead.lock();
+		createConnection();
+		String auth_key = null;
+		try {
+			mStmt = mConn.createStatement();
+			ResultSet results = mStmt.executeQuery("select AUTH_KEY from " + mC2dmTable);
+
+			results.next();
+			if (results.getRow() == 0)
+				return null;
+			auth_key = results.getString(1);
+			results.close();
+			mStmt.close();
+		} catch (SQLException sqlExcept) {
+			System.out.println("getAgentTypes - database access error or no agent types in database");
+		}
+		
+		shutdown();
+		mRead.unlock();
+		return auth_key;
+	}
+	
+	public void insertAuthKey(String auth_key){
+	 	mWrite.lock();
+		createConnection();
+		
+		try {
+			mStmt = mConn.createStatement();
+			mStmt.execute("insert into " + mC2dmTable + " values (" + "'" + auth_key + "'" + ")");
+			mStmt.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException sqlExcept) {
+			System.out.println("insertAgentType - database access error");
+		}
+		
+		shutdown();
+		mWrite.unlock();
+	}
+	
+	
 	public void insertInitialData(){
-		/*Date date = new Date();
+		Date date = new Date();
 		Timestamp startTime = new Timestamp(date.getTime());
 		Timestamp endTime = new Timestamp(startTime.getTime() + 1000*60*60*7);
 		long estimateTime = 1000*60*60;
@@ -2051,6 +2116,6 @@ public class DBHandler {
 //		insertActivityType(ActivityType.TOUR);
 //		insertActivity(a7);
 		
-		System.out.println("Inserted initial data - 7 activities and 7 items");*/
+		System.out.println("Inserted initial data - 7 activities and 7 items");
 	}
 }
