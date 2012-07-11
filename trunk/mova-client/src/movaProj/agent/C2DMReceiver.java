@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import movaProj.sampleApplication.InsertAgentTypeActivity;
 import type.MessageType;
+import utilities.Location;
 import utilities.MovaJson;
 import actor.Item;
 import android.content.BroadcastReceiver;
@@ -163,7 +164,12 @@ public class C2DMReceiver extends BroadcastReceiver
 
 		private void distributeItemLocation(Context context, Intent intent,
 				String message) {
-			// TODO Auto-generated method stub
+			
+			JsonParser jp = new JsonParser();
+      		JsonObject j = (JsonObject) jp.parse(message);
+      		String itemId = j.get("id").getAsString();
+      		Location newLocation = new MovaJson().jsonToLocation(j.get("location").getAsString());
+			new ItemDataSource(context).changeItemLocation(itemId, newLocation);
 			
 		}
 
@@ -195,8 +201,7 @@ public class C2DMReceiver extends BroadcastReceiver
             new ActivityDataSource(context).createActivity(activity);
         }
 
-		// Better do this in an asynchronous thread
-        public void sendRegistrationIdToServer(String registrationId,String agentType,Context context) {
+		public void sendRegistrationIdToServer(String registrationId,String agentType,Context context) {
        		Log.d("C2DM", "Sending registration ID to my application server");
        		new MovaClient().registerAgent(registrationId, agentType);
         }

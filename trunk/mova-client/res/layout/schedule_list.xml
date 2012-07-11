@@ -42,20 +42,13 @@
         android:layout_marginTop="20dp"
         android:gravity="bottom"
         android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/changeStatusButton"
-            android:layout_width="160dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:text="@string/LogoutString" />
-
+
         <Button
             android:id="@+id/initialButton"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
             android:text="Get Schedule" />
+
     </LinearLayout>
 
 </LinearLayout>
