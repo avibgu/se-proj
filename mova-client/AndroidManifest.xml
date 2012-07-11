@@ -24,8 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      <activity  android:name = "movaProj.sampleApplication.CreateActivity" > </activity>
-      <activity  android:name = "movaProj.sampleApplication.MovaActivityDetails" > </activity>
+         <activity  android:name = "movaProj.sampleApplication.CreateActivity" > </activity>
+   	  <activity  android:name = "movaProj.sampleApplication.MovaActivityDetails" > </activity>
       <activity  android:name = "movaProj.sampleApplication.InsertAgentTypeActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.MovaAgentActivity" > </activity>
       <activity  android:name = "movaProj.sampleApplication.ActivityLongClickList" > </activity>

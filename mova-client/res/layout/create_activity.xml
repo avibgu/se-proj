@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" >
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -77,36 +81,108 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout6"
+		
+       <LinearLayout
+            android:id="@+id/DateMainLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:id="@+id/linearLayout7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/editText3"
-                    android:layout_width="136dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Severity"
-                    android:textSize="32px" >
-
-                    <requestFocus />
-                </TextView>
-
-                <Spinner
-                    android:id="@+id/severitySpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </LinearLayout>
-
+            android:orientation="horizontal" >
+            
+           <TextView
+                        android:id="@+id/dateText"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.14"
+                        android:text="Date:"
+                        android:textSize="32px" />
+                     <EditText
+               android:id="@+id/date"
+               android:layout_width="154dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.43"
+               android:inputType="textPersonName"
+               android:clickable="true" />
+           
+      	</LinearLayout>
+        
+        
         <LinearLayout
+            android:id="@+id/StartTimeMainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            
+           <TextView
+                        android:id="@+id/startTimeText"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.14"
+                        android:text="Start Time:"
+                        android:textSize="32px" />
+           
+          <EditText
+               android:id="@+id/startTime"
+               android:layout_width="154dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.43"
+               android:inputType="textPersonName" 
+               android:clickable="true"
+               android:editable="false"/>
+           
+      	</LinearLayout>
+       
+        
+       <LinearLayout
+            android:id="@+id/EndTimeMainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            
+           <TextView
+                        android:id="@+id/endTimeText"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.14"
+                        android:text="End Time:"
+                        android:textSize="32px" />
+           
+          <EditText
+               android:id="@+id/endTime"
+               android:layout_width="154dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.43"
+               android:inputType="textPersonName"
+               android:clickable="true" 
+               android:editable="false"/>
+           
+      	</LinearLayout>
+       
+       <LinearLayout
+           android:id="@+id/EstimatedTimeMainLayout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal" >
+
+           <TextView
+               android:id="@+id/estimatedTimeText"
+               android:layout_width="130dp"
+               android:layout_height="match_parent"
+               android:layout_weight="0.44"
+               android:text="Estimated Time: (min)"
+               android:textSize="32px" />
+
+           <EditText
+               android:id="@+id/estimatedTime"
+               android:layout_width="173dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.25"
+               android:inputType="number" >
+
+               <requestFocus />
+           </EditText>
+       </LinearLayout>
+       
+       <LinearLayout
             android:id="@+id/linearLayout10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -145,23 +221,66 @@
                 </LinearLayout>
             </LinearLayout>
 
+           <LinearLayout
+			            android:id="@+id/dependenciesLayout"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:orientation="vertical" >
+
+			           <TextView
+			               android:id="@+id/dependenciesText"
+			               android:layout_width="244dp"
+			               android:layout_height="44dp"
+			               android:text="Required activities:"
+			               android:textSize="32px" />
+			           
+			           <LinearLayout
+			               android:id="@+id/dependenciesLayout"
+			               android:layout_width="match_parent"
+			               android:layout_height="wrap_content"
+			               android:orientation="horizontal" >
+
+			               <Spinner
+			                   android:id="@+id/dependenciesSpinner"
+			                   android:layout_width="216dp"
+			                   android:layout_height="wrap_content"
+			                   android:layout_weight="0.89" />
+
+			               <Button
+			                   android:id="@+id/addDependencyButton"
+			                   android:layout_width="68dp"
+			                   android:layout_height="wrap_content"
+			                   android:text="Add" />
+			           </LinearLayout>
+
+       	             	<ListView
+						            android:id="@+id/dependenciesList"
+						            android:layout_width="match_parent"
+						            android:layout_height="wrap_content" >
+						        </ListView>
+    					
+	           
+          	</LinearLayout>
+            
             <LinearLayout
                 android:id="@+id/linearLayout12"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp" >
 
                 <LinearLayout
                     android:id="@+id/linearLayout18"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
-
+
                     <TextView
                         android:id="@+id/editText2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                         android:textSize="32px"
-                        android:text="@string/description_new" />
+                        android:text="@string/description_new"
+                        android:textSize="32px" />
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -213,3 +332,5 @@
     </LinearLayout>
 
 </LinearLayout>
+
+</ScrollView>

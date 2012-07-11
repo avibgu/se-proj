@@ -53,9 +53,9 @@ public class MovaClient {
 	}
 	
 	private URI getBaseURI() {
-		//return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
+		return UriBuilder.fromUri("http://10.0.2.2:8080/mova-server").build();
 //		return UriBuilder.fromUri("http://192.168.43.24:8080/mova-server").build();
-		return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
+		//return UriBuilder.fromUri("http://localhost:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://10.0.0.2:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://132.72.247.5:8080/mova-server").build();
 		//return UriBuilder.fromUri("http://192.168.1.9:8080/mova-server").build();
@@ -147,11 +147,10 @@ public class MovaClient {
 	 * @param pActivity the activity to send
 	 * @param pAgentIds a vector of agent ID's to send to
 	 */
-	public void sendActivity(Activity pActivity, Vector<String> pAgentIds){
+	public void sendActivity(Activity pActivity){
 		JsonObject j = new JsonObject();
 		j.addProperty("activity", mMj.activityToJson(pActivity));
-		j.addProperty("agentIds", mMj.agentsToJson(pAgentIds));
-
+		
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/sendActivity");
 		resource.put(j.toString());
 		
@@ -292,13 +291,7 @@ public class MovaClient {
 		String response = resource.get(String.class);
 		return new MovaJson().jsonToAgents(response);
 	}
-	
-//	public void getAgentsAvailability(String agentId) {
-//		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/getAgentsAvailability");
-//		resource.getReference().addQueryParameter("agentId", agentId);
-//		resource.get();
-//	}
-	
+
 	// Static
 	
 	public void createAgentType(String type){
@@ -345,17 +338,4 @@ public class MovaClient {
 		resource.get(String.class);
 	}
 
-	
-	
-	
-	
-	
-//	public void changeAgentStatus(String agentId, boolean isLogin){
-//		JsonObject j = new JsonObject();
-//		j.addProperty("agentId", agentId);
-//		j.addProperty("newStatus", isLogin);
-//		
-//		ClientResource resource = new ClientResource(getBaseURI().toString() + "/agents/changeAgentStatus");
-//		resource.put(j.toString());
-//	}
 }

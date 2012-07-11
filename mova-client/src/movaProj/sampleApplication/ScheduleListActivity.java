@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -83,8 +84,6 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		
 		listView.setOnCreateContextMenuListener(this);
 		
-		Button logoutButton = (Button) this.findViewById(R.id.changeStatusButton);
-		logoutButton.setOnClickListener(this);
 		Button recalculateButton = (Button) this.findViewById(R.id.initialButton);
 		recalculateButton.setOnClickListener(this);
 		C2DMReceiver.addListener(this);
@@ -104,12 +103,38 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	}
 	
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		String agentId = new AgentDataSource(this).getAgentId();
+	    switch (item.getItemId()) {
+	        case R.id.createActivity:     
+	        	Intent i = new Intent(ScheduleListActivity.this,
+						CreateActivity.class);
+				startActivity(i);
+	        	break;
+	        case R.id.logout:     
+	        	MovaAndroidClient.changeAgentStatus(agentId,false,this);
+				setContentView(R.layout.login);
+				Button loginButton = (Button) this.findViewById(R.id.loginButton);
+				loginButton.setOnClickListener(this);
+				break;
+	    }
+	    return true;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+	
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 	  int menuItemIndex = item.getItemId();
 	  switch (menuItemIndex){
 	  	case 0: // Start Activity
-			MovaAndroidClient.startActivity(this, schedule1.get(info.position).getId());
+			MovaAndroidClient.startActivity(schedule1.get(info.position).getId());
 			Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
 			break;
 		case 1:
@@ -221,12 +246,6 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	public void onClick(View v) {
 		String agentId = new AgentDataSource(this).getAgentId();
 		switch (v.getId()) {
-		case R.id.changeStatusButton:
-			MovaAndroidClient.changeAgentStatus(agentId,false,this);
-			setContentView(R.layout.login);
-			Button loginButton = (Button) this.findViewById(R.id.loginButton);
-			loginButton.setOnClickListener(this);
-			break;
 		case R.id.loginButton:
 			MovaAndroidClient.changeAgentStatus(agentId,true,this);
 			Intent i = new Intent(ScheduleListActivity.this,
@@ -239,12 +258,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		case R.id.numberPickerOkButton:
 			NumberPicker numberPicker = (NumberPicker) this.findViewById(R.id.numberPickerComponent);
 			int addedTime = numberPicker.getCurrent();
-
 			break;
 		}
-	
-
 	}
-
-
 }
