@@ -41,10 +41,11 @@ public class ActivityResource {
 	public void sendActivity(String jsonObject){
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
-		JsonObject jsonActivity = (JsonObject) jp.parse(j.get("activity").getAsString());
-		Vector<String> jsonIds = null;
+		String jsonActivity =  j.get("activity").getAsString();
+		Activity newActivity = new MovaJson().jsonToActivity(jsonActivity);
+		db.insertActivity(newActivity);
 		
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds,MessageType.SEND_ACTIVITY);
+		//C2dmController.getInstance().sendMessageToDevice("3", jsonObject,jsonIds,MessageType.SEND_ACTIVITY);
 	}
 	/**
 	 * Sends a whole activity schedule to all relevant agents
@@ -159,11 +160,12 @@ public class ActivityResource {
 	
 	@GET
 	@Path("/getAllActivities")
-	public void getAllActivities(@QueryParam("agentId") String agentId){
+	public String getAllActivities(@QueryParam("agentId") String agentId){
 		List<Activity> activities = db.getAllActivities();
 		Vector<String> agentIds = new Vector<String>();
 		agentIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(activities),agentIds, MessageType.GOT_ACTIVITIES);
+		//C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(activities),agentIds, MessageType.GOT_ACTIVITIES);
+		return new MovaJson().createJsonObj(activities);
 	}
 	
 }

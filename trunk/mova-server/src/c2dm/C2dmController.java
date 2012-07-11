@@ -48,78 +48,82 @@ public class C2dmController {
 	 */
 	public void sendMessageUsingRegistrationId(String pCollapseKey, String pMessage,
 			String registrationId, MessageType pMessageType){
-		try{
-			String authToken = getAutoToken();
-			URL url = new URL("https://android.apis.google.com/c2dm/send");
-			HttpsURLConnection
-					.setDefaultHostnameVerifier(new CustomizedHostnameVerifier());
-			HttpsURLConnection request = (HttpsURLConnection) url
-					.openConnection();
-	
-			request.setDoOutput(true);
-			request.setDoInput(true);
-	
-			StringBuilder buf = new StringBuilder();
-			buf.append("registration_id").append("=")
-					.append((URLEncoder.encode(registrationId, "UTF-8")));
-			buf.append("&collapse_key").append("=")
-					.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
-			buf.append("&data.message").append("=")
-					.append((URLEncoder.encode(pMessage, "UTF-8")));
-			buf.append("&data.messageType").append("=")
-			.append((URLEncoder.encode(pMessageType.toString(), "UTF-8")));
-	
-			request.setRequestMethod("POST");
-			request.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded");
-			request.setRequestProperty("Content-Length", buf.toString()
-					.getBytes().length + "");
-			request.setRequestProperty("Authorization", "GoogleLogin auth="
-					+ authToken);
-	
-			OutputStreamWriter post = new OutputStreamWriter(
-					request.getOutputStream());
-			post.write(buf.toString());
-			post.flush();
-	
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					request.getInputStream()));
-			buf = new StringBuilder();
-	
-			String inputLine;
-	
-			while ((inputLine = in.readLine()) != null) {
-				buf.append(inputLine);
+		boolean success = false;
+		while (!success){
+			try{
+				
+				String authToken = getAuthToken();
+				URL url = new URL("https://android.apis.google.com/c2dm/send");
+				HttpsURLConnection
+						.setDefaultHostnameVerifier(new CustomizedHostnameVerifier());
+				HttpsURLConnection request = (HttpsURLConnection) url
+						.openConnection();
+		
+				request.setDoOutput(true);
+				request.setDoInput(true);
+		
+				StringBuilder buf = new StringBuilder();
+				buf.append("registration_id").append("=")
+						.append((URLEncoder.encode(registrationId, "UTF-8")));
+				buf.append("&collapse_key").append("=")
+						.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
+				buf.append("&data.message").append("=")
+						.append((URLEncoder.encode(pMessage, "UTF-8")));
+				buf.append("&data.messageType").append("=")
+				.append((URLEncoder.encode(pMessageType.toString(), "UTF-8")));
+		
+				request.setRequestMethod("POST");
+				request.setRequestProperty("Content-Type",
+						"application/x-www-form-urlencoded");
+				request.setRequestProperty("Content-Length", buf.toString()
+						.getBytes().length + "");
+				request.setRequestProperty("Authorization", "GoogleLogin auth="
+						+ authToken);
+		
+				OutputStreamWriter post = new OutputStreamWriter(
+						request.getOutputStream());
+				post.write(buf.toString());
+				post.flush();
+		
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						request.getInputStream()));
+				buf = new StringBuilder();
+		
+				String inputLine;
+		
+				while ((inputLine = in.readLine()) != null) {
+					buf.append(inputLine);
+				}
+		
+				post.close();
+				in.close();
+		
+				int code = request.getResponseCode();
+		
+				if (code == 200) {
+					success = true;
+		
+				} else if (code == 503) {
+					
+		
+				} else if (code == 401) {
+					getNewAuthKey();
+					sendMessageUsingRegistrationId(pCollapseKey, pMessage, registrationId, pMessageType);
+				}
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-	
-			post.close();
-			in.close();
-	
-			int code = request.getResponseCode();
-	
-			if (code == 200) {
-				// TODO: check for an error and if so, handle
-	
-			} else if (code == 503) {
-				// TODO: check for Retry-After header; use exponential
-				// backoff and try again
-	
-			} else if (code == 401) {
-				// TODO: get a new auth token
-			}
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
 	public void sendMessageToDevice(String pCollapseKey, String pMessage,
 			Vector<String> pAgentsIds, MessageType pMessageType) {
 
-		String authToken = getAutoToken();
+		String authToken = getAuthToken();
 		URL url;
 		
 		try {
@@ -198,11 +202,21 @@ public class C2dmController {
 		}
 	}
 
-	private static String getAutoToken() {
-
-		String authToken = null;
+	private String getAuthToken() {
+		
+		String authToken = mDb.getAuthKey();
+		//String authToken = null;
+		
+		if (authToken == null) {
+			return getNewAuthKey();
+		}else{
+			return authToken;
+		}
+	}
+	
+	private String getNewAuthKey(){
 		System.out.println("asking C2DM server for auth token...");
-
+		String authToken = null;
 		StringBuilder buf = new StringBuilder();
 
 		HttpsURLConnection request = null;
@@ -235,8 +249,6 @@ public class C2dmController {
 			post.flush();
 
 			int code = request.getResponseCode();
-			// _log.info("response code: " + request.getResponseCode());
-			// _log.info("response message: " + request.getResponseMessage());
 			if (code == 200) {
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						request.getInputStream()));
@@ -250,18 +262,17 @@ public class C2dmController {
 				}
 				post.close();
 				in.close();
-				// _log.info("response from C2DM server:\n" + buf.toString());
+				
 
 			} else if (code == 403) {
-				// TODO: handle error conditions
+				
 			}
 
 			if (authToken != null) {
-				// _log.info("storing auth token: " + authToken);
-				// _dao.saveAuthToken(authToken);
+				mDb.deleteAuthKey();
+				mDb.insertAuthKey(authToken);
 			}
-
-			return authToken;
+		return authToken;
 
 		} catch (Exception e) {
 			// _log.error("unable to make https post request to c2dm server",
@@ -270,9 +281,8 @@ public class C2dmController {
 			e.printStackTrace();
 			return null;
 		}
-	}
 	
-
+	}
 	private static class CustomizedHostnameVerifier implements HostnameVerifier {
 		public boolean verify(String pHostname, SSLSession pSession) {
 			return true;

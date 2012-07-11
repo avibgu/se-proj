@@ -103,3 +103,10 @@ CREATE TABLE itemLocations  (
   	REFERENCES items(item_id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE c2dm  (
+	auth_key TEXT
+);
+
+
+
