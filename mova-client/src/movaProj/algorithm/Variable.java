@@ -11,6 +11,7 @@ public class Variable implements Comparable<Variable> {
 	protected Activity mActivity;
 	protected Domain mDomain;
 
+	@Deprecated
 	public Variable(Activity pActivity) {
 
 		mActivity = pActivity;

@@ -1,4 +1,4 @@
-package algorithm;
+package movaProj.algorithm;
 
 import java.sql.Timestamp;
 import java.util.Date;
