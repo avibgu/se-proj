@@ -73,9 +73,10 @@ public class ActivityDataSource {
 				cv.put(DatabaseHelper.scheduleIndexIdCol, i);
 				cv.put(DatabaseHelper.scheduleActivityIdCol, movaSched.get(i).getId());
 				openToWrite();
-			   	database.insert(DatabaseHelper.scheduleTable, null,cv);
+			   	long j = database.insert(DatabaseHelper.scheduleTable, null,cv);
 			   	close();
 			}
+			close();
 			
 		}
 		
@@ -143,6 +144,24 @@ public class ActivityDataSource {
 			}
 		}
 		
+		public Vector<String> getActivityTypes(){
+			Vector<String> types=new Vector<String>();
+			openToRead();
+			Cursor cursor = database.query(DatabaseHelper.activityTypeTable,
+					new String[] {DatabaseHelper.activityTypeColName}, null, null, null, null, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				types.add(cursor.getString(0)); 
+				cursor.moveToNext();
+			}
+			// Make sure to close the cursor
+			cursor.close();
+			
+			close();
+			
+			return types;
+		}
+		
 		public void completeActivity(String activityId){
 			openToWrite();
 			database.beginTransaction();
@@ -152,5 +171,19 @@ public class ActivityDataSource {
 			database.endTransaction();
 			close();
 		}
+		
+		public boolean isActivityExists(String activityId){
+			openToRead();
+			Cursor cursor = database.query(DatabaseHelper.activityTable,
+					new String[] {DatabaseHelper.activityColState}, DatabaseHelper.activityColID + "=?" , new String[] {activityId}, null, null, null);
+			cursor.moveToFirst();
+			close();
+			if (!cursor.isAfterLast()) {
+				return true;
+			}
+			return false;
+			
+		}
+		
 }
 

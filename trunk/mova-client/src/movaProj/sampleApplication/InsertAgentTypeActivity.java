@@ -7,7 +7,7 @@ import java.util.Vector;
 import client.MovaClient;
 
 import movaProj.agent.AgentDataSource;
-import movaProj.agent.MovaAndroidClient;
+import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
 import movaProj.agent.R.id;
@@ -48,7 +48,7 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 	       
 	       Button agentTypeButton = (Button)this.findViewById(R.id.agentTypeButton);
 	       agentTypeButton.setOnClickListener(this);
-	       MovaAndroidClient.addListener(this);
+	       new MovaAndroidClientImpl().addListener(this);
 	}
 	
 	@Override
@@ -66,7 +66,7 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 	@Override
 	public void onClick(View v) {
 		setContentView(R.layout.progress_bar);
-		MovaAndroidClient.registerAgent(this,registrationId, agentType);
+		new MovaAndroidClientImpl().registerAgent(this,registrationId, agentType);
 	}
 
 	@Override

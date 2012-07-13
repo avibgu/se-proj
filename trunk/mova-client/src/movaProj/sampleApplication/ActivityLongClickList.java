@@ -1,7 +1,7 @@
 package movaProj.sampleApplication;
 
 import movaProj.agent.ActivityDataSource;
-import movaProj.agent.MovaAndroidClient;
+import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,7 +34,7 @@ public class ActivityLongClickList extends Activity {
 				case 0:
 					break;
 				case 1: // Complete Activity - Remove from the list and mark as completed.
-					MovaAndroidClient.completeActivity(getParent(), activityId);
+					new MovaAndroidClientImpl().completeActivity(getParent(), activityId);
 					Intent i = new Intent(ActivityLongClickList.this,
 							ScheduleListActivity.class);
 					startActivity(i);

@@ -72,7 +72,7 @@ public class C2DMReceiver extends BroadcastReceiver
 			 	 String message = extras.getString("message");
 		         Log.d("CD2M", "received message: " + message);
 		         MessageType messageType = MessageType.valueOf(extras.getString("messageType"));
-		      	Log.d("CD2M",messageType.toString());
+		      	 Log.d("CD2M",messageType.toString());
 		         switch (messageType){
 		         	case DELETE_ITEM:
 		         		deleteItem(context, intent, message);
@@ -192,14 +192,6 @@ public class C2DMReceiver extends BroadcastReceiver
             new ActivityDataSource(context).createSchedule(schedule);
             notifyObservers(new MovaMessage(MessageType.GOT_SCHEDULE, null)); 
 		}
-
-		public void sendActivity(Context context, Intent intent,String message){
-			JsonParser jp = new JsonParser();
-      		JsonObject j = (JsonObject) jp.parse(message);
-      	
-      		actor.Activity activity = new MovaJson().jsonToActivity(j.get("activity").getAsString());
-            new ActivityDataSource(context).createActivity(activity);
-        }
 
 		public void sendRegistrationIdToServer(String registrationId,String agentType,Context context) {
        		Log.d("C2DM", "Sending registration ID to my application server");

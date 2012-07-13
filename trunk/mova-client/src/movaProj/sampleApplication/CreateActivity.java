@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import movaProj.agent.AgentDataSource;
-import movaProj.agent.MovaAndroidClient;
+import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.R;
 import type.ActivityType;
 import type.AgentType;
@@ -66,7 +66,7 @@ public class CreateActivity extends Activity implements OnClickListener,OnItemSe
 	public void onStart(){
 	  super.onStart();
 	  String agentId = new AgentDataSource(this).getAgentId();
-	  allActivities = MovaAndroidClient.getAllActivities(agentId);
+	  allActivities = new MovaAndroidClientImpl().getAllActivities(agentId);
       List<String> allActivitiesStrings = getActivitiesNames(allActivities);
       Spinner s2 = (Spinner) findViewById(R.id.agentTypeSpinner);
       ArrayAdapter<String> adapter2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item, AgentType.values());
@@ -229,7 +229,7 @@ public class CreateActivity extends Activity implements OnClickListener,OnItemSe
 					 Intent i = new Intent(CreateActivity.this, ScheduleListActivity.class);
 					 startActivity(i);
 					 
-					 MovaAndroidClient.createNewActivity(this,newActivity);
+					 new MovaAndroidClientImpl().createNewActivity(this,newActivity);
 			         break;
 			 	case R.id.addDependencyButton:
 			 		long dependencyId = ((Spinner)findViewById(R.id.dependenciesSpinner)).getSelectedItemId();

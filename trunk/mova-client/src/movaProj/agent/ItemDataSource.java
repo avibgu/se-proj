@@ -48,7 +48,7 @@ public class ItemDataSource {
 	
 	public void deleteItem(String itemId) {
 		openToWrite();
-		database.delete(DatabaseHelper.itemTable, DatabaseHelper.itemColID + "=" + itemId, null);
+		database.delete(DatabaseHelper.itemTable, DatabaseHelper.itemColID + "=?", new String[] {itemId});
 		close();
 	}
 	
@@ -56,7 +56,7 @@ public class ItemDataSource {
 		ContentValues cv = new ContentValues();
 	    cv.put(DatabaseHelper.itemColState, newState);
 	    openToWrite();
-	   	database.update(DatabaseHelper.itemTable, cv, DatabaseHelper.itemColID + "=" + itemId, null);
+	   	database.update(DatabaseHelper.itemTable, cv, DatabaseHelper.itemColID + "=?", new String[] {itemId});
 	   	close();
 	}
 	
@@ -65,7 +65,7 @@ public class ItemDataSource {
 	    cv.put(DatabaseHelper.itemLongitudeCol, newLocation.getLongitude());
 	    cv.put(DatabaseHelper.itemLatitudeCol, newLocation.getLatitude());
 		openToWrite();
-		database.update(DatabaseHelper.itemTable, cv, DatabaseHelper.itemColID + "=" + itemId, null);
+		database.update(DatabaseHelper.itemTable, cv, DatabaseHelper.itemColID + "=?", new String[] {itemId});
 		close();
 	}
 	
@@ -85,7 +85,7 @@ public class ItemDataSource {
 		close();
 	}
 	
-	private void deleteItems() {
+	public void deleteItems() {
 		openToWrite();
 		database.delete(DatabaseHelper.itemTable, null, null);
 		close();
@@ -96,7 +96,7 @@ public class ItemDataSource {
 		openToRead();
 		Cursor itemLocationCur = database.query(DatabaseHelper.itemTable, 
 					   new String[] {DatabaseHelper.itemLongitudeCol, DatabaseHelper.itemLatitudeCol},
-					   				 DatabaseHelper.itemColID + "=" + itemId, null, null, null, null);
+					   				 DatabaseHelper.itemColID + "=?", new String[] {itemId}, null, null, null);
 		if (itemLocationCur != null){
 			itemLocationCur.moveToFirst();
 		}
@@ -114,8 +114,8 @@ public class ItemDataSource {
 					   new String[] {DatabaseHelper.itemColID,DatabaseHelper.itemColType,DatabaseHelper.itemLongitudeCol, DatabaseHelper.itemLatitudeCol,
 									 DatabaseHelper.itemColState},
 					   				 DatabaseHelper.itemColID + "=?", new String[] {itemId}, null, null, null);
-		if (itemCur != null){
-			itemCur.moveToFirst();
+		itemCur.moveToFirst();
+		if (!itemCur.isAfterLast()){
 			item = new Item(new ItemType(itemCur.getString(1)));
 			item.setId(itemCur.getString(0));
 			item.setLocation(new Location(itemCur.getInt(2), itemCur.getInt(3)));
@@ -161,5 +161,23 @@ public class ItemDataSource {
 		   	database.insert(DatabaseHelper.itemTypeTable, null,cv);
 		   	close();
 		}
+	}
+	
+	public List<String> getItemTypes(){
+		List<String> itemsTypes = new ArrayList<String>();
+		openToRead();
+		Cursor itemCur = database.query(DatabaseHelper.itemTypeTable, new String[] {DatabaseHelper.itemTypeColName}, null, null, null, null, null);
+		itemCur.moveToFirst();
+		while (!itemCur.isAfterLast()){
+			String type;
+			type = itemCur.getString(0);
+			itemsTypes.add(type);
+			itemCur.moveToNext();
+		}
+		
+		itemCur.close();
+		close();
+		
+		return itemsTypes;
 	}
 }

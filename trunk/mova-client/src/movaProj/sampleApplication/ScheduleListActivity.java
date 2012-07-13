@@ -9,7 +9,7 @@ import java.util.Vector;
 import movaProj.agent.AgentDataSource;
 import movaProj.agent.C2DMReceiver;
 import movaProj.agent.ItemDataSource;
-import movaProj.agent.MovaAndroidClient;
+import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
 import actor.Item;
@@ -45,7 +45,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this); 
+		final List<actor.Activity> schedule = new MovaAndroidClientImpl().getSchedule(this); 
 		String app_name = (String)this.getText(R.string.app_name);
 		schedule1 = schedule;
 		setContentView(R.layout.schedule_list);
@@ -112,7 +112,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 				startActivity(i);
 	        	break;
 	        case R.id.logout:     
-	        	MovaAndroidClient.changeAgentStatus(agentId,false,this);
+	        	new MovaAndroidClientImpl().changeAgentStatus(agentId,false,this);
 				setContentView(R.layout.login);
 				Button loginButton = (Button) this.findViewById(R.id.loginButton);
 				loginButton.setOnClickListener(this);
@@ -134,7 +134,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 	  int menuItemIndex = item.getItemId();
 	  switch (menuItemIndex){
 	  	case 0: // Start Activity
-			MovaAndroidClient.startActivity(schedule1.get(info.position).getId());
+	  		new MovaAndroidClientImpl().startActivity(schedule1.get(info.position).getId());
 			Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_LONG);
 			break;
 		case 1:
@@ -153,7 +153,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 					dialog.dismiss();
 					NumberPicker picker = (NumberPicker) dialog.findViewById(R.id.numberPickerComponent);
 					//MovaAndroidClient.postponeActivity(activityId, (picker.mCurrent)*60*1000, activityOldEndTime);
-					MovaAndroidClient.postponeActivity(ScheduleListActivity.this, activityId, picker.mCurrent);
+					new MovaAndroidClientImpl().postponeActivity(ScheduleListActivity.this, activityId, picker.mCurrent);
 				}
 			});
 			Button cancelButton = (Button) dialog.findViewById(R.id.numberPickerCancelButton);
@@ -169,10 +169,10 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 			dialog.show();
 			break;
 		case 2: // Complete Activity - Remove from the list and mark as completed.
-			MovaAndroidClient.completeActivity(this, schedule1.get(info.position).getId());
+			new MovaAndroidClientImpl().completeActivity(this, schedule1.get(info.position).getId());
 			Toast.makeText(getApplicationContext(), "Activity Mark as Completed", Toast.LENGTH_LONG);
 			ListView listView = (ListView) findViewById(R.id.mylist);
-			schedule1 = MovaAndroidClient.getSchedule(this); 
+			schedule1 = new MovaAndroidClientImpl().getSchedule(this); 
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule1);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
 					R.layout.list_item,displayedSchedule);
@@ -214,7 +214,7 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		Intent i;
 		switch (message.getMessageType()) {
 		case GOT_SCHEDULE:
-			List<actor.Activity> schedule = MovaAndroidClient.getSchedule(this);
+			List<actor.Activity> schedule = new MovaAndroidClientImpl().getSchedule(this);
 			schedule1 = schedule;
 			String[] displayedSchedule = prepareDisplayedSchedule(schedule1);
 			ArrayAdapter<String> adapter = new MyArrayAdapter(this,
@@ -247,13 +247,13 @@ public class ScheduleListActivity extends Activity implements Observer,OnCreateC
 		String agentId = new AgentDataSource(this).getAgentId();
 		switch (v.getId()) {
 		case R.id.loginButton:
-			MovaAndroidClient.changeAgentStatus(agentId,true,this);
+			new MovaAndroidClientImpl().changeAgentStatus(agentId,true,this);
 			Intent i = new Intent(ScheduleListActivity.this,
 					ScheduleListActivity.class);
 					startActivity(i);
 			break;
 		case R.id.initialButton:
-			MovaAndroidClient.recalculate(this);
+			new MovaAndroidClientImpl().recalculate(this);
 			break;	//TODO: remove it..
 		case R.id.numberPickerOkButton:
 			NumberPicker numberPicker = (NumberPicker) this.findViewById(R.id.numberPickerComponent);

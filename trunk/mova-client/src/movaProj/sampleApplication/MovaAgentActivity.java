@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import movaProj.agent.ActivityDataSource;
-import movaProj.agent.MovaAndroidClient;
+import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
 import android.app.Activity;
@@ -27,7 +27,7 @@ public class MovaAgentActivity extends Activity implements OnClickListener,Obser
 		Button button3 = (Button) this.findViewById(R.id.button3);
 		button2.setOnClickListener(this);
 		button3.setOnClickListener(this);
-		MovaAndroidClient.addListener(this);
+		new MovaAndroidClientImpl().addListener(this);
 	}
 
 	public void register() {

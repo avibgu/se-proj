@@ -5,7 +5,7 @@ import java.util.Observer;
 
 import client.MovaClient;
 
-import movaProj.agent.MovaAndroidClient;
+import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.R;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -25,7 +25,7 @@ public class RegistrationDialogActivity extends Activity implements OnClickListe
 	
 		registerButton.setOnClickListener(this);
 		
-		MovaAndroidClient.addListener(this);
+		new MovaAndroidClientImpl().addListener(this);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class RegistrationDialogActivity extends Activity implements OnClickListe
 
 	@Override
 	public void onClick(View arg0) {
-		MovaAndroidClient.register(this);
+		new MovaAndroidClientImpl().register(this);
 		setContentView(R.layout.progress_bar);
 	}
 }
