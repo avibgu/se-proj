@@ -9,7 +9,7 @@ import type.ItemType;
 import actor.Agent;
 import actor.Item;
 
-public class XXX {
+public class DBGeneratorForAlgorithmTests {
 
 	private static HashMap<AgentType, List<Agent>> sAgentsMap =
 			new HashMap<AgentType, List<Agent>>();

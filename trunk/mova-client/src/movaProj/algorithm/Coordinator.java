@@ -12,7 +12,6 @@ import movaProj.agent.C2DMReceiver;
 import movaProj.agent.ItemDataSource;
 import movaProj.agent.MovaMessage;
 import state.ActivityState;
-import utilities.Location;
 import utilities.MovaJson;
 import actor.Activity;
 import actor.Agent;

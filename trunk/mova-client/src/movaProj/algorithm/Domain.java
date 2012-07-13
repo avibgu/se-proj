@@ -6,13 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
-import java.util.Vector;
-
-import movaProj.agent.C2DMReceiver;
-import movaProj.agent.MovaMessage;
 
 import client.MovaClient;
 
@@ -22,8 +16,6 @@ import state.ActivityState;
 import type.AgentType;
 import type.ItemType;
 
-import utilities.MovaJson;
-
 import actor.Activity;
 import actor.Agent;
 import actor.Item;
@@ -31,7 +23,7 @@ import actor.Item;
 public class Domain implements Cloneable {
 
 	private static final long HOUR = 1000 * 60 * 60;
-	private static final long QUARTER_HOUR = 1000 * 60 * 15;
+	private static final long QUARTER_HOUR = HOUR / 4;
 
 	protected String mMyID;
 
