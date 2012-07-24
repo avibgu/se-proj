@@ -1,10 +1,6 @@
 package movaProj.algorithm;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,85 +13,78 @@ import actor.Item;
 
 public class DBGeneratorForAlgorithmTests {
 
-	private static HashMap<AgentType, List<Agent>> sAgentsMap =
-			new HashMap<AgentType, List<Agent>>();
-	
-	private static HashMap<ItemType, List<Item>> sItemsMap =
-			new HashMap<ItemType, List<Item>>();
+	private static List<Agent> sAgents = new ArrayList<Agent>();
+	private static List<Item> sItems = new ArrayList<Item>();
+	private static List<Activity> sActivities = new ArrayList<Activity>();
 
-	public static List<Agent> getAllAgentsOfThisTypeFromDB(AgentType pAgentType) {
+	public static List<Agent> getAgents() {
 
-		List<Agent> tList = sAgentsMap.get(pAgentType);
+		if (sAgents.isEmpty()) {
 
-		if (null == tList) {
-
-			tList = new ArrayList<Agent>();
-
-			tList.add(new Agent(pAgentType));
-			tList.add(new Agent(pAgentType));
-			tList.add(new Agent(pAgentType));
-			tList.add(new Agent(pAgentType));
-
-			sAgentsMap.put(pAgentType, tList);
+			sAgents.add(new Agent(new AgentType("AG1")));
+			sAgents.add(new Agent(new AgentType("AG1")));
+			
+			sAgents.add(new Agent(new AgentType("AG2")));
+			sAgents.add(new Agent(new AgentType("AG2")));
+			sAgents.add(new Agent(new AgentType("AG2")));
 		}
 
-		return tList;
+		return sAgents;
 	}
+	
+	public static List<Item> getItems() {
 
-	public static List<Item> getAllItemsOfThisTypeFromDB(ItemType pItemType) {
+		if (sItems.isEmpty()) {
 
-		List<Item> tList = sItemsMap.get(pItemType);
-
-		if (null == tList) {
-
-			tList = new ArrayList<Item>();
-
-			tList.add(new Item(pItemType));
-			tList.add(new Item(pItemType));
-			tList.add(new Item(pItemType));
-			tList.add(new Item(pItemType));
-			tList.add(new Item(pItemType));
-
-			sItemsMap.put(pItemType, tList);
+			sItems.add(new Item(new ItemType("IT1")));
+			sItems.add(new Item(new ItemType("IT1")));
+			
+			sItems.add(new Item(new ItemType("IT2")));
+			sItems.add(new Item(new ItemType("IT2")));
+			sItems.add(new Item(new ItemType("IT2")));
 		}
 
-		return tList;
+		return sItems;
 	}
 	
-	public static Activity createSimpleActivity() {
+	public static List<Activity> getActivities() {
+		
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
 
-		Timestamp startTime = new Timestamp(new Date().getTime());
-		Timestamp endTime = new Timestamp(startTime.getTime() + Domain.HOUR * 8);
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+			Activity activity2 = new Activity("activity2");
+			Activity activity3 = new Activity("activity3");
+			Activity activity4 = new Activity("activity4");
+			Activity activity5 = new Activity("activity5");
+			
+			activity1.setRequiredAgents(requiredAents);
 
-		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
-		
-		requiredAgents.put(new AgentType("AT1"), 1);
-//		requiredAgents.put(new AgentType("AT2"), 1);
-		
-		Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
-		
-//		requiredItems.put(new ItemType("IT1"), 2);
-//		requiredItems.put(new ItemType("IT2"), 1);
-		
-		Set<String> requiredActivities = new HashSet<String>();
+			activity1.setRequiredItems(requiredItems);
+			
+			activity1.setRequiredActivityIds(requiredActivities);
+			
+			sActivities.add(activity1);
+			sActivities.add(activity2);
+			sActivities.add(activity3);
+			sActivities.add(activity4);
+			sActivities.add(activity5);
+		}
 
-		return new Activity("KENES", startTime, endTime, Domain.HOUR * 2,
-				requiredAgents, requiredItems, requiredActivities, "TEST",
-				"TEST");
+		return sActivities;
+		
 	}
 	
-	public static List<Agent> generateAgents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public static Activity getSomeActivity(int pIndex) {
 
-	public static List<Item> generateItems() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static List<Activity> generateActivities() {
-		// TODO Auto-generated method stub
-		return null;
+		getActivities();
+		
+		return sActivities.get(pIndex);
 	}
 }

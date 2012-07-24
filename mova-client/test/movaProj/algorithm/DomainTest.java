@@ -15,11 +15,11 @@ public class DomainTest {
 	@Test
 	public void test() {
 
-		Activity activity = DBGeneratorForAlgorithmTests.createSimpleActivity();
+		Activity activity = DBGeneratorForAlgorithmTests.getSomeActivity(0);
 		
-		List<Agent> agents = null;
-		List<Item> items = null;
-		List<Activity> activities = null;
+		List<Agent> agents = DBGeneratorForAlgorithmTests.getAgents();
+		List<Item> items = DBGeneratorForAlgorithmTests.getItems();
+		List<Activity> activities = DBGeneratorForAlgorithmTests.getActivities();
 		
 		Domain domain = new Domain(activity, activities, agents, items);
 		
