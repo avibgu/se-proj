@@ -8,8 +8,6 @@ import gui.World;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import db.DBHandler;
-
 /**
  * @author Shai Cantor
  *
