@@ -43,13 +43,18 @@ public class Location implements Cloneable{
 	}
 	
 	public boolean equals(Object l){
+		
 		Location loc = (Location)l;
+		
 		if(loc != null){
+			
 			if(loc.getLatitude() != mLatitude || loc.getLongitude() != mLongitude)
 				return false;
+			
 			else
 				return true;
 		}
+		
 		return false;
 	}
 }

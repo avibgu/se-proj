@@ -13,10 +13,12 @@ public class LocationSerializer implements JsonSerializer<Location> {
 
 	@Override
 	public JsonElement serialize(Location location, Type locationType, JsonSerializationContext context) {
+		
 		JsonObject jsonItem = new JsonObject();
 		jsonItem.addProperty("latitude", location.getLatitude());
 		jsonItem.addProperty("longitude", location.getLongitude());
 		jsonItem.addProperty("room", location.getRoom());
+		
 		return jsonItem;
 	}
 

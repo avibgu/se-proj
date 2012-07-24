@@ -23,7 +23,9 @@ public class MovaJson {
 	Gson _gson;
 	
 	public MovaJson(){
+		
 		GsonBuilder gb = new GsonBuilder();
+		
 		gb.registerTypeAdapter(Item.class, new ItemSerializer());
 		gb.registerTypeAdapter(Location.class, new LocationSerializer());
 		gb.registerTypeAdapter(Item.class, new ItemDeserializer());
@@ -86,8 +88,10 @@ public class MovaJson {
 	 * @return a vector of deserialized items. Returns an empty vector if json is not a JSON vector items
 	 */
 	public Vector<Item> jsonToItems(String json){
+		
 		Vector<Item> items = new Vector<Item>();
 		Item[] itemsArray = null;
+		
 		try{
 			itemsArray = _gson.fromJson(json, Item[].class);
 		}
@@ -95,9 +99,8 @@ public class MovaJson {
 			return items;
 		}
 		
-		for(int i = 0; i < itemsArray.length; i++){
+		for(int i = 0; i < itemsArray.length; i++)
 			items.add(itemsArray[i]);
-		}
 		
 		return items;
 	}
@@ -107,13 +110,14 @@ public class MovaJson {
 	 * @return a deserialized Location. Returns null if json is not a JSON Location
 	 */
 	public Location jsonToLocation(String json){
+		
 		Location l = null;
+		
 		try{
 			l = _gson.fromJson(json, Location.class);
 		}
-		catch(JsonSyntaxException e){
-			
-		}
+		catch(JsonSyntaxException e){}
+		
 		return l;
 	}
 	
@@ -122,14 +126,18 @@ public class MovaJson {
 	 * @return a deserialized Activity. Returns null if json is not a JSON Activity
 	 */
 	public Agent jsonToAgent(String json){
+		
 		Agent a = null;
+		
 		try{
 			a = _gson.fromJson(json, Agent.class);
 		}
+		
 		catch(JsonSyntaxException e){
 			e.printStackTrace();
 			System.out.println("JsonToAgent failed");
 		}
+		
 		return a;
 	}
 	
@@ -138,13 +146,14 @@ public class MovaJson {
 	 * @return a deserialized Activity. Returns null if json is not a JSON Activity
 	 */
 	public Activity jsonToActivity(String json){
+		
 		Activity a = null;
+		
 		try{
 			a = _gson.fromJson(json, Activity.class);
 		}
-		catch(JsonSyntaxException e){
-			
-		}
+		catch(JsonSyntaxException e){}
+		
 		return a;
 	}
 	
@@ -153,8 +162,10 @@ public class MovaJson {
 	 * @return a vector of deserialized activities. Returns an empty vector if json is not a JSON vector activities
 	 */
 	public List<Activity> jsonToActivities(String json){
+		
 		List<Activity> activities = new Vector<Activity>();
 		Activity[] activityArray = null;
+		
 		try{
 			activityArray = _gson.fromJson(json, Activity[].class);
 		}
@@ -162,9 +173,8 @@ public class MovaJson {
 			return activities;
 		}
 		
-		for(int i = 0; i < activityArray.length; i++){
+		for(int i = 0; i < activityArray.length; i++)
 			activities.add(activityArray[i]);
-		}
 		
 		return activities;
 	}
@@ -186,11 +196,13 @@ public class MovaJson {
 	}
 	
 	public Vector<String> jsonToVectorTypes(String jsonObject){
+		
 		Vector<String> returnedTypes = new Vector<String>();
 		String[] types =  _gson.fromJson(jsonObject, String[].class);
-		for(int i = 0; i < types.length; i++){
+		
+		for(int i = 0; i < types.length; i++)
 			returnedTypes.add(types[i]);
-		}
+
 		return returnedTypes;
 	}
 
@@ -233,7 +245,9 @@ public class MovaJson {
 			
 			try {
 				map.put(tmp[0], DateFormat.getInstance().parse(tmp[1]));
-			} catch (ParseException e) {
+			}
+			
+			catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
@@ -251,5 +265,4 @@ public class MovaJson {
 			return null;
 		}
 	}
-	
 }
