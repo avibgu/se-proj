@@ -1,6 +1,8 @@
 package movaProj.algorithm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +15,12 @@ import actor.Item;
 
 public class DBGeneratorForAlgorithmTests {
 
+	private static final AgentType sAG1 = new AgentType("AG1");
+	private static final AgentType sAG2 = new AgentType("AG2");
+
+	private static final ItemType sIT1 = new ItemType("IT1");
+	private static final ItemType sIT2 = new ItemType("IT2");
+	
 	private static List<Agent> sAgents = new ArrayList<Agent>();
 	private static List<Item> sItems = new ArrayList<Item>();
 	private static List<Activity> sActivities = new ArrayList<Activity>();
@@ -21,12 +29,10 @@ public class DBGeneratorForAlgorithmTests {
 
 		if (sAgents.isEmpty()) {
 
-			sAgents.add(new Agent(new AgentType("AG1")));
-			sAgents.add(new Agent(new AgentType("AG1")));
+			sAgents.add(new Agent(sAG1));
+			sAgents.add(new Agent(sAG1));
 			
-			sAgents.add(new Agent(new AgentType("AG2")));
-			sAgents.add(new Agent(new AgentType("AG2")));
-			sAgents.add(new Agent(new AgentType("AG2")));
+			sAgents.add(new Agent(sAG2));
 		}
 
 		return sAgents;
@@ -36,12 +42,10 @@ public class DBGeneratorForAlgorithmTests {
 
 		if (sItems.isEmpty()) {
 
-			sItems.add(new Item(new ItemType("IT1")));
-			sItems.add(new Item(new ItemType("IT1")));
+			sItems.add(new Item(sIT1));
 			
-			sItems.add(new Item(new ItemType("IT2")));
-			sItems.add(new Item(new ItemType("IT2")));
-			sItems.add(new Item(new ItemType("IT2")));
+			sItems.add(new Item(sIT2));
+			sItems.add(new Item(sIT2));
 		}
 
 		return sItems;
@@ -59,21 +63,76 @@ public class DBGeneratorForAlgorithmTests {
 			getItems();
 			
 			Activity activity1 = new Activity("Activity1");
-			Activity activity2 = new Activity("activity2");
-			Activity activity3 = new Activity("activity3");
-			Activity activity4 = new Activity("activity4");
-			Activity activity5 = new Activity("activity5");
-			
+	
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG1, 1);
 			activity1.setRequiredAgents(requiredAents);
 
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT1, 1);
 			activity1.setRequiredItems(requiredItems);
 			
-			activity1.setRequiredActivityIds(requiredActivities);
-			
 			sActivities.add(activity1);
+			
+			Activity activity2 = new Activity("activity2");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG2, 1);
+			activity2.setRequiredAgents(requiredAents);
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT2, 1);
+			activity2.setRequiredItems(requiredItems);
+			
 			sActivities.add(activity2);
+
+			Activity activity3 = new Activity("activity3");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG1, 1);
+			activity3.setRequiredAgents(requiredAents);
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT2, 1);
+			activity3.setRequiredItems(requiredItems);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add("activity1");
+			requiredActivities.add("activity2");
+			activity3.setRequiredActivityIds(requiredActivities);
+
 			sActivities.add(activity3);
+				
+			Activity activity4 = new Activity("activity4");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG1, 1);
+			activity4.setRequiredAgents(requiredAents);
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT1, 1);
+			activity4.setRequiredItems(requiredItems);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add("activity2");
+			activity4.setRequiredActivityIds(requiredActivities);
+			
 			sActivities.add(activity4);
+			
+			Activity activity5 = new Activity("activity5");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG2, 1);
+			activity5.setRequiredAgents(requiredAents);
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT1, 1);
+			activity5.setRequiredItems(requiredItems);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add("activity1");
+			activity5.setRequiredActivityIds(requiredActivities);
+			
 			sActivities.add(activity5);
 		}
 
