@@ -2,7 +2,6 @@ package actor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 import type.AgentType;
 
 public class SensorAgent extends Agent {
@@ -19,8 +18,7 @@ public class SensorAgent extends Agent {
 			mVisibleItems = pItems;	
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public Map<String, Item> getVisibleItems(){
 		
 		Map<String, Item> visibleItems = new HashMap<String, Item>();
