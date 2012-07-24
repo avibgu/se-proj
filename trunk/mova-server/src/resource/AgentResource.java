@@ -1,6 +1,5 @@
 package resource;
 
-import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.DELETE;
@@ -14,9 +13,7 @@ import simulator.Simulator;
 import type.MessageType;
 import utilities.Location;
 import utilities.MovaJson;
-import actor.Activity;
 import actor.Agent;
-import actor.Item;
 import c2dm.C2dmController;
 
 import com.google.gson.JsonObject;
@@ -140,15 +137,6 @@ public class AgentResource {
 
 		C2dmController.getInstance().sendMessageUsingRegistrationId("3", j.toString(),registrationId,MessageType.STATIC_TYPES);
 	}
-
-//	@GET
-//	@Path("/getAllAgents")
-//	public void getAllAgents(@PathParam("agentId") String agentId){
-//		List<Agent> agents = db.getAllAgents();
-//		Vector<String> agentIds = new Vector<String>();
-//		agentIds.add(agentId);
-//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_AGENTS);
-//	}
 	
 	@GET
 	@Path("/getAllAgents")
@@ -156,58 +144,9 @@ public class AgentResource {
 		return new MovaJson().createJsonObj(db.getAllAgents());
 	}
 	
-//	@GET
-//	@Path("/getAllActivities")
-//	public void getAllActivities(@PathParam("agentId") String agentId){
-//		List<Activity> agents = db.getAllActivities();
-//		Vector<String> agentIds = new Vector<String>();
-//		agentIds.add(agentId);
-//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agents),agentIds, MessageType.GOT_ACTIVITIES);
-//	}
-	
 	public String getAllActivitiesHTTP(@PathParam("agentId") String agentId){
 		return new MovaJson().createJsonObj(db.getAllActivities());
 	}
-	
-	private String getAllObjects(String agentId){
-		List<Agent> agents = db.getAllAgents();
-		List<Activity> activities = db.getAllActivities();
-		
-	//	System.err.println("Activities before json: " + activities);
-		
-	//	List<Item> items = db.getItems();
-		Vector<String> agentIds = new Vector<String>();
-		agentIds.add(agentId);
-					
-		JsonObject j = new JsonObject();
-		
-		j.addProperty("activities", movaJson.createJsonObj(activities));
-		
-		System.err.println("Activities after json: " + j.toString());
-		
-		j.addProperty("agents", movaJson.createJsonObj(agents));
-	//	j.addProperty("items", movaJson.createJsonObj(items));
-		
-		return j.toString();
-	}
-//	
-//	@GET
-//	@Path("/getAgentsAvailability")
-//	public void getAgentsAvailability(@QueryParam("agentId") String agentId){
-//		List<String> agentsAvailability = db.getAgentsAvailability();
-//		Vector<String> agentIds = new Vector<String>();
-//		agentIds.add(agentId);
-//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
-//	}
-	
-//	@GET
-//	@Path("/getAgentsAvailability")
-//	public void getAgentsAvailability(@QueryParam("agentId") String agentId){
-//		List<String> agentsAvailability = db.getAgentsAvailability();
-//		Vector<String> agentIds = new Vector<String>();
-//		agentIds.add(agentId);
-//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.AGENTS_AVAILABILITY);
-//	}
 
 	//TODO is this needed??? nobody is using this method
 	@PUT
@@ -224,11 +163,7 @@ public class AgentResource {
 	@GET
 	@Path("/startRecalculate")
 	public String startRecalculate(@QueryParam("agentId") final String agentId) {
-		//
-		// new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
+
 		Boolean approvement = DBHandler.canStartNewRecalculte();
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
@@ -244,8 +179,6 @@ public class AgentResource {
 			j.addProperty("agents", getAllAgentsHTTP(agentId));
 			return j.toString();
 		}
-		// }
-		// }).start();
 
 		return "";
 	}
