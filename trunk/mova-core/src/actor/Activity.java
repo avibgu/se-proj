@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import client.MovaClient;
-
 import state.ActivityState;
 import type.AgentType;
 import type.ItemType;
