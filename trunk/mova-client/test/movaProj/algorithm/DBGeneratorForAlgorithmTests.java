@@ -97,8 +97,8 @@ public class DBGeneratorForAlgorithmTests {
 			activity3.setRequiredItems(requiredItems);
 			
 			requiredActivities = new HashSet<String>();
-			requiredActivities.add("activity1");
-			requiredActivities.add("activity2");
+			requiredActivities.add(activity1.getId());
+			requiredActivities.add(activity2.getId());
 			activity3.setRequiredActivityIds(requiredActivities);
 
 			sActivities.add(activity3);
@@ -114,7 +114,7 @@ public class DBGeneratorForAlgorithmTests {
 			activity4.setRequiredItems(requiredItems);
 			
 			requiredActivities = new HashSet<String>();
-			requiredActivities.add("activity2");
+			requiredActivities.add(activity2.getId());
 			activity4.setRequiredActivityIds(requiredActivities);
 			
 			sActivities.add(activity4);
@@ -130,7 +130,7 @@ public class DBGeneratorForAlgorithmTests {
 			activity5.setRequiredItems(requiredItems);
 			
 			requiredActivities = new HashSet<String>();
-			requiredActivities.add("activity1");
+			requiredActivities.add(activity1.getId());
 			activity5.setRequiredActivityIds(requiredActivities);
 			
 			sActivities.add(activity5);
