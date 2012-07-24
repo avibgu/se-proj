@@ -18,10 +18,10 @@ public class Variable implements Comparable<Variable> {
 		mDomain = new Domain(mActivity);
 	}
 
-	public Variable(Activity pActivity, String pMyID,
+	public Variable(Activity pActivity,
 			List<Activity> pActivities, List<Agent> pAgents, List<Item> pItems) {
 		mActivity = pActivity;
-		mDomain = new Domain(mActivity, pMyID, pActivities, pAgents, pItems);
+		mDomain = new Domain(mActivity, pActivities, pAgents, pItems);
 	}
 
 	public Domain getDomain() {
@@ -40,7 +40,6 @@ public class Variable implements Comparable<Variable> {
 
 	@Override
 	public int compareTo(Variable pO) {
-		// TODO Auto-generated method stub
 		return mActivity.compareTo(mActivity);
 	}
 }

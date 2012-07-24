@@ -1,6 +1,5 @@
 package movaProj.sampleApplication;
 
-import movaProj.agent.ActivityDataSource;
 import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.R;
 import android.app.Activity;

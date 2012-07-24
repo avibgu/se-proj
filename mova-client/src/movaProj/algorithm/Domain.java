@@ -22,10 +22,8 @@ import actor.Item;
 
 public class Domain implements Cloneable {
 
-	private static final long HOUR = 1000 * 60 * 60;
-	private static final long QUARTER_HOUR = HOUR / 4;
-
-	protected String mMyID;
+	public static final long HOUR = 1000 * 60 * 60;
+	public static final long QUARTER_HOUR = HOUR / 4;
 
 	protected Activity mActivity;
 
@@ -55,14 +53,13 @@ public class Domain implements Cloneable {
 
 	@Deprecated
 	public Domain(Activity pActivity) {
-		this(pActivity, "", null, null, null);
+		this(pActivity, null, null, null);
 	}
 
-	public Domain(Activity pActivity, String pMyID, List<Activity> pActivities,
+	public Domain(Activity pActivity, List<Activity> pActivities,
 			List<Agent> pAgents, List<Item> pItems) {
 
 		mActivity = pActivity;
-		mMyID = pMyID;
 		initItemsAndAgents(pActivities, pAgents, pItems);
 		initValues();
 	}

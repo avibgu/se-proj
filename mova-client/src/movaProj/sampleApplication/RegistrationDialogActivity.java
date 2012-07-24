@@ -3,13 +3,9 @@ package movaProj.sampleApplication;
 import java.util.Observable;
 import java.util.Observer;
 
-import client.MovaClient;
-
 import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.R;
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
