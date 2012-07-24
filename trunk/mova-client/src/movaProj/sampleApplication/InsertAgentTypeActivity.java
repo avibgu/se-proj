@@ -4,16 +4,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-import client.MovaClient;
-
 import movaProj.agent.AgentDataSource;
 import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
-import movaProj.agent.R.id;
-import movaProj.agent.R.layout;
 
-import type.AgentType;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +25,7 @@ public class InsertAgentTypeActivity extends Activity implements OnClickListener
 	 private String agentType;
 	 private String registrationId="";
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	       super.onCreate(savedInstanceState);

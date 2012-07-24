@@ -167,16 +167,23 @@ public class AgentResource {
 		Boolean approvement = DBHandler.canStartNewRecalculte();
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
+		
+		// TODO: approvement..
 		approvement = true;
+		
 		if (approvement) {
+			
 			// C2dmController.getInstance().sendMessageToDevice("3", new
 			// MovaJson().createJsonObj(agentId),null,
 			// MessageType.RECALCULATE_START);
 			// getAllActivitiesHTTP(agentId);
 			// getAllAgents(agentId);
+			
 			JsonObject j = new JsonObject();
+			
 			j.addProperty("activities", getAllActivitiesHTTP(agentId));
 			j.addProperty("agents", getAllAgentsHTTP(agentId));
+			
 			return j.toString();
 		}
 

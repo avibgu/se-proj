@@ -110,7 +110,6 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
         this(context, attrs, 0);
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
     public NumberPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
         setOrientation(VERTICAL);
