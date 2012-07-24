@@ -11,13 +11,6 @@ public class Variable implements Comparable<Variable> {
 	protected Activity mActivity;
 	protected Domain mDomain;
 
-	@Deprecated
-	public Variable(Activity pActivity) {
-
-		mActivity = pActivity;
-		mDomain = new Domain(mActivity);
-	}
-
 	public Variable(Activity pActivity,
 			List<Activity> pActivities, List<Agent> pAgents, List<Item> pItems) {
 		mActivity = pActivity;
@@ -25,7 +18,7 @@ public class Variable implements Comparable<Variable> {
 	}
 
 	public Domain getDomain() {
-		// return (Domain) mDomain.clone(); TODO
+		// TODO: return (Domain) mDomain.clone(); 
 		return mDomain;
 	}
 

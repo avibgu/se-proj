@@ -51,11 +51,6 @@ public class Domain implements Cloneable {
 
 	protected MovaClient mMovaClient;
 
-	@Deprecated
-	public Domain(Activity pActivity) {
-		this(pActivity, null, null, null);
-	}
-
 	public Domain(Activity pActivity, List<Activity> pActivities,
 			List<Agent> pAgents, List<Item> pItems) {
 
@@ -203,7 +198,9 @@ public class Domain implements Cloneable {
 			value = constructValueFromIndexes();
 
 			incrementIndexes();
-		} while (null == value);
+		}
+		
+		while (null == value);
 
 		// mValues.put(hashKey, value);
 		// }
