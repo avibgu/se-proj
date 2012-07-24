@@ -32,9 +32,6 @@ public class Activity implements Cloneable {
 	// The State of this Activity
 	protected ActivityState mState;
 
-	// The Priority of this Activity
-	// protected Priority mPriority;
-
 	// The Lower bound time of this Activity
 	protected Timestamp mStartTime;
 
@@ -79,7 +76,7 @@ public class Activity implements Cloneable {
 	 */
 	public Activity(String pName) {
 
-		long estimateTime = 1000 * 60 * 60 * 1;
+		long estimateTime = 1000 * 60 * 60 * 1; // HOUR
 
 		Timestamp startTime = new Timestamp(new Date().getTime());
 		Timestamp endTime = new Timestamp(startTime.getTime() + estimateTime
