@@ -20,7 +20,6 @@ import db.DBHandler;
 
 import simulator.NewDomain;
 import simulator.Simulator;
-import state.ItemState;
 
 /**
  *
