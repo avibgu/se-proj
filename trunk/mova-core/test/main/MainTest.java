@@ -1,9 +1,5 @@
 package main;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Vector;
 
 import org.junit.After;
@@ -13,7 +9,6 @@ import org.junit.Test;
 import client.MovaClient;
 
 import type.AgentType;
-import utilities.MovaJson;
 
 import actor.Activity;
 import actor.Agent;
