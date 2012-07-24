@@ -1,9 +1,7 @@
 package resource;
 
-import java.util.List;
 import java.util.Vector;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -21,20 +19,21 @@ import utilities.MovaJson;
 import actor.Item;
 import c2dm.C2dmController;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import db.DBHandler;
+
 /**
- * The item resource is used to process incoming connections
- * from the Mova Client that are relevant to items
+ * The item resource is used to process incoming connections from the Mova
+ * Client that are relevant to items
  */
 @Path("/items")
 public class ItemResource {
-	
+
 	DBHandler db = DBHandler.getInstance();
 	Simulator simulator = Simulator.getInstance(null);
+
 	/**
 	 * 
 	 * @param type
@@ -44,72 +43,87 @@ public class ItemResource {
 	 */
 	@GET
 	@Path("/findItem")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public String findItem(@DefaultValue("") @QueryParam("type") String type, 
-							@DefaultValue("1") @QueryParam("quantity") int quantity,
-							@QueryParam("location") String location){
-		
-		//add c2dm code here
-		//query the agents for the wanted items
-		
-		
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public String findItem(@DefaultValue("") @QueryParam("type") String type,
+			@DefaultValue("1") @QueryParam("quantity") int quantity,
+			@QueryParam("location") String location) {
+
+		// TODO add c2dm code here
+		// query the agents for the wanted items
+
 		Vector<Item> items = new Vector<Item>();
 		Item i1 = new Item(new ItemType("BOARD"));
 		Item i2 = new Item(new ItemType("CABLE"));
-		if(new ItemType(type).equals(i1.getType()))
+		if (new ItemType(type).equals(i1.getType()))
 			items.add(i1);
-		
-		if(new ItemType(type).equals(i2.getType()))
+
+		if (new ItemType(type).equals(i2.getType()))
 			items.add(i2);
 		MovaJson mj = new MovaJson();
-		
+
 		return mj.itemsToJson(items);
 	}
+
 	/**
 	 * Distributes an item's location to all agents
-	 * @param jsonObject a json object that holds the item id and the location of the item
+	 * 
+	 * @param jsonObject
+	 *            a json object that holds the item id and the location of the
+	 *            item
 	 */
 	@PUT
 	@Path("/distributeItemLocation")
-	public void distributeItemLocation(String jsonObject){
-		JsonParser jp = new JsonParser();
-		JsonObject j = (JsonObject) jp.parse(jsonObject);
+	public void distributeItemLocation(String jsonObject) {
+		// JsonParser jp = new JsonParser();
+		// JsonObject j = (JsonObject) jp.parse(jsonObject);
 		Vector<String> agentsId = null;
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsId,MessageType.DISTRIBUTE_ITEM_LOCATION);
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,
+				agentsId, MessageType.DISTRIBUTE_ITEM_LOCATION);
 	}
+
 	/**
 	 * Distributes an item's state to all agents
-	 * @param jsonObject a json object that holds the item id and the state of the item
+	 * 
+	 * @param jsonObject
+	 *            a json object that holds the item id and the state of the item
 	 */
 	@PUT
 	@Path("/distributeItemState")
-	public void distributeItemState(String jsonObject){
-		JsonArray ids = new JsonArray();
+	public void distributeItemState(String jsonObject) {
+		// JsonArray ids = new JsonArray();
 		Vector<String> agentsId = null;
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsId,MessageType.DISTRIBUTE_ITEM_STATE);
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,
+				agentsId, MessageType.DISTRIBUTE_ITEM_STATE);
 	}
+
 	/**
 	 * Deletes an item from the system
-	 * @param itemId the item id
+	 * 
+	 * @param itemId
+	 *            the item id
 	 */
 	@DELETE
 	@Path("/deleteItem/{id}")
-	//@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteItem(@PathParam("id") String itemId){
+	// @Consumes(MediaType.APPLICATION_JSON)
+	public void deleteItem(@PathParam("id") String itemId) {
 		db.deleteItem(itemId);
 		// Distribute to ALL agents
 		Vector<String> agentsId = null;
 		String jsonObject = new MovaJson().createJsonObj(itemId);
-		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,agentsId,MessageType.DELETE_ITEM);
+		C2dmController.getInstance().sendMessageToDevice("3", jsonObject,
+				agentsId, MessageType.DELETE_ITEM);
 	}
+
 	/**
 	 * Changes an item's state in the system
-	 * @param jsonObject a json object that holds the item id, 
-	 * the new item state and the agent id that changed the item's state
+	 * 
+	 * @param jsonObject
+	 *            a json object that holds the item id, the new item state and
+	 *            the agent id that changed the item's state
 	 */
 	@PUT
 	@Path("/changeItemStatus")
-	public void changeItemStatus(String jsonObject){
+	public void changeItemStatus(String jsonObject) {
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(jsonObject);
 		String itemId = j.get("itemId").getAsString();
@@ -117,49 +131,48 @@ public class ItemResource {
 		String agentId = j.get("agentId").getAsString();
 		db.updateItemState(itemId, newStatus, agentId);
 		simulator.updateItemState(itemId, newStatus, agentId);
-		//TODO execute distributeItemState
+		// TODO execute distributeItemState
 	}
+
 	/**
 	 * Creates a new item type
-	 * @param jsonObject a json object that holds the new item type
+	 * 
+	 * @param jsonObject
+	 *            a json object that holds the new item type
 	 */
 	@PUT
 	@Path("/createItemType")
-	//@Consumes(MediaType.APPLICATION_JSON)
-	public void createItemType(String jsonObject){
+	// @Consumes(MediaType.APPLICATION_JSON)
+	public void createItemType(String jsonObject) {
 		db.insertItemType(jsonObject);
 	}
+
 	/**
 	 * Deletes an existing item type
-	 * @param jsonObject a json object that holds the item type
+	 * 
+	 * @param jsonObject
+	 *            a json object that holds the item type
 	 */
 	@PUT
 	@Path("/deleteItemType")
-	public void deleteItemType(String jsonObject){
+	public void deleteItemType(String jsonObject) {
 		db.deleteItemType(jsonObject);
 	}
+
 	/**
 	 * Returns all the items in the systems
+	 * 
 	 * @return all the items in the systems
 	 */
 	@GET
 	@Path("/getItems")
-	public String getItems(@QueryParam("agentId") String agentId){
+	public String getItems(@QueryParam("agentId") String agentId) {
 		Vector<Item> items = db.getItems();
 		String itemsJson = new MovaJson().itemsToJson(items);
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
-		C2dmController.getInstance().sendMessageToDevice("3", itemsJson, agentsIds, MessageType.ITEMS_LIST);
+		C2dmController.getInstance().sendMessageToDevice("3", itemsJson,
+				agentsIds, MessageType.ITEMS_LIST);
 		return itemsJson;
 	}
-	
-//	@GET
-//	@Path("/getItemsAvailability")
-//	public void getItemsAvailability(@QueryParam("agentId") String agentId){
-//		List<String> agentsAvailability = db.getItemsAvailability();
-//		Vector<String> agentIds = new Vector<String>();
-//		agentIds.add(agentId);
-//		C2dmController.getInstance().sendMessageToDevice("3", new MovaJson().createJsonObj(agentsAvailability),agentIds, MessageType.ITEMS_AVAILABILITY);
-//	}
-	
 }
