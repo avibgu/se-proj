@@ -103,10 +103,9 @@ CREATE TABLE itemLocations  (
   	REFERENCES items(item_id) ON DELETE CASCADE
 );
 
-
-CREATE TABLE c2dm  (
-	auth_key TEXT
-);
-
+CREATE TABLE `c2dm` (
+  `auth_key` varchar(300) NOT NULL,
+  PRIMARY KEY (`auth_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
