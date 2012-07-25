@@ -1946,8 +1946,7 @@ public class DBHandler {
 			ResultSet results = mStmt.executeQuery("select AUTH_KEY from " + mC2dmTable);
 
 			results.next();
-			if (results.getRow() == 0)
-				return null;
+
 			auth_key = results.getString(1);
 			results.close();
 			mStmt.close();

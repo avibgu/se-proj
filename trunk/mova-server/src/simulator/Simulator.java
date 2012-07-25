@@ -2,8 +2,10 @@ package simulator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -79,6 +81,32 @@ public class Simulator {
 		for (Runnable itemScanner : _domain.getItemScanners()) {
 			new Thread(itemScanner).start();
 		}
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				List<Location> locations = new ArrayList<Location>();
+				locations.add(new Location(11,11));
+				locations.add(new Location(7,7));
+				locations.add(new Location(8,8));
+				locations.add(new Location(9,9));
+				Item item = (Item) _items.elementAt(0);
+				int index = 0;
+				while(true){
+					Location l = locations.get(index);
+					item.setLocation(l);
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						System.out.println("Item changing location thread was interrupted");
+					}
+					index++;
+					index = index % locations.size();
+				}
+				
+			}
+		}).start();
 	}
 	/**
 	 * Registers a new agent in the simulator and presents it in the virtual world
