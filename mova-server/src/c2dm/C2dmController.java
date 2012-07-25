@@ -205,7 +205,7 @@ public class C2dmController {
 	private String getAuthToken() {
 		
 		String authToken = mDb.getAuthKey();
-		//String authToken = null;
+		authToken = null;
 		
 		if (authToken == null) {
 			return getNewAuthKey();
