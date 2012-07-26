@@ -80,7 +80,7 @@ public class Activity implements Cloneable {
 
 		Timestamp startTime = new Timestamp(new Date().getTime());
 		Timestamp endTime = new Timestamp(startTime.getTime() + estimateTime
-				* 5);
+				* 8);
 
 		Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
 		// requiredAgents.put(new AgentType("DEFAULT"), 1);
