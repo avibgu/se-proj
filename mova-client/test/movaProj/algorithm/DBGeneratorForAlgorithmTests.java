@@ -17,9 +17,11 @@ public class DBGeneratorForAlgorithmTests {
 
 	private static final AgentType sAG1 = new AgentType("AG1");
 	private static final AgentType sAG2 = new AgentType("AG2");
+	private static final AgentType sAG3 = new AgentType("AG3");
 
 	private static final ItemType sIT1 = new ItemType("IT1");
 	private static final ItemType sIT2 = new ItemType("IT2");
+	private static final ItemType sIT3 = new ItemType("IT3");
 	
 	private static List<Agent> sAgents = new ArrayList<Agent>();
 	private static List<Item> sItems = new ArrayList<Item>();
@@ -33,6 +35,10 @@ public class DBGeneratorForAlgorithmTests {
 			sAgents.add(new Agent(sAG1));
 			
 			sAgents.add(new Agent(sAG2));
+			sAgents.add(new Agent(sAG2));
+			
+			sAgents.add(new Agent(sAG3));
+			sAgents.add(new Agent(sAG3));
 		}
 
 		return sAgents;
@@ -43,15 +49,19 @@ public class DBGeneratorForAlgorithmTests {
 		if (sItems.isEmpty()) {
 
 			sItems.add(new Item(sIT1));
+			sItems.add(new Item(sIT1));
 			
 			sItems.add(new Item(sIT2));
 			sItems.add(new Item(sIT2));
+			
+			sItems.add(new Item(sIT3));
+			sItems.add(new Item(sIT3));
 		}
 
 		return sItems;
 	}
 	
-	public static List<Activity> getActivities() {
+	public static List<Activity> getActivitiesSet1() {
 		
 		Map<AgentType, Integer> requiredAents = null;
 		Map<ItemType, Integer> requiredItems = null;
@@ -106,7 +116,7 @@ public class DBGeneratorForAlgorithmTests {
 			Activity activity4 = new Activity("activity4");
 			
 			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 1);
+			requiredAents.put(sAG1, 2);
 			activity4.setRequiredAgents(requiredAents);
 
 			requiredItems = new HashMap<ItemType, Integer>();
@@ -126,7 +136,7 @@ public class DBGeneratorForAlgorithmTests {
 			activity5.setRequiredAgents(requiredAents);
 
 			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 1);
+			requiredItems.put(sIT1, 2);
 			activity5.setRequiredItems(requiredItems);
 			
 			requiredActivities = new HashSet<String>();
@@ -134,6 +144,40 @@ public class DBGeneratorForAlgorithmTests {
 			activity5.setRequiredActivityIds(requiredActivities);
 			
 			sActivities.add(activity5);
+			
+			Activity activity6 = new Activity("activity6");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG3, 2);
+			activity6.setRequiredAgents(requiredAents);
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT3, 1);
+			activity6.setRequiredItems(requiredItems);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add(activity4.getId());
+			requiredActivities.add(activity5.getId());
+			activity6.setRequiredActivityIds(requiredActivities);
+			
+			sActivities.add(activity6);
+			
+			Activity activity7 = new Activity("activity7");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG3, 1);
+			activity7.setRequiredAgents(requiredAents);
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT3, 1);
+			activity7.setRequiredItems(requiredItems);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add(activity4.getId());
+			requiredActivities.add(activity5.getId());
+			activity7.setRequiredActivityIds(requiredActivities);
+			
+			sActivities.add(activity7);
 		}
 
 		return sActivities;
@@ -142,7 +186,7 @@ public class DBGeneratorForAlgorithmTests {
 	
 	public static Activity getSomeActivity(int pIndex) {
 
-		getActivities();
+		getActivitiesSet1();
 		
 		return sActivities.get(pIndex);
 	}

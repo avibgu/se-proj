@@ -17,7 +17,7 @@ public class DomainTest {
 		
 		List<Agent> agents = DBGeneratorForAlgorithmTests.getAgents();
 		List<Item> items = DBGeneratorForAlgorithmTests.getItems();
-		List<Activity> activities = DBGeneratorForAlgorithmTests.getActivities();
+		List<Activity> activities = DBGeneratorForAlgorithmTests.getActivitiesSet1();
 		
 		Domain domain = new Domain(activity, activities, agents, items);
 
