@@ -20,7 +20,7 @@ public class CBJTest {
 		
 		List<Agent> agents = DBGeneratorForAlgorithmTests.getAgents();
 		List<Item> items = DBGeneratorForAlgorithmTests.getItems();
-		List<Activity> activities = DBGeneratorForAlgorithmTests.getActivities();		
+		List<Activity> activities = DBGeneratorForAlgorithmTests.getActivitiesSet1();		
 
 		Vector<Variable> variables = new Vector<Variable>();
 
@@ -38,6 +38,6 @@ public class CBJTest {
 				System.out.println(value);
 
 		else
-			;
+			System.out.println("No Solution!");
 	}
 }
