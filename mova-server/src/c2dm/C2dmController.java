@@ -24,6 +24,8 @@ public class C2dmController {
 
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
 	public static final String SENDER_PW = "movaC2DM";
+	public static final String PROJECT_ID = "175716185590";
+	public static final String API_KEY = "AIzaSyBAH4gQ1z87c9rHLnCr7tH7fzCJq8GcIhM";
 	private static final C2dmController mInstance = new C2dmController();
 
 	public int mCounter = 0;
@@ -52,8 +54,8 @@ public class C2dmController {
 		while (!success){
 			try{
 				
-				String authToken = getAuthToken();
-				URL url = new URL("https://android.apis.google.com/c2dm/send");
+				//String authToken = getAuthToken();
+				URL url = new URL("https://android.googleapis.com/gcm/send");
 				HttpsURLConnection
 						.setDefaultHostnameVerifier(new CustomizedHostnameVerifier());
 				HttpsURLConnection request = (HttpsURLConnection) url
@@ -65,8 +67,8 @@ public class C2dmController {
 				StringBuilder buf = new StringBuilder();
 				buf.append("registration_id").append("=")
 						.append((URLEncoder.encode(registrationId, "UTF-8")));
-				buf.append("&collapse_key").append("=")
-						.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
+//				buf.append("&collapse_key").append("=")
+//						.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
 				buf.append("&data.message").append("=")
 						.append((URLEncoder.encode(pMessage, "UTF-8")));
 				buf.append("&data.messageType").append("=")
@@ -77,8 +79,8 @@ public class C2dmController {
 						"application/x-www-form-urlencoded");
 				request.setRequestProperty("Content-Length", buf.toString()
 						.getBytes().length + "");
-				request.setRequestProperty("Authorization", "GoogleLogin auth="
-						+ authToken);
+				request.setRequestProperty("Authorization", "key="
+						+ API_KEY);
 		
 				OutputStreamWriter post = new OutputStreamWriter(
 						request.getOutputStream());
@@ -123,7 +125,7 @@ public class C2dmController {
 	public void sendMessageToDevice(String pCollapseKey, String pMessage,
 			Vector<String> pAgentsIds, MessageType pMessageType) {
 
-		String authToken = getAuthToken();
+		//String authToken = getAuthToken();
 		URL url;
 		
 		try {
@@ -138,7 +140,7 @@ public class C2dmController {
 
 				String regId = mDb.getAgentRegistrationId(agentId);
 
-				url = new URL("https://android.apis.google.com/c2dm/send");
+				url = new URL("https://android.googleapis.com/gcm/send");
 				HttpsURLConnection
 						.setDefaultHostnameVerifier(new CustomizedHostnameVerifier());
 				HttpsURLConnection request = (HttpsURLConnection) url
@@ -150,8 +152,8 @@ public class C2dmController {
 				StringBuilder buf = new StringBuilder();
 				buf.append("registration_id").append("=")
 						.append((URLEncoder.encode(regId, "UTF-8")));
-				buf.append("&collapse_key").append("=")
-						.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
+//				buf.append("&collapse_key").append("=")
+//						.append((URLEncoder.encode(pCollapseKey, "UTF-8")));
 				buf.append("&data.message").append("=")
 						.append((URLEncoder.encode(pMessage, "UTF-8")));
 				buf.append("&data.messageType").append("=")
@@ -162,8 +164,8 @@ public class C2dmController {
 						"application/x-www-form-urlencoded");
 				request.setRequestProperty("Content-Length", buf.toString()
 						.getBytes().length + "");
-				request.setRequestProperty("Authorization", "GoogleLogin auth="
-						+ authToken);
+				request.setRequestProperty("Authorization", "key="
+						+ API_KEY);
 
 				OutputStreamWriter post = new OutputStreamWriter(
 						request.getOutputStream());
