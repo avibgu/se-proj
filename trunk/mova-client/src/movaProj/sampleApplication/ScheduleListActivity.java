@@ -13,7 +13,6 @@ import movaProj.agent.MovaAndroidClientImpl;
 import movaProj.agent.MovaMessage;
 import movaProj.agent.R;
 import actor.Item;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Notification;
@@ -140,7 +139,6 @@ public class ScheduleListActivity extends Activity implements Observer,
 		return true;
 	}
 
-	@SuppressLint("ShowToast")
 	@SuppressWarnings("unused")
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
