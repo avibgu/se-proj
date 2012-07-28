@@ -117,7 +117,36 @@ public class WebApp {
 	@Path("/RemoveAgentType")
 	public String RemoveAgentTypeGET(String params) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<form class=\"well\" method=\"post\" action=\"RemoveAgentType\">\n");
+		sb.append("<label class=\"control-label\" for=\"selectAgentType\">Remove Agent Type</label>\n");
+		
+		sb.append("<div class=\"controls\">");
+		
+		sb.append("<select id=\"selectAgentType\">");
+		 
+		for (String type : db.getAgentTypes())
+			sb.append("</option value=\"" + type + "\">" + type + "</option>\n");
+
+        sb.append("</select>\n");
+        sb.append("</div>\n");
+		sb.append("<button type=\"submit\" class=\"btn\">Remove</button>\n");
+		sb.append("</form>\n");
+
+		return sb.toString();
+	}
+	
+	@POST
+	@Path("/RemoveAgentType")
+	public String RemoveAgentTypePOST(String params) {
+		
+		System.out.println(params);
+		System.out.println(params.split("=")[1]);
+				
+//		db.insertAgentType();
+		return mainPage();
 	}
 	
 	// Item Functions
