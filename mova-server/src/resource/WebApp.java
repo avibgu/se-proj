@@ -116,8 +116,7 @@ public class WebApp {
 	@GET
 	@Path("/RemoveAgentType")
 	public String RemoveAgentTypeGET(String params) {
-		// TODO Auto-generated method stub
-		
+
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("<form class=\"well\" method=\"post\" action=\"RemoveAgentType\">\n");
@@ -125,10 +124,10 @@ public class WebApp {
 		
 		sb.append("<div class=\"controls\">");
 		
-		sb.append("<select id=\"selectAgentType\">");
+		sb.append("<select id=\"selectAgentType\" name=\"selectAgentType\">");
 		 
 		for (String type : db.getAgentTypes())
-			sb.append("</option value=\"" + type + "\">" + type + "</option>\n");
+			sb.append("<option value=\"" + type + "\">" + type + "</option>\n");
 
         sb.append("</select>\n");
         sb.append("</div>\n");
@@ -141,11 +140,7 @@ public class WebApp {
 	@POST
 	@Path("/RemoveAgentType")
 	public String RemoveAgentTypePOST(String params) {
-		
-		System.out.println(params);
-		System.out.println(params.split("=")[1]);
-				
-//		db.insertAgentType();
+		db.deleteAgentType(params.split("=")[1]);
 		return mainPage();
 	}
 	
