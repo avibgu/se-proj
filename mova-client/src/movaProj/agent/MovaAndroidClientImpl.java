@@ -16,6 +16,8 @@ import client.MovaClient;
 
 public class MovaAndroidClientImpl implements MovaAndroidClient{
 		
+	public static final String PROJECT_ID = "175716185590";
+	
 	/* (non-Javadoc)
 	 * @see movaProj.agent.MovaAndroidClientI#findItemLocation(java.lang.String, android.content.Context)
 	 */
@@ -76,7 +78,7 @@ public class MovaAndroidClientImpl implements MovaAndroidClient{
 		Intent intent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		intent.putExtra("app",
 				PendingIntent.getBroadcast(context, 0, new Intent(), 0));
-		intent.putExtra("sender", "movaC2DM@gmail.com");
+		intent.putExtra("sender", PROJECT_ID);
 		context.startService(intent);
 		
 		//MovaAndroidClient.recalculate(activity);
