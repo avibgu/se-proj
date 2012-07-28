@@ -3,6 +3,7 @@ package resource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Vector;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -78,15 +79,27 @@ public class WebApp {
 	@GET
 	@Path("/AddActivityType")
 	public String AddActivityTypeGET(String params) {
-		// TODO Auto-generated method stub
-		return null;
+		return addTypeHTML("Activity");
+	}
+	
+	@POST
+	@Path("/AddActivityType")
+	public String AddActivityTypePOST(String params) {
+		db.insertActivityType(params.split("=")[1]);
+		return mainPage();
 	}
 	
 	@GET
 	@Path("/RemoveActivityType")
 	public String RemoveActivityTypeGET(String params) {
-		// TODO Auto-generated method stub
-		return null;
+		return removeTypeHTML(db.getActivityTypes(), "Activity");
+	}
+	
+	@POST
+	@Path("/RemoveActivityType")
+	public String RemoveActivityTypePOST(String params) {
+		db.deleteActivityType(params.split("=")[1]);
+		return mainPage();
 	}
 	
 	// Agent Functions
@@ -94,16 +107,7 @@ public class WebApp {
 	@GET
 	@Path("/AddAgentType")
 	public String AddAgentTypeGET(String params) {
-
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("<form class=\"well\" method=\"post\" action=\"AddAgentType\">\n");
-		sb.append("<label>Add Agent Type</label>\n");
-		sb.append("<input name=\"type\" type=\"text\" class=\"span3\" placeholder=\"New Agent Type\">\n");
-		sb.append("<button type=\"submit\" class=\"btn\">Add</button>\n");
-		sb.append("</form>\n");
-
-		return sb.toString();
+		return addTypeHTML("Agent");
 	}
 	
 	@POST
@@ -116,25 +120,7 @@ public class WebApp {
 	@GET
 	@Path("/RemoveAgentType")
 	public String RemoveAgentTypeGET(String params) {
-
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("<form class=\"well\" method=\"post\" action=\"RemoveAgentType\">\n");
-		sb.append("<label class=\"control-label\" for=\"selectAgentType\">Remove Agent Type</label>\n");
-		
-		sb.append("<div class=\"controls\">");
-		
-		sb.append("<select id=\"selectAgentType\" name=\"selectAgentType\">");
-		 
-		for (String type : db.getAgentTypes())
-			sb.append("<option value=\"" + type + "\">" + type + "</option>\n");
-
-        sb.append("</select>\n");
-        sb.append("</div>\n");
-		sb.append("<button type=\"submit\" class=\"btn\">Remove</button>\n");
-		sb.append("</form>\n");
-
-		return sb.toString();
+		return removeTypeHTML(db.getAgentTypes(), "Agent");
 	}
 	
 	@POST
@@ -163,14 +149,64 @@ public class WebApp {
 	@GET
 	@Path("/AddItemType")
 	public String AddItemTypeGET(String params) {
-		// TODO Auto-generated method stub
-		return null;
+		return addTypeHTML("Item");
+	}
+	
+	@POST
+	@Path("/AddItemType")
+	public String AddItemTypePOST(String params) {
+		db.insertItemType(params.split("=")[1]);
+		return mainPage();
 	}
 	
 	@GET
 	@Path("/RemoveItemType")
 	public String RemoveItemTypeGET(String params) {
-		// TODO Auto-generated method stub
-		return null;
+		return removeTypeHTML(db.getItemTypes(), "Item");
+	}
+	
+	@POST
+	@Path("/RemoveItemType")
+	public String RemoveItemTypePOST(String params) {
+		db.deleteItemType(params.split("=")[1]);
+		return mainPage();
+	}
+	
+	// html templates
+	
+	protected String addTypeHTML(String pWhichType) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<form class=\"well\" method=\"post\" action=\"Add" + pWhichType + "Type\">\n");
+		sb.append("<label>Add " + pWhichType + " Type</label>\n");
+		sb.append("<input name=\"type\" type=\"text\" class=\"span3\" placeholder=\"New " + pWhichType + " Type\">\n");
+		sb.append("<button type=\"submit\" class=\"btn\">Add</button>\n");
+		sb.append("</form>\n");
+
+		return sb.toString();
+	}
+	
+	protected String removeTypeHTML(Vector<String> agentTypes, String pWhichType) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<form class=\"well\" method=\"post\" action=\"Remove" + pWhichType + "Type\">\n");
+		sb.append("<label class=\"control-label\" for=\"select" + pWhichType + "Type\">Remove " + pWhichType + " Type</label>\n");
+		
+		sb.append("<div class=\"controls\">");
+		
+		sb.append("<select id=\"select" + pWhichType + "Type\" name=\"select" + pWhichType + "Type\">");
+		 
+		
+		for (String type : agentTypes)
+			sb.append("<option value=\"" + type + "\">" + type + "</option>\n");
+
+        sb.append("</select>\n");
+        sb.append("</div>\n");
+		sb.append("<button type=\"submit\" class=\"btn\">Remove</button>\n");
+		sb.append("</form>\n");
+
+		return sb.toString();
 	}
 }
