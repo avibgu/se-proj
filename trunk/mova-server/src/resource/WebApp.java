@@ -5,14 +5,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import db.DBHandler;
 
 @Path("/webapp")
 public class WebApp {
 
+	DBHandler db = DBHandler.getInstance();
+	
 	@GET
 	@Path("/main")
-	public String mainGET(String jsonObject) {
+	public String mainGET(String params) {
+		return mainPage();
+	}
+
+	private String mainPage() {
 		return page(WebApp.class.getResourceAsStream("index.html"));
 	}
 
@@ -27,7 +36,7 @@ public class WebApp {
 			br = new BufferedReader(new InputStreamReader(pInputStream));
 
 			while (br.ready())
-				stringBuilder.append(br.readLine());
+				stringBuilder.append(br.readLine() + "\n");
 
 			br.close();
 
@@ -42,28 +51,40 @@ public class WebApp {
 	
 	@GET
 	@Path("/AddActivity")
-	public String addActivityGET(String jsonObject) {
+	public String addActivityGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	@POST
+	@Path("/AddActivity")
+	public String addActivityPOST(String params) {
+		// TODO Auto-generated method stub
+		
+//		Activity activity = mj.jsonToActivity(params);
+//		db.insertActivityType(activity.getType());
+//		db.insertActivity(activity);
+//		
+		return mainPage();
+	}
+	
 	@GET
 	@Path("/RemoveActivity")
-	public String removeActivityGET(String jsonObject) {
+	public String removeActivityGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@GET
 	@Path("/AddActivityType")
-	public String AddActivityTypeGET(String jsonObject) {
+	public String AddActivityTypeGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@GET
 	@Path("/RemoveActivityType")
-	public String RemoveActivityTypeGET(String jsonObject) {
+	public String RemoveActivityTypeGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -72,14 +93,29 @@ public class WebApp {
 	
 	@GET
 	@Path("/AddAgentType")
-	public String AddAgentTypeGET(String jsonObject) {
-		// TODO Auto-generated method stub
-		return null;
+	public String AddAgentTypeGET(String params) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<form class=\"well\" method=\"post\" action=\"AddAgentType\">\n");
+		sb.append("<label>Add Agent Type</label>\n");
+		sb.append("<input name=\"type\" type=\"text\" class=\"span3\" placeholder=\"New Agent Type\">\n");
+		sb.append("<button type=\"submit\" class=\"btn\">Add</button>\n");
+		sb.append("</form>\n");
+
+		return sb.toString();
+	}
+	
+	@POST
+	@Path("/AddAgentType")
+	public String AddAgentTypePOST(String params) {
+		db.insertAgentType(params.split("=")[1]);
+		return mainPage();
 	}
 	
 	@GET
 	@Path("/RemoveAgentType")
-	public String RemoveAgentTypeGET(String jsonObject) {
+	public String RemoveAgentTypeGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -88,28 +124,28 @@ public class WebApp {
 	
 	@GET
 	@Path("/AddItem")
-	public String AddItemGET(String jsonObject) {
+	public String AddItemGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@GET
 	@Path("/RemoveItem")
-	public String RemoveItemGET(String jsonObject) {
+	public String RemoveItemGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@GET
 	@Path("/AddItemType")
-	public String AddItemTypeGET(String jsonObject) {
+	public String AddItemTypeGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@GET
 	@Path("/RemoveItemType")
-	public String RemoveItemTypeGET(String jsonObject) {
+	public String RemoveItemTypeGET(String params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
