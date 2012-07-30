@@ -1,7 +1,6 @@
 package resource;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
@@ -21,19 +20,21 @@ import db.DBHandler;
 @Path("/webapp")
 public class WebApp {
 
-	DBHandler db = DBHandler.getInstance();
+	private DBHandler db;;
+	private String mainPage;
+	private String failedPage;
+	private String succeedPage;
 
-	@GET
-	@Path("/main")
-	public String mainGET(String params) {
-		return mainPage();
+	public WebApp() {
+
+		db = DBHandler.getInstance();
+
+		mainPage = page("index.html");
+//		failedPage = page("failed.html");
+//		succeedPage = page("succeed.html");
 	}
 
-	private String mainPage() {
-		return page(WebApp.class.getResourceAsStream("index.html"));
-	}
-
-	private String page(InputStream pInputStream) {
+	private String page(String pageName) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -41,7 +42,8 @@ public class WebApp {
 
 		try {
 
-			br = new BufferedReader(new InputStreamReader(pInputStream));
+			br = new BufferedReader(new InputStreamReader(
+					WebApp.class.getResourceAsStream(pageName)));
 
 			while (br.ready())
 				stringBuilder.append(br.readLine() + "\n");
@@ -55,13 +57,36 @@ public class WebApp {
 		return stringBuilder.toString();
 	}
 
+	@GET
+	@Path("/main")
+	public String mainGET(String params) {
+		return mainPage;
+	}
+
 	// Activity Functions
 
 	@GET
 	@Path("/AddActivity")
 	public String addActivityGET(String params) {
 		// TODO Auto-generated method stub
-		return null;
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("<form class=\"well\" method=\"post\" action=\"AddActivity\">\n");
+		sb.append("<label class=\"control-label\">Add Activity</label>\n");
+		
+		sb.append("<div class=\"controls\">\n");
+		sb.append("<input type=\"text\" class=\"input-xlarge\" name=\"name\" placeholder=\"Name\"/>\n");
+		sb.append("</div>\n");
+		
+		sb.append("<div class=\"controls\">\n");
+		sb.append("<textarea class=\"input-xlarge\" name=\"description\" rows=\"3\" placeholder=\"Description\"></textarea>\n");
+		sb.append("</div>\n");
+		
+		sb.append("<button type=\"submit\" class=\"btn\">Add</button>\n");
+		sb.append("</form>\n");
+
+		return sb.toString();		
 	}
 
 	@POST
@@ -69,11 +94,16 @@ public class WebApp {
 	public String addActivityPOST(String params) {
 		// TODO Auto-generated method stub
 
-		// Activity activity = mj.jsonToActivity(params);
-		// db.insertActivityType(activity.getType());
-		// db.insertActivity(activity);
-		//
-		return mainPage();
+		// Activity activity = new mj.jsonToActivity(params);
+
+//		Activity activity = new Activity(type, startTime, endTime,
+//				estimateTime, reauiredAgents, requiredItems,
+//				requiredActivities, description, name);
+//
+//		db.insertActivityType(activity.getType());
+//		db.insertActivity(activity);
+
+		return mainPage;
 	}
 
 	@GET
@@ -97,7 +127,7 @@ public class WebApp {
 	@Path("/RemoveActivity")
 	public String removeActivityPOST(String params) {
 		db.deleteActivity(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	@GET
@@ -110,7 +140,7 @@ public class WebApp {
 	@Path("/AddActivityType")
 	public String AddActivityTypePOST(String params) {
 		db.insertActivityType(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	@GET
@@ -123,7 +153,7 @@ public class WebApp {
 	@Path("/RemoveActivityType")
 	public String RemoveActivityTypePOST(String params) {
 		db.deleteActivityType(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	// Agent Functions
@@ -138,7 +168,7 @@ public class WebApp {
 	@Path("/AddAgentType")
 	public String AddAgentTypePOST(String params) {
 		db.insertAgentType(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	@GET
@@ -151,7 +181,7 @@ public class WebApp {
 	@Path("/RemoveAgentType")
 	public String RemoveAgentTypePOST(String params) {
 		db.deleteAgentType(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	// Item Functions
@@ -199,7 +229,7 @@ public class WebApp {
 
 		db.insertItem(item);
 
-		return mainPage();
+		return mainPage;
 	}
 
 	@GET
@@ -224,7 +254,7 @@ public class WebApp {
 	@Path("/RemoveItem")
 	public String RemoveItemPOST(String params) {
 		db.deleteItem(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	@GET
@@ -237,7 +267,7 @@ public class WebApp {
 	@Path("/AddItemType")
 	public String AddItemTypePOST(String params) {
 		db.insertItemType(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	@GET
@@ -250,7 +280,7 @@ public class WebApp {
 	@Path("/RemoveItemType")
 	public String RemoveItemTypePOST(String params) {
 		db.deleteItemType(params.split("=")[1]);
-		return mainPage();
+		return mainPage;
 	}
 
 	// html templates
