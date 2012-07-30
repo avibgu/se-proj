@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -184,6 +186,11 @@ public class WebApp {
 	@Path("/AddActivity")
 	public String addActivityPOST(String params) {
 
+		params = params.replace("%3A", ":");
+		params = params.replace("+", " ");
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		
 		try {
 			
 			String[] splitted = params.split("&");
@@ -192,8 +199,8 @@ public class WebApp {
 			String name = splitted[1].split("=")[1];
 			String description = splitted[2].split("=")[1];
 			
-			Timestamp startTime = new Timestamp(DateFormat.getDateInstance().parse(splitted[3].split("=")[1]).getTime());
-			Timestamp endTime = new Timestamp(DateFormat.getDateInstance().parse(splitted[4].split("=")[1]).getTime());
+			Timestamp startTime = new Timestamp(df.parse(splitted[3].split("=")[1]).getTime());
+			Timestamp endTime = new Timestamp(df.parse(splitted[4].split("=")[1]).getTime());
 			long estimateTime = Long.parseLong(splitted[5].split("=")[1]);
 			
 			int index = 6;
