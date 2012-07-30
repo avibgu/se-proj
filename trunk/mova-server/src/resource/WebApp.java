@@ -30,8 +30,8 @@ public class WebApp {
 		db = DBHandler.getInstance();
 
 		mainPage = page("index.html");
-//		failedPage = page("failed.html");
-//		succeedPage = page("succeed.html");
+		failedPage = page("failed.html");
+		succeedPage = page("succeed.html");
 	}
 
 	private String page(String pageName) {
