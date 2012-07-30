@@ -197,15 +197,20 @@ public class WebApp {
 			String name = splitted[1].split("=")[1];
 			String description = splitted[2].split("=")[1];
 			
-			Timestamp startTime = new Timestamp(df.parse(splitted[3].split("=")[1]).getTime());
-			Timestamp endTime = new Timestamp(df.parse(splitted[4].split("=")[1]).getTime());
+			Timestamp startTime = Timestamp.valueOf(splitted[3].split("=")[1]);
+			Timestamp endTime = Timestamp.valueOf(splitted[4].split("=")[1]);
 			long estimateTime = Long.parseLong(splitted[5].split("=")[1]);
 			
 			int index = 6;
 			
 			Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
 			
-			while (splitted[index].split("=")[0].startsWith("requiredAgent")){
+			while (index < splitted.length && splitted[index].split("=")[0].startsWith("requiredAgent")){
+				
+				if (splitted[index].split("=")[0].startsWith("requiredAgentQuantity")){
+					index++;
+					continue;
+				}
 				
 				requiredAgents.put(new AgentType(splitted[index].split("=")[1]), Integer.parseInt(splitted[index + 1].split("=")[1]));
 				index += 2;
@@ -214,7 +219,12 @@ public class WebApp {
 			
 			Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
 			
-			while (splitted[index].split("=")[0].startsWith("requiredItem")){
+			while (index < splitted.length && splitted[index].split("=")[0].startsWith("requiredItem")){
+				
+				if (splitted[index].split("=")[0].startsWith("requiredItemQuantity")){
+					index++;
+					continue;
+				}
 				
 				requiredItems.put(new ItemType(splitted[index].split("=")[1]), Integer.parseInt(splitted[index + 1].split("=")[1]));
 				index += 2;
@@ -222,7 +232,7 @@ public class WebApp {
 			
 			Set<String> requiredActivities = new HashSet<String>();
 			
-			while (splitted[index].split("=")[0].startsWith("requiredActivity")){
+			while (index < splitted.length && splitted[index].split("=")[0].startsWith("requiredActivity")){
 				
 				requiredActivities.add(splitted[index].split("=")[1]);
 				index++;
