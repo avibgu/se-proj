@@ -9,10 +9,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import type.AgentType;
 import type.ItemType;
 import utilities.Location;
 
 import actor.Activity;
+import actor.Agent;
 import actor.Item;
 
 import db.DBHandler;
@@ -68,22 +70,103 @@ public class WebApp {
 	@GET
 	@Path("/AddActivity")
 	public String addActivityGET(String params) {
-		// TODO Auto-generated method stub
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("<form class=\"well\" method=\"post\" action=\"AddActivity\">\n");
-		sb.append("<label class=\"control-label\">Add Activity</label>\n");
 		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<h4>Add Activity</h4><br/>\n");
+		sb.append("<form class=\"well\" method=\"post\" action=\"AddActivity\">\n");
+		
+		// type
+		sb.append("<label class=\"control-label\">Select Activity Type:</label>\n");
+		sb.append("<div class=\"controls\">\n");
+		sb.append("<select id=\"selectActivityType\" name=\"selectActivityType\" class=\"input-xlarge\">");
+
+		for (String type : db.getActivityTypes())
+			sb.append("<option value=\"" + type + "\">" + type + "</option>\n");
+
+		sb.append("</select>\n");
+		sb.append("</div>\n");
+		
+		// name
 		sb.append("<div class=\"controls\">\n");
 		sb.append("<input type=\"text\" class=\"input-xlarge\" name=\"name\" placeholder=\"Name\"/>\n");
 		sb.append("</div>\n");
 		
+		// description
 		sb.append("<div class=\"controls\">\n");
 		sb.append("<textarea class=\"input-xlarge\" name=\"description\" rows=\"3\" placeholder=\"Description\"></textarea>\n");
 		sb.append("</div>\n");
+	
+		// startTime
+		sb.append("<div class=\"controls\">\n");
+		sb.append("<input type=\"text\" class=\"input-xlarge\" name=\"startTime\" placeholder=\"Start Time - YYYY-MM-DD HH:MM:SS\"/>\n");
+		sb.append("</div>\n");
 		
+		// endTime
+		sb.append("<div class=\"controls\">\n");
+		sb.append("<input type=\"text\" class=\"input-xlarge\" name=\"endTime\" placeholder=\"End Time - YYYY-MM-DD HH:MM:SS\"/>\n");
+		sb.append("</div>\n");
+		
+		// estimateTime
+		sb.append("<div class=\"controls\">\n");
+		sb.append("<input type=\"text\" class=\"input-xlarge\" name=\"estimateTime\" placeholder=\"Estimate Duration in Miliseconds\"/>\n");
+		sb.append("</div>\n");
+
+		// reauiredAgents
+		if (db.getAgentTypes() != null && !db.getAgentTypes().isEmpty()){
+			
+			sb.append("<div class=\"controls\">\n");
+			sb.append("<label class=\"control-label\"><b>Select Required Activitiess and Quantity:</b></label>\n");
+
+			for (String agentType : db.getAgentTypes()){
+				
+				sb.append("<label class=\"checkbox inline\">\n");
+				sb.append("<input type=\"checkbox\" name=\"requiredAgent" + agentType + "\" value=\"" + agentType + "\">  ");
+				sb.append(agentType + "  <input type=\"text\" name=\"requiredAgentQuantity" + agentType + "\" placeholder=\"0\"/>\n");
+				sb.append("</label><br/>\n");
+			}
+			
+			sb.append("</div>\n");
+		}
+
+		// requiredItems
+		if (db.getItemTypes() != null && !db.getItemTypes().isEmpty()){
+
+			sb.append("<div class=\"controls\">\n");
+			sb.append("<label class=\"control-label\"><b>Select Required Item Types and Quantity:</b></label>\n");
+
+			for (String itemType : db.getItemTypes()){
+				
+				sb.append("<label class=\"checkbox inline\">\n");
+				sb.append("<input type=\"checkbox\" name=\"requiredItem" + itemType + "\" value=\"" + itemType + "\">  ");
+				sb.append(itemType + "  <input type=\"text\" name=\"requiredItemQuantity" + itemType + "\" placeholder=\"0\"/>\n");
+				sb.append("</label><br/>\n");
+			}
+			
+			sb.append("</div>\n");
+		}
+		
+		// requiredActivities
+		if (db.getAllActivities() != null && !db.getAllActivities().isEmpty()){
+
+			sb.append("<div class=\"controls\">\n");
+			sb.append("<label class=\"control-label\"><b>Select Required Item Types and Quantity:</b></label>\n");
+
+			for (Activity activity : db.getAllActivities()){
+				
+				sb.append("<label class=\"checkbox inline\">\n");
+				sb.append("<input type=\"checkbox\" name=\"requiredActivity" + activity.getId() + "\" value=\"" + activity.getId() + "\">  ");
+				sb.append(activity.getName() + ", Type: " + activity.getType() + ", State: " + activity.getState()); 
+				sb.append("  <input type=\"text\" name=\"requiredActivityQuantity" + activity.getId() + "\" placeholder=\"0\"/>\n");
+				sb.append("</label><br/>\n");
+			}
+			
+			sb.append("</div>\n");
+		}
+
+		// button
 		sb.append("<button type=\"submit\" class=\"btn\">Add</button>\n");
+		
 		sb.append("</form>\n");
 
 		return sb.toString();		
@@ -103,6 +186,8 @@ public class WebApp {
 //		db.insertActivityType(activity.getType());
 //		db.insertActivity(activity);
 
+		System.out.println(params);
+		
 		return mainPage;
 	}
 
