@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,7 +187,7 @@ public class WebApp {
 		params = params.replace("%3A", ":");
 		params = params.replace("+", " ");
 		
-		SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		DateFormat df = DateFormat.getDateTimeInstance();
 		
 		try {
 			
