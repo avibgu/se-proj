@@ -2,13 +2,22 @@ package resource;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import type.ActivityType;
 import type.AgentType;
 import type.ItemType;
 import utilities.Location;
@@ -157,7 +166,6 @@ public class WebApp {
 				sb.append("<label class=\"checkbox inline\">\n");
 				sb.append("<input type=\"checkbox\" name=\"requiredActivity" + activity.getId() + "\" value=\"" + activity.getId() + "\">  ");
 				sb.append(activity.getName() + ", Type: " + activity.getType() + ", State: " + activity.getState()); 
-				sb.append("  <input type=\"text\" name=\"requiredActivityQuantity" + activity.getId() + "\" placeholder=\"0\"/>\n");
 				sb.append("</label><br/>\n");
 			}
 			
@@ -175,18 +183,57 @@ public class WebApp {
 	@POST
 	@Path("/AddActivity")
 	public String addActivityPOST(String params) {
-		// TODO Auto-generated method stub
 
-		// Activity activity = new mj.jsonToActivity(params);
+		try {
+			
+			String[] splitted = params.split("&");
+			
+			String type = splitted[0].split("=")[1];
+			String name = splitted[1].split("=")[1];
+			String description = splitted[2].split("=")[1];
+			
+			Timestamp startTime = new Timestamp(DateFormat.getDateInstance().parse(splitted[3].split("=")[1]).getTime());
+			Timestamp endTime = new Timestamp(DateFormat.getDateInstance().parse(splitted[4].split("=")[1]).getTime());
+			long estimateTime = Long.parseLong(splitted[5].split("=")[1]);
+			
+			int index = 6;
+			
+			Map<AgentType, Integer> requiredAgents = new HashMap<AgentType, Integer>();
+			
+			while (splitted[index].split("=")[0].startsWith("requiredAgent")){
+				
+				requiredAgents.put(new AgentType(splitted[index].split("=")[1]), Integer.parseInt(splitted[index + 1].split("=")[1]));
+				index += 2;
+			}
+			
+			
+			Map<ItemType, Integer> requiredItems = new HashMap<ItemType, Integer>();
+			
+			while (splitted[index].split("=")[0].startsWith("requiredItem")){
+				
+				requiredItems.put(new ItemType(splitted[index].split("=")[1]), Integer.parseInt(splitted[index + 1].split("=")[1]));
+				index += 2;
+			}
+			
+			Set<String> requiredActivities = new HashSet<String>();
+			
+			while (splitted[index].split("=")[0].startsWith("requiredActivity")){
+				
+				requiredActivities.add(splitted[index].split("=")[1]);
+				index++;
+			}
+			
+			Activity activity = new Activity(type, startTime, endTime,
+					estimateTime, requiredAgents, requiredItems,
+					requiredActivities, description, name);
 
-//		Activity activity = new Activity(type, startTime, endTime,
-//				estimateTime, reauiredAgents, requiredItems,
-//				requiredActivities, description, name);
-//
-//		db.insertActivityType(activity.getType());
-//		db.insertActivity(activity);
-
-		System.out.println(params);
+			db.insertActivity(activity);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
 		
 		return mainPage;
 	}
