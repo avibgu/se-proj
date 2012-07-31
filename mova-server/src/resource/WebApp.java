@@ -3,9 +3,6 @@ package resource;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,13 +14,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import type.ActivityType;
 import type.AgentType;
 import type.ItemType;
 import utilities.Location;
 
 import actor.Activity;
-import actor.Agent;
 import actor.Item;
 
 import db.DBHandler;
@@ -47,7 +42,7 @@ public class WebApp {
 
 	private String page(String pageName) {
 
-		StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder("");
 
 		BufferedReader br = null;
 
@@ -184,12 +179,10 @@ public class WebApp {
 	@Path("/AddActivity")
 	public String addActivityPOST(String params) {
 
-		params = params.replace("%3A", ":");
-		params = params.replace("+", " ");
-		
-		DateFormat df = DateFormat.getDateTimeInstance();
-		
 		try {
+			
+			params = params.replace("%3A", ":");
+			params = params.replace("+", " ");
 			
 			String[] splitted = params.split("&");
 			
@@ -273,7 +266,16 @@ public class WebApp {
 	@POST
 	@Path("/RemoveActivity")
 	public String removeActivityPOST(String params) {
-		db.deleteActivity(params.split("=")[1]);
+		
+		try {
+			db.deleteActivity(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -286,7 +288,16 @@ public class WebApp {
 	@POST
 	@Path("/AddActivityType")
 	public String AddActivityTypePOST(String params) {
-		db.insertActivityType(params.split("=")[1]);
+		
+		try {
+			db.insertActivityType(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -299,7 +310,16 @@ public class WebApp {
 	@POST
 	@Path("/RemoveActivityType")
 	public String RemoveActivityTypePOST(String params) {
-		db.deleteActivityType(params.split("=")[1]);
+		
+		try {
+			db.deleteActivityType(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -314,7 +334,16 @@ public class WebApp {
 	@POST
 	@Path("/AddAgentType")
 	public String AddAgentTypePOST(String params) {
-		db.insertAgentType(params.split("=")[1]);
+		
+		try {
+			db.insertAgentType(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -327,7 +356,16 @@ public class WebApp {
 	@POST
 	@Path("/RemoveAgentType")
 	public String RemoveAgentTypePOST(String params) {
-		db.deleteAgentType(params.split("=")[1]);
+		
+		try {
+			db.deleteAgentType(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -364,18 +402,26 @@ public class WebApp {
 	@Path("/AddItem")
 	public String AddItemPOST(String params) {
 
-		System.out.println(params);
+		try {
+			
+			System.out.println(params);
 
-		String[] splitted = params.split("&");
+			String[] splitted = params.split("&");
 
-		Item item = new Item(new ItemType(splitted[0].split("=")[1]));
+			Item item = new Item(new ItemType(splitted[0].split("=")[1]));
 
-		item.setLocation(new Location(
-				Integer.parseInt(splitted[1].split("=")[1]), Integer
-						.parseInt(splitted[2].split("=")[1])));
+			item.setLocation(new Location(
+					Integer.parseInt(splitted[1].split("=")[1]), Integer
+							.parseInt(splitted[2].split("=")[1])));
 
-		db.insertItem(item);
-
+			db.insertItem(item);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -400,7 +446,16 @@ public class WebApp {
 	@POST
 	@Path("/RemoveItem")
 	public String RemoveItemPOST(String params) {
-		db.deleteItem(params.split("=")[1]);
+		
+		try {
+			db.deleteItem(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -413,7 +468,16 @@ public class WebApp {
 	@POST
 	@Path("/AddItemType")
 	public String AddItemTypePOST(String params) {
-		db.insertItemType(params.split("=")[1]);
+		
+		try {
+			db.insertItemType(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
@@ -426,7 +490,16 @@ public class WebApp {
 	@POST
 	@Path("/RemoveItemType")
 	public String RemoveItemTypePOST(String params) {
-		db.deleteItemType(params.split("=")[1]);
+		
+		try {
+			db.deleteItemType(params.split("=")[1]);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return failedPage;
+		}
+		
 		return mainPage;
 	}
 
