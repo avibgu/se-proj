@@ -235,7 +235,8 @@ public class WebApp {
 					estimateTime, requiredAgents, requiredItems,
 					requiredActivities, description, name);
 
-			db.insertActivity(activity);
+			if (!db.insertActivity(activity))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -243,7 +244,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -268,7 +269,8 @@ public class WebApp {
 	public String removeActivityPOST(String params) {
 		
 		try {
-			db.deleteActivity(params.split("=")[1]);
+			if (!db.deleteActivity(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -276,7 +278,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -290,7 +292,8 @@ public class WebApp {
 	public String AddActivityTypePOST(String params) {
 		
 		try {
-			db.insertActivityType(params.split("=")[1]);
+			if (!db.insertActivityType(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -298,7 +301,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -312,7 +315,8 @@ public class WebApp {
 	public String RemoveActivityTypePOST(String params) {
 		
 		try {
-			db.deleteActivityType(params.split("=")[1]);
+			if (!db.deleteActivityType(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -320,7 +324,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	// Agent Functions
@@ -336,7 +340,8 @@ public class WebApp {
 	public String AddAgentTypePOST(String params) {
 		
 		try {
-			db.insertAgentType(params.split("=")[1]);
+			if (!db.insertAgentType(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -344,7 +349,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -358,7 +363,8 @@ public class WebApp {
 	public String RemoveAgentTypePOST(String params) {
 		
 		try {
-			db.deleteAgentType(params.split("=")[1]);
+			if (!db.deleteAgentType(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -366,7 +372,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	// Item Functions
@@ -414,7 +420,8 @@ public class WebApp {
 					Integer.parseInt(splitted[1].split("=")[1]), Integer
 							.parseInt(splitted[2].split("=")[1])));
 
-			db.insertItem(item);
+			if (!db.insertItem(item))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -422,7 +429,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -448,7 +455,8 @@ public class WebApp {
 	public String RemoveItemPOST(String params) {
 		
 		try {
-			db.deleteItem(params.split("=")[1]);
+			if (!db.deleteItem(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -456,7 +464,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -470,7 +478,8 @@ public class WebApp {
 	public String AddItemTypePOST(String params) {
 		
 		try {
-			db.insertItemType(params.split("=")[1]);
+			if (!db.insertItemType(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -478,7 +487,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	@GET
@@ -492,7 +501,8 @@ public class WebApp {
 	public String RemoveItemTypePOST(String params) {
 		
 		try {
-			db.deleteItemType(params.split("=")[1]);
+			if (!db.deleteItemType(params.split("=")[1]))
+				return failedPage;
 		}
 		
 		catch (Exception e) {
@@ -500,7 +510,7 @@ public class WebApp {
 			return failedPage;
 		}
 		
-		return mainPage;
+		return succeedPage;
 	}
 
 	// html templates
