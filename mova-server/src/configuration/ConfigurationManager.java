@@ -13,7 +13,8 @@ import simulator.NewDomain;
  * and the scan distance of the sensors 
  */
 public class ConfigurationManager {
-
+	
+	private static Properties mProp;
 	/**
 	 * Reads the number of agents, items and sensors configured in the config.properties file
 	 * The file is to be placed inside the simulator package
@@ -25,6 +26,7 @@ public class ConfigurationManager {
 		try {
 			InputStream in = getClass().getResourceAsStream("config.properties");
 			prop.load(in);
+			mProp = prop;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -38,5 +40,8 @@ public class ConfigurationManager {
 		
 		NewDomain domain = new NewDomain(15, 35, nAgents, nItems, nSensors, nScanDistance);
 		return domain;
+	}
+	public static String getDBURL(){
+		return mProp.getProperty("nConnectionString");
 	}
 }

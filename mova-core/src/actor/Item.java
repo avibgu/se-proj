@@ -102,4 +102,14 @@ public class Item extends Entity{
 	public String toString() {
 		return "Item-" + mId;
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Item i = new Item(getType());
+		i.setState(mState);
+		i.setId(mId);
+		i.setLocation(getOldLocation());
+		i.setRepLocation(getLastRepLocation());
+		i.setLocation(mLocation);
+		return i;
+	}
 }

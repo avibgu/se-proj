@@ -95,8 +95,9 @@ public class Simulator {
 				while(true){
 					Location l = locations.get(index);
 					item.setLocation(l);
+					db.updateItemLocation(item.getId(), l);
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						System.out.println("Item changing location thread was interrupted");

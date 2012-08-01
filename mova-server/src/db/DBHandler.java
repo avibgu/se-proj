@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import configuration.ConfigurationManager;
 import state.ActivityState;
 import state.ItemState;
 import type.ActivityType;
@@ -48,7 +50,8 @@ public class DBHandler {
 //    private static String						mAgentLocationsTableName = "app.agentLocations";
 //    private static String						mItemLocationsTableName = "app.itemLocations";
     
-    private static String						mDbURL = "jdbc:mysql://localhost:3306/mysqldatabase";
+    //private static String						mDbURL = "jdbc:mysql://localhost:3306/mysqldatabase";
+	private static String						mDbURL = ConfigurationManager.getDBURL();
     private static String						mAgentTableName = "agents";
     private static String						mAgentTypeTableName = "agentTypes";
     private static String						mActivityTableName = "activities";
@@ -154,22 +157,25 @@ public class DBHandler {
      * Inserts a new Agent Type.
      * @param pName the Agent Type to insert
      */
-	public void insertAgentType(String pName){
+	public boolean insertAgentType(String pName){
     	mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("insert into " + mAgentTypeTableName + " values (" + "'" + pName + "'" + ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
+			
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertAgentType - database access error");
+			succeeded = false;
 		}
-		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
     }
     
 	/**
@@ -178,11 +184,11 @@ public class DBHandler {
 	 * the type pName must be in the system.
 	 * @param pName the Agent Type to delete
 	 */
-    public void deleteAgentType(String pName) {
+    public boolean deleteAgentType(String pName) {
 		
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("delete from " + mAgentTypeTableName + " WHERE NAME = "
@@ -190,10 +196,12 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLException sqlExcept) {
 			System.out.println("deleteAgentType - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	/**
 	 * Returns all the agent types in the system
@@ -597,32 +605,35 @@ public class DBHandler {
      * Inserts a new activity type
      * @param pName the new activity type to insert
      */
-	public void insertActivityType(String pName){
+	public boolean insertActivityType(String pName){
     	mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("insert into " + mActivityTypeTableName + " values (" + "'" + pName + "'" + ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertActivityType - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
     }
     /**
      * Deletes an activity type
      * @param pName the activity type to delete
      */
-	public void deleteActivityType(String pName) {
+	public boolean deleteActivityType(String pName) {
 		
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("delete from " + mActivityTypeTableName + " WHERE NAME = "
@@ -631,10 +642,12 @@ public class DBHandler {
 		} catch (SQLException sqlExcept) {
 			System.out.println("deleteActivityType - database access error " +
 					", no activity type in the system: " + pName);
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	/**
 	 * Gets all the activity types in the system
@@ -673,10 +686,11 @@ public class DBHandler {
 	 * Inserts a new activity
 	 * @param activity the new activity to insert
 	 */
-	public void insertActivity(Activity activity) {
+	public boolean insertActivity(Activity activity) {
 		
 		mWrite.lock();
 		createConnection();
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			int estimatedTime = (int) activity.getEstimateTime();
@@ -690,21 +704,33 @@ public class DBHandler {
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertActivity - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
 		
-		insertActivityTypeAgent(activity);
-		insertActivityTypeItem(activity);
-		for (String participatingAgentId : activity.getParticipatingAgentIds()) {
-			insertActivityAgent(activity.getId(), participatingAgentId);
+		boolean succeeded2 = insertActivityTypeAgent(activity);
+		boolean succeeded3 = insertActivityTypeItem(activity);
+		if(succeeded2 && succeeded3){
+			for (String participatingAgentId : activity.getParticipatingAgentIds()) {
+				boolean succeeded4 = insertActivityAgent(activity.getId(), participatingAgentId);
+				if(!succeeded4)//If any of the insert commands is false all fails
+					return false;
+			}
+			for (String participatingItemId : activity.getParticipatingItemIds()) {
+				boolean succeeded4 = insertActivityItem(activity.getId(), participatingItemId);
+				if(!succeeded4)//If any of the insert commands is false all fails
+					return false;
+			}
 		}
-		for (String participatingItemId : activity.getParticipatingItemIds()) {
-			insertActivityItem(activity.getId(), participatingItemId);
-		}
+		else
+			return false;//If insertActivityTypeAgent or insertActivityTypeItem are false all fails
+		
+		return succeeded;//If we got here, succeeded2, succeeded3 and succeeded4 are true
 		
 	}
 	/**
@@ -712,11 +738,11 @@ public class DBHandler {
 	 * @pre the id pActivityId must be in the system.
 	 * @param pActivityId the id of the activity to delete
 	 */
-	public void deleteActivity(String pActivityId) {
+	public boolean deleteActivity(String pActivityId) {
 		
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("delete from " + mActivityTableName + " WHERE ACTIVITY_ID = "
@@ -725,10 +751,12 @@ public class DBHandler {
 		} catch (SQLException sqlExcept) {
 			System.out.println("deleteActivity - database access error" +
 					", no activity id in the system: " + pActivityId);
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	/**
 	 * Updates the activity deadline
@@ -1073,10 +1101,10 @@ public class DBHandler {
 	}
 	
 //----------------------------ActivityTypeAgents Table Handling----------------------------
-	private void insertActivityTypeAgent(Activity activity) {
+	private boolean insertActivityTypeAgent(Activity activity) {
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		Map<AgentType, Integer> requiredAgents = activity.getRequiredAgents();
 		for (Map.Entry<AgentType, Integer> requiredAgent : requiredAgents.entrySet()) {
 			try {
@@ -1088,20 +1116,23 @@ public class DBHandler {
 				mStmt.close();
 			} catch (SQLIntegrityConstraintViolationException e) {
 				System.out.println(e.getMessage());
+				succeeded = false;
 			} catch (SQLException sqlExcept) {
 				sqlExcept.printStackTrace();
+				succeeded = false;
 			}
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	
 //----------------------------ActivityTypeItems Table Handling----------------------------	
-	private void insertActivityTypeItem(Activity activity) {
+	private boolean insertActivityTypeItem(Activity activity) {
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		Map<ItemType, Integer> requiredItems = activity.getRequiredItems();
 		for (Map.Entry<ItemType, Integer> requiredItem : requiredItems.entrySet()) {
 			try {
@@ -1113,13 +1144,16 @@ public class DBHandler {
 				mStmt.close();
 			} catch (SQLIntegrityConstraintViolationException e) {
 				System.out.println(e.getMessage());
+				succeeded = false;
 			} catch (SQLException sqlExcept) {
 				sqlExcept.printStackTrace();
+				succeeded = false;
 			}
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	
 //----------------------------Items Table Handling----------------------------
@@ -1127,9 +1161,10 @@ public class DBHandler {
 	 * Inserts a new item
 	 * @param item the new item to insert
 	 */
-	public void insertItem(Item item) {
+	public boolean insertItem(Item item) {
 		mWrite.lock();
 		createConnection();
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 
@@ -1139,25 +1174,29 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertItem - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
 		
-		insertItemLocation(item.getId(), item.getLocation());
+		boolean succeeded2 = insertItemLocation(item.getId(), item.getLocation());
+		return succeeded && succeeded2;
+			
 	}
 	/**
 	 * Deletes an item from the system
 	 * @pre the id pItemId must be in the system.
 	 * @param pItemId the id of the item to delete
 	 */
-	public void deleteItem(String pItemId) {
+	public boolean deleteItem(String pItemId) {
 		
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("delete from " + mItemTableName + " WHERE ITEM_ID = "
@@ -1166,10 +1205,12 @@ public class DBHandler {
 		} catch (SQLException sqlExcept) {
 			System.out.println("deleteItem - database access error" +
 					", no item id in the system: " + pItemId);
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	
 	/**
@@ -1425,33 +1466,36 @@ public class DBHandler {
      * Inserts a new item type
      * @param pName the new item type
      */
-	public void insertItemType(String pName){
+	public boolean insertItemType(String pName){
     	mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("insert into " + mItemTypeTableName + " values (" + "'" + pName + "'" + ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertItemType - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
     }
 	/**
 	 * Deletes an item type from the system
 	 * @pre the name pName must be in the system.
 	 * @param pName the item type to delete
 	 */
-	public void deleteItemType(String pName) {
+	public boolean deleteItemType(String pName) {
 		
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("delete from " + mItemTypeTableName + " WHERE NAME = "
@@ -1460,10 +1504,12 @@ public class DBHandler {
 		} catch (SQLException sqlExcept) {
 			System.out.println("deleteItemType - database access error " +
 					", no item type in the system: " + pName);
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	/**
 	 * Gets all the item types in the system
@@ -1504,22 +1550,25 @@ public class DBHandler {
 	 * @param pActivityId the activity id
 	 * @param pAgentId the agent id to add
 	 */
-	public void insertActivityAgent(String pActivityId, String pAgentId){
+	public boolean insertActivityAgent(String pActivityId, String pAgentId){
     	mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("insert into " + mActivityAgentsTableName + " values (" + "'" + pActivityId + "'" + "," + "'" + pAgentId + "'"+ ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertActivityAgent - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
     }
 	/**
 	 * Deletes an agent from the activity agent list
@@ -1593,6 +1642,7 @@ public class DBHandler {
 					+ " WHERE " + mActivityAgentsTableName + ".ACTIVITY_ID = " 
 					+ mActivityTableName + ".ACTIVITY_ID AND " 
 					+ mActivityAgentsTableName + ".AGENT_ID = " + "'" + pAgentId + "'"
+					+ " AND " + mActivityTableName + ".ACTIVITY_STATE <> 'COMPLETED'"
 					+ " ORDER BY ACTUAL_START_TIME ASC");
 
 			while (results.next()) {
@@ -1642,22 +1692,25 @@ public class DBHandler {
 	 * @param pActivityId the activity id
 	 * @param pItemId the item id inserted
 	 */
-	public void insertActivityItem(String pActivityId, String pItemId){
+	public boolean insertActivityItem(String pActivityId, String pItemId){
     	mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("insert into " + mActivityItemsTableName + " values (" + "'" + pActivityId + "'" + "," + "'" + pItemId + "'"+ ")");
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertActivityItem - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
     }
 	/**
 	 * Deletes an existing item from the activity
@@ -1821,10 +1874,10 @@ public class DBHandler {
 	 * @param pItemId the item id
 	 * @param location the item's location
 	 */
-	public void insertItemLocation(String pItemId, Location location){
+	public boolean insertItemLocation(String pItemId, Location location){
 		mWrite.lock();
 		createConnection();
-		
+		boolean succeeded = true;
 		try {
 			mStmt = mConn.createStatement();
 			mStmt.execute("insert into " + mItemLocationsTableName + " values (" + "'" + pItemId + "'" + "," + location.getLatitude() 
@@ -1832,12 +1885,15 @@ public class DBHandler {
 			mStmt.close();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e.getMessage());
+			succeeded = false;
 		} catch (SQLException sqlExcept) {
 			System.out.println("insertItemLocation - database access error");
+			succeeded = false;
 		}
 		
 		shutdown();
 		mWrite.unlock();
+		return succeeded;
 	}
 	/**
 	 * Updates the item's location

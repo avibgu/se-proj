@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Observer;
 import java.util.Vector;
 
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
+
 import utilities.Location;
 
 import actor.Entity;
@@ -22,7 +24,7 @@ public class ItemScanner implements Runnable {
 	protected NewDomain mDomain;
 	protected SensorAgent mSensorAgent;
 	protected Location mSensorLocation;
-	protected final long mRefreshRate = 10;
+	protected final long mRefreshRate = 3000;
 	protected final double mScanDistance;
 	protected Vector<Item> mVisibleItems;
 	protected Map<String, Item> mIsibleItems;
@@ -62,10 +64,15 @@ public class ItemScanner implements Runnable {
 				for (Map.Entry<String, Item> item : visible.entrySet()) {
 					if(!mIsibleItems.containsKey(item.getKey()))
 						changedLocationItems.put(item.getKey(), item.getValue());
+					else{
+						Item oldItem = mIsibleItems.get(item.getKey());
+						if(!oldItem.getLocation().equals(item.getValue().getLocation()))
+							changedLocationItems.put(item.getKey(), item.getValue());
+					}
 				}
 			
 				mSensorAgent.setVisibleItems(visible);
-				mIsibleItems = visible;
+				copyVisibleItems(visible);
 				if(changedLocationItems.size() > 0){
 	//				for (Observer ob : _observers) {
 	//					ob.update(null, changedLocationItems);
@@ -77,9 +84,20 @@ public class ItemScanner implements Runnable {
 				}
 			}
 			try {
-				Thread.sleep(mRefreshRate * 200);
+				Thread.sleep(mRefreshRate);
 			} catch (InterruptedException e) {
 				stop();
+			}
+		}
+	}
+	public void copyVisibleItems(Map<String, Item> visible){
+		mIsibleItems.clear();
+		for (Map.Entry<String, Item> itemEntry: visible.entrySet()) {
+			try {
+				mIsibleItems.put(itemEntry.getKey(), (Item) itemEntry.getValue().clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

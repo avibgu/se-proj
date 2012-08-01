@@ -300,7 +300,8 @@ public class NewDomain extends DefaultTableModel{
     public Vector<Item> scanForItems(Location entityLocation, double distance){
 		Vector<Item> items = new Vector<Item>();
 		synchronized (_entities) {
-			for (Entity item : _entities.get(1)) {
+			Vector<Entity> entityItems = _entities.elementAt(1);
+			for (Entity item : entityItems) {
 				Location itemLocation = item.getLocation();
 				double dist = calcDistance(entityLocation, itemLocation);
 				if(dist <= distance){
