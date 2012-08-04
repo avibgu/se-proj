@@ -13,6 +13,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
+import configuration.ConfigurationManager;
+
 import type.MessageType;
 import db.DBHandler;
 /**
@@ -25,7 +27,7 @@ public class C2dmController {
 	public static final String SENDER_ID = "movaC2DM@gmail.com";
 	public static final String SENDER_PW = "movaC2DM";
 	public static final String PROJECT_ID = "175716185590";
-	public static final String API_KEY = "AIzaSyBAH4gQ1z87c9rHLnCr7tH7fzCJq8GcIhM";
+	public static final String API_KEY = ConfigurationManager.getAPIKey();
 	private static final C2dmController mInstance = new C2dmController();
 
 	public int mCounter = 0;

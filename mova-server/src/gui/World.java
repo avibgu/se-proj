@@ -200,8 +200,7 @@ public class World extends javax.swing.JFrame implements Observer{
 
     private void RestartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestartButtonActionPerformed
         _controller.stop();
-        ConfigurationManager config = new ConfigurationManager();
-        NewDomain domain = config.loadParameters();
+        NewDomain domain = ConfigurationManager.loadParameters();
         Controller controller = new Controller(domain);
         DBHandler db = DBHandler.getInstance();
         db.deleteData();
@@ -252,8 +251,7 @@ public class World extends javax.swing.JFrame implements Observer{
         }
         //</editor-fold>
         
-        ConfigurationManager config = new ConfigurationManager();
-        NewDomain domain = config.loadParameters();
+        NewDomain domain = ConfigurationManager.loadParameters();
         final Controller controller = new Controller(domain);
         /*
          * Create and display the form
@@ -313,8 +311,7 @@ public class World extends javax.swing.JFrame implements Observer{
         }
         //</editor-fold>
         
-        ConfigurationManager config = new ConfigurationManager();
-        NewDomain domain = config.loadParameters();
+        NewDomain domain = ConfigurationManager.loadParameters();
         final Controller controller = new Controller(domain);
         DBHandler db = DBHandler.getInstance();
         db.deleteData();
