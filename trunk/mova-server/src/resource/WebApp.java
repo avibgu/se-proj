@@ -120,7 +120,7 @@ public class WebApp {
 		if (db.getAgentTypes() != null && !db.getAgentTypes().isEmpty()){
 			
 			sb.append("<div class=\"controls\">\n");
-			sb.append("<label class=\"control-label\"><b>Select Required Activitiess and Quantity:</b></label>\n");
+			sb.append("<label class=\"control-label\"><b>Select Required Agent Types and Quantity:</b></label>\n");
 
 			for (String agentType : db.getAgentTypes()){
 				
@@ -154,7 +154,7 @@ public class WebApp {
 		if (db.getAllActivities() != null && !db.getAllActivities().isEmpty()){
 
 			sb.append("<div class=\"controls\">\n");
-			sb.append("<label class=\"control-label\"><b>Select Required Item Types and Quantity:</b></label>\n");
+			sb.append("<label class=\"control-label\"><b>Select Required Activities:</b></label>\n");
 
 			for (Activity activity : db.getAllActivities()){
 				
