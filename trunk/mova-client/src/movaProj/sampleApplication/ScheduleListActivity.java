@@ -6,6 +6,10 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.Vector;
 
+import state.ItemState;
+
+import client.MovaClient;
+
 import movaProj.agent.AgentDataSource;
 import movaProj.agent.C2DMReceiver;
 import movaProj.agent.ItemDataSource;
@@ -147,10 +151,8 @@ public class ScheduleListActivity extends Activity implements Observer,
 		int menuItemIndex = item.getItemId();
 		switch (menuItemIndex) {
 		case 0: // Start Activity
-			new MovaAndroidClientImpl().startActivity(schedule1.get(
-					info.position).getId());
-			Toast.makeText(getApplicationContext(), "Started",
-					Toast.LENGTH_LONG);
+			new MovaAndroidClientImpl().startActivity(schedule1.get(info.position).getId());
+			Toast.makeText(getApplicationContext(), "Started",Toast.LENGTH_LONG);
 			break;
 		case 1:
 			// custom dialog
@@ -192,8 +194,7 @@ public class ScheduleListActivity extends Activity implements Observer,
 			break;
 		case 2: // Complete Activity - Remove from the list and mark as
 				// completed.
-			new MovaAndroidClientImpl().completeActivity(this,
-					schedule1.get(info.position).getId());
+			new MovaAndroidClientImpl().completeActivity(this,schedule1.get(info.position).getId());
 			Toast.makeText(getApplicationContext(),
 					"Activity Mark as Completed", Toast.LENGTH_LONG);
 			ListView listView = (ListView) findViewById(R.id.mylist);

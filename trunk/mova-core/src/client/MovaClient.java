@@ -183,9 +183,7 @@ public class MovaClient {
 		JsonObject j = new JsonObject();
 		j.addProperty("activityId", pId);
 		j.addProperty("state", pState.toString());
-		
-//		mService.path("activities").path("changeActivityStatus")
-//			.type(MediaType.APPLICATION_JSON).put(j.toString());
+
 		ClientResource resource = new ClientResource(getBaseURI().toString() + "/activities/changeActivityStatus");
 		resource.put(j.toString());
 	}

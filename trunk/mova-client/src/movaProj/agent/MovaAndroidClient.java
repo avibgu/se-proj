@@ -3,7 +3,9 @@ package movaProj.agent;
 import java.util.List;
 import java.util.Observer;
 
+import state.ItemState;
 import utilities.Location;
+import actor.Item;
 import android.app.Activity;
 import android.content.Context;
 
@@ -17,7 +19,7 @@ public interface MovaAndroidClient {
 	 */
 	public Location findItemLocation(String itemId, Context context);
 
-	/**
+	/**+
 	 * Add listener to the application.
 	 * @param observer the observer that will get the events messages.
 	 */
@@ -40,12 +42,11 @@ public interface MovaAndroidClient {
 	/**
 	 * Postpone the activity according to the given added time. 
 	 * Cause to recalculation of the event schedule.
-	 * @param activity The android activity that the agent arrived from.
+	 * @param context The context that the agent arrived from (For example: the activity that call this function)
 	 * @param activityId The id of the postponed activity.
 	 * @param addedTime The time that the agent want to add to the activity in minutes.
 	 */
-	public void postponeActivity(Activity activity, String activityId,
-			long addedTime);
+	public void postponeActivity(Context context, String activityId,long addedTime);
 
 	/**
 	 * Mark that the activity was started.
@@ -101,5 +102,12 @@ public interface MovaAndroidClient {
 	 * @param newActivity
 	 */
 	public void createNewActivity(Context context,actor.Activity newActivity);
+	
+	/**
+	 * Change the status of the given item.
+	 * @param item The item that should be changed its state.
+	 * @param newItemState The item new state.
+	 */
+	public void changeItemStatus(Context context, String itemId, ItemState newItemState);
 
 }
