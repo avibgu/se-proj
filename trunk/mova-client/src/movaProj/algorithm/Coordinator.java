@@ -12,6 +12,7 @@ import utilities.MovaJson;
 import actor.Activity;
 import actor.Agent;
 import actor.Item;
+import android.content.Context;
 import client.MovaClient;
 
 public class Coordinator {
@@ -21,9 +22,9 @@ public class Coordinator {
 	private List<Activity> mActivities;
 	private List<Agent> mAgents;
 	private List<Item> mItems;
-	private android.app.Activity mAndroidActivity;
+	private Context mAndroidActivity;
 
-	public Coordinator(android.app.Activity activity) {
+	public Coordinator(Context activity) {
 		mAndroidActivity = activity;
 		mMovaClient = new MovaClient();
 	}

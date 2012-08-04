@@ -100,7 +100,7 @@ public class MovaAndroidClientImpl implements MovaAndroidClient{
 	 * @see movaProj.agent.MovaAndroidClientI#recalculate(android.app.Activity)
 	 */
 	@Override
-	public void recalculate(Activity activity){
+	public void recalculate(Context activity){
 		new Coordinator(activity).askRecalculate(new AgentDataSource(activity).getAgentId());
 	}
 	
@@ -125,7 +125,7 @@ public class MovaAndroidClientImpl implements MovaAndroidClient{
 	 * @see movaProj.agent.MovaAndroidClientI#createNewActivity(android.app.Activity, actor.Activity)
 	 */
 	@Override
-	public void createNewActivity(Activity activity, actor.Activity newActivity) {
+	public void createNewActivity(Context activity, actor.Activity newActivity) {
 		new MovaClient().sendActivity(newActivity);
 		recalculate(activity);
 	}
