@@ -6,9 +6,11 @@ import java.util.Observer;
 import movaProj.algorithm.Coordinator;
 
 import state.ActivityState;
+import state.ItemState;
 import utilities.ConfigurationManager;
 import utilities.Location;
 import actor.Agent;
+import actor.Item;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -57,9 +59,9 @@ public class MovaAndroidClientImpl implements MovaAndroidClient{
 	 * @see movaProj.agent.MovaAndroidClientI#postponeActivity(android.app.Activity, java.lang.String, long)
 	 */
 	@Override
-	public  void postponeActivity(Activity activity, String activityId, long addedTime){
+	public  void postponeActivity(Context context, String activityId, long addedTime){
 		new MovaClient().postponeActivity(activityId,addedTime);
-		recalculate(activity);
+		recalculate(context);
 	}
 	
 	/* (non-Javadoc)
@@ -128,5 +130,26 @@ public class MovaAndroidClientImpl implements MovaAndroidClient{
 	public void createNewActivity(Context activity, actor.Activity newActivity) {
 		new MovaClient().sendActivity(newActivity);
 		recalculate(activity);
+	}
+	
+	/* (non-Javadoc)
+	 * @see movaProj.agent.MovaAndroidClientI#changeItemStatus(Item item, ItemState newItemState)
+	 */
+	@Override
+	public void changeItemStatus(Context context, String itemId, ItemState newItemState) {
+		switch(newItemState){
+			case AVAILABLE:
+				new MovaClient().changeItemStatus(itemId, ItemState.AVAILABLE.toString(), new AgentDataSource(context).getAgentId());
+				break;
+			case UNAVAILABLE:
+				new MovaClient().changeItemStatus(itemId, ItemState.UNAVAILABLE.toString(), new AgentDataSource(context).getAgentId());
+				break;
+			case BUSY:
+				new MovaClient().changeItemStatus(itemId, ItemState.BUSY.toString(), new AgentDataSource(context).getAgentId());
+				break;
+				
+		}
+			
+		
 	}
 }
