@@ -6,6 +6,7 @@ import java.util.Observer;
 import movaProj.algorithm.Coordinator;
 
 import state.ActivityState;
+import utilities.ConfigurationManager;
 import utilities.Location;
 import actor.Agent;
 import android.app.Activity;
@@ -16,7 +17,7 @@ import client.MovaClient;
 
 public class MovaAndroidClientImpl implements MovaAndroidClient{
 		
-	public static final String PROJECT_ID = "175716185590";
+	public static final String PROJECT_ID = ConfigurationManager.getProjectID();
 	
 	/* (non-Javadoc)
 	 * @see movaProj.agent.MovaAndroidClientI#findItemLocation(java.lang.String, android.content.Context)

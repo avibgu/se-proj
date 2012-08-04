@@ -33,12 +33,9 @@ public class NewDomain extends DefaultTableModel{
      * Creates a new domain according configurable variables
      * @param height the domain height
      * @param width the domain width
-     * @param nAgents the number of agents to create
-     * @param nItems the number of items to create
-     * @param nSensors the number of sensors
      * @param nScanDistance the scan distance of the item scanners
      */
-    public NewDomain (int height, int width, int nAgents, int nItems, int nSensors, double nScanDistance){
+    public NewDomain (int height, int width, double nScanDistance){
         _nScanDistance = nScanDistance;
         _entities = new Vector<Vector<Entity>>();
         _locations = new String[height][width];
