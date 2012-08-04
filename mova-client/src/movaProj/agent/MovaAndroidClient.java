@@ -75,7 +75,7 @@ public interface MovaAndroidClient {
 	 * Recalculate all the activities in the event and send new schedule to every agent.
 	 * @param activity The android activity that the agent arrived from.
 	 */
-	public void recalculate(Activity activity);
+	public void recalculate(Context activity);
 
 	/**
 	 * Change the status of the agent. The agent can be login or logout.
@@ -94,7 +94,7 @@ public interface MovaAndroidClient {
 	 */
 	public List<actor.Activity> getAllActivities(String agentId);
 
-	public void createNewActivity(Activity activity,
+	public void createNewActivity(Context activity,
 			actor.Activity newActivity);
 
 }
