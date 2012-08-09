@@ -211,8 +211,8 @@ public class CreateActivity extends Activity implements OnClickListener,
 	}
 
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.submitActivityButton:
+		int id = v.getId();
+		if (id == R.id.submitActivityButton) {
 			activityName = (EditText) findViewById(R.id.ActivityNameText);
 			actor.Activity newActivity = new actor.Activity(activityName
 					.getText().toString());
@@ -237,14 +237,11 @@ public class CreateActivity extends Activity implements OnClickListener,
 					.valueOf((((EditText) findViewById(R.id.estimatedTime))
 							.getText()).toString()) * 60000);
 			newActivity.setRequiredActivityIds(dependenciesIds);
-
 			Intent i = new Intent(CreateActivity.this,
 					ScheduleListActivity.class);
 			startActivity(i);
-
 			new MovaAndroidClientImpl().createNewActivity(this, newActivity);
-			break;
-		case R.id.addDependencyButton:
+		} else if (id == R.id.addDependencyButton) {
 			long dependencyId = ((Spinner) findViewById(R.id.dependenciesSpinner))
 					.getSelectedItemId();
 			addedDependenciesStrings.add(allActivities.get((int) dependencyId)
@@ -254,20 +251,17 @@ public class CreateActivity extends Activity implements OnClickListener,
 					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			((ListView) findViewById(R.id.dependenciesList))
 					.setLayoutParams(mParam);
-			break;
 		}
 	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
-		switch (arg0.getId()) {
-		case R.id.activityTypeSpinner:
+		int id = arg0.getId();
+		if (id == R.id.activityTypeSpinner) {
 			this.activityType = (String) arg0.getItemAtPosition(arg2);
-			break;
-		case R.id.agentTypeSpinner:
+		} else if (id == R.id.agentTypeSpinner) {
 			this.agentType = (String) arg0.getItemAtPosition(arg2);
-			break;
 		}
 	}
 

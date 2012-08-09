@@ -94,7 +94,11 @@ public interface MovaAndroidClient {
 	 * @return list of all the activities in the event.
 	 */
 	public List<actor.Activity> getAllActivities(String agentId);
-
+	/**
+	 * Creates a new MoVA activity
+	 * @param activity the android activity that made the call
+	 * @param newActivity the new MoVA activity to be added
+	 */
 	/**
 	 * Create new MoVA Activity.
 	 * Cause to recalculation of the event schedule.

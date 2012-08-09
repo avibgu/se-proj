@@ -33,5 +33,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mova-core"/>
 	<classpathentry kind="con" path="DERBY_CONTAINER"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.20-bin.jar"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

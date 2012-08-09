@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.ws.rs.core.Application;
+
 import simulator.NewDomain;
 /**
  * The ConfigurationManager class is used to read
@@ -25,7 +27,7 @@ public class ConfigurationManager {
 	public static NewDomain loadParameters() {
 		Properties prop = new Properties();
 		try {
-			InputStream in = ConfigurationManager.class.getResourceAsStream("config.properties");
+			InputStream in = ConfigurationManager.class.getResourceAsStream("../../config.properties");
 			prop.load(in);
 			mProp = prop;
 		} catch (FileNotFoundException e) {
