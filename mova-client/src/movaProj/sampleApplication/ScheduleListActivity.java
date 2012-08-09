@@ -120,18 +120,16 @@ public class ScheduleListActivity extends Activity implements Observer,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		String agentId = new AgentDataSource(this).getAgentId();
-		switch (item.getItemId()) {
-		case R.id.createActivity:
+		int itemId = item.getItemId();
+		if (itemId == R.id.createActivity) {
 			Intent i = new Intent(ScheduleListActivity.this,
 					CreateActivity.class);
 			startActivity(i);
-			break;
-		case R.id.logout:
+		} else if (itemId == R.id.logout) {
 			new MovaAndroidClientImpl().changeAgentStatus(agentId, false, this);
 			setContentView(R.layout.login);
 			Button loginButton = (Button) this.findViewById(R.id.loginButton);
 			loginButton.setOnClickListener(this);
-			break;
 		}
 		return true;
 	}
@@ -288,24 +286,15 @@ public class ScheduleListActivity extends Activity implements Observer,
 
 		String agentId = new AgentDataSource(this).getAgentId();
 
-		switch (v.getId()) {
-
-		case R.id.loginButton:
+		int id = v.getId();
+		if (id == R.id.loginButton) {
 			new MovaAndroidClientImpl().changeAgentStatus(agentId, true, this);
 			Intent i = new Intent(ScheduleListActivity.this,
 					ScheduleListActivity.class);
 			startActivity(i);
-			break;
-
-		case R.id.initialButton:
+		} else if (id == R.id.initialButton) {
 			new MovaAndroidClientImpl().recalculate(this);
-			break; // TODO: remove it..
-
-		case R.id.numberPickerOkButton:
-			// NumberPicker numberPicker = (NumberPicker) this
-			// .findViewById(R.id.numberPickerComponent);
-			// int addedTime = numberPicker.getCurrent();
-			break;
+		} else if (id == R.id.numberPickerOkButton) {
 		}
 	}
 }

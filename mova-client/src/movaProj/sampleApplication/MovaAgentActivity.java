@@ -37,16 +37,14 @@ public class MovaAgentActivity extends Activity implements OnClickListener,Obser
 	}
 
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.button2:
+		int id = v.getId();
+		if (id == R.id.button2) {
 			Intent i1 = new Intent(MovaAgentActivity.this, CreateActivity.class);
 			startActivity(i1);
-			break;
-		case R.id.button3:
+		} else if (id == R.id.button3) {
 			Intent i = new Intent(MovaAgentActivity.this,
 			ScheduleListActivity.class);
 			startActivity(i);
-			break;
 		}
 	}
 
