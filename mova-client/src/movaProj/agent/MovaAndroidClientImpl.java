@@ -147,9 +147,7 @@ public class MovaAndroidClientImpl implements MovaAndroidClient{
 			case BUSY:
 				new MovaClient().changeItemStatus(itemId, ItemState.BUSY.toString(), new AgentDataSource(context).getAgentId());
 				break;
-				
 		}
-			
-		
+    recalculate(context);		
 	}
 }
