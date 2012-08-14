@@ -184,7 +184,7 @@ public class Domain implements Cloneable {
 		mEmpty = false;
 	}
 
-	public Value nextValue() {
+	public Value nextValue() throws Exception{
 
 		// String hashKey = getHashKeyOfCurrentIndexes();
 		//
@@ -258,19 +258,19 @@ public class Domain implements Cloneable {
 		return incremented;
 	}
 
-	private Value constructValueFromIndexes() {
-
+	private Value constructValueFromIndexes() throws Exception {
+		
 		Set<Agent> requiredAgents = new HashSet<Agent>();
-
+		Set<Item> requiredItems = new HashSet<Item>();
+		
 		for (int i = 0; i < mAgentsIndexes.size(); i++)
 			for (Integer index : mAgentsIndexes.get(i))
 				requiredAgents.add(mAgents.get(i).get(index));
-
-		Set<Item> requiredItems = new HashSet<Item>();
-
+		
 		for (int i = 0; i < mItemsIndexes.size(); i++)
 			for (Integer index : mItemsIndexes.get(i))
-				requiredItems.add(mItems.get(i).get(index));
+				requiredItems.add(mItems.get(i)
+						.get(index));
 
 		for (Agent agent : requiredAgents)
 			if (mAgentsAvailability.containsKey(agent.getId())

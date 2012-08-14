@@ -74,118 +74,118 @@ public class DBGeneratorForAlgorithmTests {
 		Map<ItemType, Integer> requiredItems = null;
 		Set<String> requiredActivities = null;
 		
-		if (sActivities.isEmpty()) {
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
-	
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 1);
-			activity1.setRequiredAgents(requiredAents);
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 1);
-			activity1.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG2, 1);
-			activity2.setRequiredAgents(requiredAents);
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 1);
+		activity1.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT2, 1);
-			activity2.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity2);
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT1, 1);
+		activity1.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG2, 1);
+		activity2.setRequiredAgents(requiredAents);
 
-			Activity activity3 = new Activity("activity3");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 1);
-			activity3.setRequiredAgents(requiredAents);
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT2, 1);
+		activity2.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity2);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT2, 1);
-			activity3.setRequiredItems(requiredItems);
-			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity1.getId());
-			requiredActivities.add(activity2.getId());
-			activity3.setRequiredActivityIds(requiredActivities);
+		Activity activity3 = new Activity("activity3");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 1);
+		activity3.setRequiredAgents(requiredAents);
 
-			sActivities.add(activity3);
-				
-			Activity activity4 = new Activity("activity4");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 2);
-			activity4.setRequiredAgents(requiredAents);
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT2, 1);
+		activity3.setRequiredItems(requiredItems);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity1.getId());
+		requiredActivities.add(activity2.getId());
+		activity3.setRequiredActivityIds(requiredActivities);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 1);
-			activity4.setRequiredItems(requiredItems);
+		sActivities.add(activity3);
 			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity2.getId());
-			activity4.setRequiredActivityIds(requiredActivities);
-			
-			sActivities.add(activity4);
-			
-			Activity activity5 = new Activity("activity5");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG2, 1);
-			activity5.setRequiredAgents(requiredAents);
+		Activity activity4 = new Activity("activity4");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 2);
+		activity4.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 2);
-			activity5.setRequiredItems(requiredItems);
-			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity1.getId());
-			activity5.setRequiredActivityIds(requiredActivities);
-			
-			sActivities.add(activity5);
-			
-			Activity activity6 = new Activity("activity6");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG3, 2);
-			activity6.setRequiredAgents(requiredAents);
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT1, 1);
+		activity4.setRequiredItems(requiredItems);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity2.getId());
+		activity4.setRequiredActivityIds(requiredActivities);
+		
+		sActivities.add(activity4);
+		
+		Activity activity5 = new Activity("activity5");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG2, 1);
+		activity5.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT3, 1);
-			activity6.setRequiredItems(requiredItems);
-			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity4.getId());
-			requiredActivities.add(activity5.getId());
-			activity6.setRequiredActivityIds(requiredActivities);
-			
-			sActivities.add(activity6);
-			
-			Activity activity7 = new Activity("activity7");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG3, 1);
-			activity7.setRequiredAgents(requiredAents);
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT1, 2);
+		activity5.setRequiredItems(requiredItems);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity1.getId());
+		activity5.setRequiredActivityIds(requiredActivities);
+		
+		sActivities.add(activity5);
+		
+		Activity activity6 = new Activity("activity6");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG3, 2);
+		activity6.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT3, 1);
-			activity7.setRequiredItems(requiredItems);
-			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity4.getId());
-			requiredActivities.add(activity5.getId());
-			activity7.setRequiredActivityIds(requiredActivities);
-			
-			sActivities.add(activity7);
-		}
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT3, 1);
+		activity6.setRequiredItems(requiredItems);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity4.getId());
+		requiredActivities.add(activity5.getId());
+		activity6.setRequiredActivityIds(requiredActivities);
+		
+		sActivities.add(activity6);
+		
+		Activity activity7 = new Activity("activity7");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG3, 1);
+		activity7.setRequiredAgents(requiredAents);
+
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT3, 1);
+		activity7.setRequiredItems(requiredItems);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity4.getId());
+		requiredActivities.add(activity5.getId());
+		activity7.setRequiredActivityIds(requiredActivities);
+		
+		sActivities.add(activity7);
 
 		return sActivities;
 	}
@@ -202,35 +202,35 @@ public class DBGeneratorForAlgorithmTests {
 		Map<AgentType, Integer> requiredAents = null;
 		Map<ItemType, Integer> requiredItems = null;
 		
-		if (sActivities.isEmpty()) {
+		if (!sActivities.isEmpty())
+			sActivities.clear();
+			
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
 
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
-	
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 1);
-			activity1.setRequiredAgents(requiredAents);
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 1);
+		activity1.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 1);
-			activity1.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG2, 1);
-			activity2.setRequiredAgents(requiredAents);
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT1, 1);
+		activity1.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG2, 1);
+		activity2.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT2, 1);
-			activity2.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity2);
-		}
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT2, 1);
+		activity2.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity2);
 
 		return sActivities;
 	}
@@ -240,37 +240,37 @@ public class DBGeneratorForAlgorithmTests {
 		Map<AgentType, Integer> requiredAents = null;
 		Map<ItemType, Integer> requiredItems = null;
 		
-		if (sActivities.isEmpty()) {
-
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 	
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 1);
-			activity1.setRequiredAgents(requiredAents);
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 1);
-			activity1.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG2, 1);
-			activity2.setRequiredAgents(requiredAents);
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 1);
+		activity1.setRequiredAgents(requiredAents);
 
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT2, 1);
-			activity2.setRequiredItems(requiredItems);
-			
-			activity2.setState(ActivityState.IN_PROGRESS);
-			
-			sActivities.add(activity2);
-		}
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT1, 1);
+		activity1.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG2, 1);
+		activity2.setRequiredAgents(requiredAents);
+
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT2, 1);
+		activity2.setRequiredItems(requiredItems);
+		
+		activity2.setState(ActivityState.IN_PROGRESS);
+		
+		sActivities.add(activity2);
 
 		return sActivities;
 	}
@@ -279,27 +279,27 @@ public class DBGeneratorForAlgorithmTests {
 
 		Map<AgentType, Integer> requiredAents = null;
 		
-		if (sActivities.isEmpty()) {
-
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 	
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 2);
-			activity1.setRequiredAgents(requiredAents);
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 1);
-			activity2.setRequiredAgents(requiredAents);
-			
-			sActivities.add(activity2);
-		}
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 2);
+		activity1.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 1);
+		activity2.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity2);
 
 		return sActivities;
 	}
@@ -308,29 +308,29 @@ public class DBGeneratorForAlgorithmTests {
 	
 		Map<ItemType, Integer> requiredItems = null;
 		
-		if (sActivities.isEmpty()) {
+		if (!sActivities.isEmpty())
+			sActivities.clear();
+	
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
 
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
-
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT4, 1);
-			activity1.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT4, 1);
-			activity2.setRequiredItems(requiredItems);
-			
-			activity2.setState(ActivityState.IN_PROGRESS);
-			
-			sActivities.add(activity2);
-		}
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT4, 1);
+		activity1.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT4, 1);
+		activity2.setRequiredItems(requiredItems);
+		
+		activity2.setState(ActivityState.IN_PROGRESS);
+		
+		sActivities.add(activity2);
 
 		return sActivities;
 	}
@@ -351,45 +351,45 @@ public class DBGeneratorForAlgorithmTests {
 
 		Map<AgentType, Integer> requiredAents = null;
 		
-		if (sActivities.isEmpty()) {
-
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 	
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 2);
-			activity1.setRequiredAgents(requiredAents);
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG2, 1);
-			activity2.setRequiredAgents(requiredAents);
-			
-			sActivities.add(activity2);
-		}
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 2);
+		activity1.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG2, 1);
+		activity2.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity2);
 
 		return sActivities;
 	}
 	
 	public static List<Activity> getProblemSolvingTestSet41() {
 
-		if (sActivities.isEmpty()) {
-
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
-			
-			// 20 hours..
-			activity1.setEstimateTime(1000 * 60 * 60 * 20);
-			
-			sActivities.add(activity1);
-		}
+		if (!sActivities.isEmpty())
+			sActivities.clear();
+	
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+		
+		// 20 hours..
+		activity1.setEstimateTime(1000 * 60 * 60 * 20);
+		
+		sActivities.add(activity1);
 
 		return sActivities;
 	}
@@ -398,19 +398,19 @@ public class DBGeneratorForAlgorithmTests {
 
 		Map<ItemType, Integer> requiredItems = null;
 		
-		if (sActivities.isEmpty()) {
-
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 	
-			requiredItems = new HashMap<ItemType, Integer>();
-			requiredItems.put(sIT1, 4);
-			activity1.setRequiredItems(requiredItems);
-			
-			sActivities.add(activity1);
-		}
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+
+		requiredItems = new HashMap<ItemType, Integer>();
+		requiredItems.put(sIT1, 4);
+		activity1.setRequiredItems(requiredItems);
+		
+		sActivities.add(activity1);
 
 		return sActivities;
 	}
@@ -419,19 +419,19 @@ public class DBGeneratorForAlgorithmTests {
 
 		Map<AgentType, Integer> requiredAents = null;
 		
-		if (sActivities.isEmpty()) {
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 	
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
-	
-			requiredAents = new HashMap<AgentType, Integer>();
-			requiredAents.put(sAG1, 4);
-			activity1.setRequiredAgents(requiredAents);
-			
-			sActivities.add(activity1);
-		}
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG1, 4);
+		activity1.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity1);
 	
 		return sActivities;
 	}
@@ -440,29 +440,29 @@ public class DBGeneratorForAlgorithmTests {
 
 		Set<String> requiredActivities = null;
 		
-		if (sActivities.isEmpty()) {
+		if (!sActivities.isEmpty())
+			sActivities.clear();
 	
-			getAgents();
-			getItems();
-			
-			Activity activity1 = new Activity("Activity1");
-			
-			sActivities.add(activity1);
-			
-			Activity activity2 = new Activity("activity2");
-			
-			sActivities.add(activity2);
-			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity1.getId());
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		sActivities.add(activity2);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity1.getId());
 
-			activity2.setRequiredActivityIds(requiredActivities);
-			
-			requiredActivities = new HashSet<String>();
-			requiredActivities.add(activity2.getId());
-			
-			activity1.setRequiredActivityIds(requiredActivities);
-		}
+		activity2.setRequiredActivityIds(requiredActivities);
+		
+		requiredActivities = new HashSet<String>();
+		requiredActivities.add(activity2.getId());
+		
+		activity1.setRequiredActivityIds(requiredActivities);
 	
 		return sActivities;
 	}
