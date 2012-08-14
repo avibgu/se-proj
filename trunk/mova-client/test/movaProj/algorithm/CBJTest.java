@@ -16,35 +16,35 @@ import actor.Item;
 public class CBJTest {
 
 	@Test
-	public void complexTest() throws Exception {		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getComplexSetActivities());
+	public void complexTest() throws Exception {
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getComplexSetActivities(), "Complex Test");
 		//success - legal schedule
 	}
 	
 	@Test
-	public void schedulingActivitiesTest1() throws Exception {		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getSchedulingActivitiesTestSet1());
+	public void schedulingActivitiesTest1() throws Exception {	
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getSchedulingActivitiesTestSet1(), "Scheduling Activities Test 1");
 		//success - 2 activities at the same time..
 	}
 	
 	@Test
-	public void schedulingActivitiesTest2() throws Exception {		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getSchedulingActivitiesTestSet2());
+	public void schedulingActivitiesTest2() throws Exception {
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getSchedulingActivitiesTestSet2(), "Scheduling Activities Test 2");
 		//success - only 1 activity (of 2)
 	}
 	
 	@Test
-	public void problemSolvingTest1() throws Exception {		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet1());
+	public void problemSolvingTest1() throws Exception {
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet1(), "Problem Solving Test 1");
 		//success - 2 activities - one after one..
 	}
 	
 	@Test
-	public void problemSolvingTest2() throws Exception {		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet2());
+	public void problemSolvingTest2() throws Exception {
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet2(), "Problem Solving Test 2 - 1");
 		//success - 2 activities at the same time..
 		DBGeneratorForAlgorithmTests.setOneItem4Unavailable();
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet2());
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet2(), "Problem Solving Test 2 - 2");
 		//success - 2 activities - one after one..
 	}
 	
@@ -53,7 +53,7 @@ public class CBJTest {
 		
 		List<Activity> problemSolvingTestSet3 = DBGeneratorForAlgorithmTests.getProblemSolvingTestSet3();
 		
-		runActivitiesTest(problemSolvingTestSet3);
+		runActivitiesTest(problemSolvingTestSet3, "Problem Solving Test 3 - 1");
 		//success - 2 activities at the same time..
 		
 		Activity activity = problemSolvingTestSet3.get(0);
@@ -61,27 +61,30 @@ public class CBJTest {
 		// set to two hours
 		activity.setEstimateTime(activity.getEstimateTime() + 1000 * 60 * 60 * 2);
 		
-		runActivitiesTest(problemSolvingTestSet3);
+		runActivitiesTest(problemSolvingTestSet3, "Problem Solving Test 3 - 2");
 		//success - 2 activities at the same time, but one of them takes longer (double time)
 	}
 	
 	@Test
-	public void problemSolvingTest4() throws Exception {		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet41());
+	public void problemSolvingTest4() throws Exception {
+
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet41(), "Problem Solving Test 4 - 1");
 		// fails - there is not enough time
 		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet42());
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet42(), "Problem Solving Test 4 - 2");
 		// fails - there is not enough items
 		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet43());
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet43(), "Problem Solving Test 4 - 3");
 		// fails - there is not enough agents
 		
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet44());
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet44(), "Problem Solving Test 4 - 4");
 		// fails - activity1 and activity2 depends on each other
 	}
 
-	protected void runActivitiesTest(List<Activity> activities)
+	protected void runActivitiesTest(List<Activity> activities, String testName)
 			throws Exception {
+
+		System.out.println(testName);
 		
 		List<Agent> agents = DBGeneratorForAlgorithmTests.getAgents();
 		List<Item> items = DBGeneratorForAlgorithmTests.getItems();

@@ -11,7 +11,7 @@ import actor.Item;
 public class DomainTest {
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 
 		Activity activity = DBGeneratorForAlgorithmTests.getSomeComplexSetActivity(0);
 		
