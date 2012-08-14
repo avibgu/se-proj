@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import state.ActivityState;
+import state.ItemState;
 import type.AgentType;
 import type.ItemType;
 import actor.Activity;
@@ -23,6 +24,8 @@ public class DBGeneratorForAlgorithmTests {
 	private static final ItemType sIT1 = new ItemType("IT1");
 	private static final ItemType sIT2 = new ItemType("IT2");
 	private static final ItemType sIT3 = new ItemType("IT3");
+
+	private static final ItemType sIT4 = new ItemType("IT4");
 	
 	private static List<Agent> sAgents = new ArrayList<Agent>();
 	private static List<Item> sItems = new ArrayList<Item>();
@@ -57,6 +60,9 @@ public class DBGeneratorForAlgorithmTests {
 			
 			sItems.add(new Item(sIT3));
 			sItems.add(new Item(sIT3));
+			
+			sItems.add(new Item(sIT4));
+			sItems.add(new Item(sIT4));
 		}
 
 		return sItems;
@@ -272,8 +278,6 @@ public class DBGeneratorForAlgorithmTests {
 	public static List<Activity> getProblemSolvingTestSet1() {
 
 		Map<AgentType, Integer> requiredAents = null;
-		Map<ItemType, Integer> requiredItems = null;
-		Set<String> requiredActivities = null;
 		
 		if (sActivities.isEmpty()) {
 
@@ -301,47 +305,165 @@ public class DBGeneratorForAlgorithmTests {
 	}
 	
 	public static List<Activity> getProblemSolvingTestSet2() {
-		
-		//TODO
 	
-		Map<AgentType, Integer> requiredAents = null;
 		Map<ItemType, Integer> requiredItems = null;
-		Set<String> requiredActivities = null;
 		
 		if (sActivities.isEmpty()) {
 
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT4, 1);
+			activity1.setRequiredItems(requiredItems);
+			
+			sActivities.add(activity1);
+			
+			Activity activity2 = new Activity("activity2");
+			
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT4, 1);
+			activity2.setRequiredItems(requiredItems);
+			
+			activity2.setState(ActivityState.IN_PROGRESS);
+			
+			sActivities.add(activity2);
 		}
 
 		return sActivities;
+	}
+	
+	public static void setOneItem4Unavailable() {
+		
+		for (Item item : sItems){
+		
+			if (item.getType() == sIT4){
+			
+				item.setState(ItemState.UNAVAILABLE);
+				return;
+			}
+		}
 	}
 	
 	public static List<Activity> getProblemSolvingTestSet3() {
-		
-		//TODO
-	
+
 		Map<AgentType, Integer> requiredAents = null;
-		Map<ItemType, Integer> requiredItems = null;
-		Set<String> requiredActivities = null;
 		
 		if (sActivities.isEmpty()) {
 
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+	
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG1, 2);
+			activity1.setRequiredAgents(requiredAents);
+			
+			sActivities.add(activity1);
+			
+			Activity activity2 = new Activity("activity2");
+			
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG2, 1);
+			activity2.setRequiredAgents(requiredAents);
+			
+			sActivities.add(activity2);
 		}
 
 		return sActivities;
 	}
 	
-	public static List<Activity> getProblemSolvingTestSet4() {
-		
-		//TODO
+	public static List<Activity> getProblemSolvingTestSet41() {
+
+		if (sActivities.isEmpty()) {
+
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+			
+			// 20 hours..
+			activity1.setEstimateTime(1000 * 60 * 60 * 20);
+			
+			sActivities.add(activity1);
+		}
+
+		return sActivities;
+	}
 	
-		Map<AgentType, Integer> requiredAents = null;
+	public static List<Activity> getProblemSolvingTestSet42() {
+
 		Map<ItemType, Integer> requiredItems = null;
-		Set<String> requiredActivities = null;
 		
 		if (sActivities.isEmpty()) {
 
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+	
+			requiredItems = new HashMap<ItemType, Integer>();
+			requiredItems.put(sIT1, 4);
+			activity1.setRequiredItems(requiredItems);
+			
+			sActivities.add(activity1);
 		}
 
+		return sActivities;
+	}
+
+	public static List<Activity> getProblemSolvingTestSet43() {
+
+		Map<AgentType, Integer> requiredAents = null;
+		
+		if (sActivities.isEmpty()) {
+	
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+	
+			requiredAents = new HashMap<AgentType, Integer>();
+			requiredAents.put(sAG1, 4);
+			activity1.setRequiredAgents(requiredAents);
+			
+			sActivities.add(activity1);
+		}
+	
+		return sActivities;
+	}
+	
+	public static List<Activity> getProblemSolvingTestSet44() {
+
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+	
+			getAgents();
+			getItems();
+			
+			Activity activity1 = new Activity("Activity1");
+			
+			sActivities.add(activity1);
+			
+			Activity activity2 = new Activity("activity2");
+			
+			sActivities.add(activity2);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add(activity1.getId());
+
+			activity2.setRequiredActivityIds(requiredActivities);
+			
+			requiredActivities = new HashSet<String>();
+			requiredActivities.add(activity2.getId());
+			
+			activity1.setRequiredActivityIds(requiredActivities);
+		}
+	
 		return sActivities;
 	}
 }
