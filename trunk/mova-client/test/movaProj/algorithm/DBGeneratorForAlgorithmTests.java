@@ -61,7 +61,7 @@ public class DBGeneratorForAlgorithmTests {
 		return sItems;
 	}
 	
-	public static List<Activity> getActivitiesSet1() {
+	public static List<Activity> getComplexSetActivities() {
 		
 		Map<AgentType, Integer> requiredAents = null;
 		Map<ItemType, Integer> requiredItems = null;
@@ -181,13 +181,102 @@ public class DBGeneratorForAlgorithmTests {
 		}
 
 		return sActivities;
-		
 	}
 	
-	public static Activity getSomeActivity(int pIndex) {
+	public static Activity getSomeComplexSetActivity(int pIndex) {
 
-		getActivitiesSet1();
+		getComplexSetActivities();
 		
 		return sActivities.get(pIndex);
+	}
+	
+	public static List<Activity> getSchedulingActivitiesTestSet1() {
+		
+		//TODO
+		
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+
+		}
+
+		return sActivities;
+	}
+	
+	public static List<Activity> getSchedulingActivitiesTestSet2() {
+		
+		//TODO
+	
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+
+		}
+
+		return sActivities;
+	}
+	
+	public static List<Activity> getProblemSolvingTestSet1() {
+		
+		//TODO
+	
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+
+		}
+
+		return sActivities;
+	}
+	
+	public static List<Activity> getProblemSolvingTestSet2() {
+		
+		//TODO
+	
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+
+		}
+
+		return sActivities;
+	}
+	
+	public static List<Activity> getProblemSolvingTestSet3() {
+		
+		//TODO
+	
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+
+		}
+
+		return sActivities;
+	}
+	
+	public static List<Activity> getProblemSolvingTestSet4() {
+		
+		//TODO
+	
+		Map<AgentType, Integer> requiredAents = null;
+		Map<ItemType, Integer> requiredItems = null;
+		Set<String> requiredActivities = null;
+		
+		if (sActivities.isEmpty()) {
+
+		}
+
+		return sActivities;
 	}
 }
