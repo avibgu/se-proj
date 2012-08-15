@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/mova-core"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/mova-core"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
