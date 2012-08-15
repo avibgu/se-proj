@@ -10,7 +10,6 @@ import state.ItemState;
 import utilities.ConfigurationManager;
 import utilities.Location;
 import actor.Agent;
-import actor.Item;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
