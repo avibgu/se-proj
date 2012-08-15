@@ -20,11 +20,11 @@ public class DBGeneratorForAlgorithmTests {
 	private static final AgentType sAG1 = new AgentType("AG1");
 	private static final AgentType sAG2 = new AgentType("AG2");
 	private static final AgentType sAG3 = new AgentType("AG3");
+	private static final AgentType sAG4 = new AgentType("AG4");
 
 	private static final ItemType sIT1 = new ItemType("IT1");
 	private static final ItemType sIT2 = new ItemType("IT2");
 	private static final ItemType sIT3 = new ItemType("IT3");
-
 	private static final ItemType sIT4 = new ItemType("IT4");
 	
 	private static List<Agent> sAgents = new ArrayList<Agent>();
@@ -43,6 +43,9 @@ public class DBGeneratorForAlgorithmTests {
 			
 			sAgents.add(new Agent(sAG3));
 			sAgents.add(new Agent(sAG3));
+			
+			sAgents.add(new Agent(sAG4));
+			sAgents.add(new Agent(sAG4));
 		}
 
 		return sAgents;
@@ -304,7 +307,7 @@ public class DBGeneratorForAlgorithmTests {
 		return sActivities;
 	}
 	
-	public static List<Activity> getProblemSolvingTestSet2() {
+	public static List<Activity> getProblemSolvingTestSet21() {
 	
 		Map<ItemType, Integer> requiredItems = null;
 		
@@ -328,8 +331,6 @@ public class DBGeneratorForAlgorithmTests {
 		requiredItems.put(sIT4, 1);
 		activity2.setRequiredItems(requiredItems);
 		
-		activity2.setState(ActivityState.IN_PROGRESS);
-		
 		sActivities.add(activity2);
 
 		return sActivities;
@@ -342,6 +343,47 @@ public class DBGeneratorForAlgorithmTests {
 			if (item.getType() == sIT4){
 			
 				item.setState(ItemState.UNAVAILABLE);
+				return;
+			}
+		}
+	}
+	
+	public static List<Activity> getProblemSolvingTestSet22() {
+		
+		Map<AgentType, Integer> requiredAents = null;
+		
+		if (!sActivities.isEmpty())
+			sActivities.clear();
+	
+		getAgents();
+		getItems();
+		
+		Activity activity1 = new Activity("Activity1");
+
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG4, 1);
+		activity1.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity1);
+		
+		Activity activity2 = new Activity("activity2");
+		
+		requiredAents = new HashMap<AgentType, Integer>();
+		requiredAents.put(sAG4, 1);
+		activity2.setRequiredAgents(requiredAents);
+		
+		sActivities.add(activity2);
+
+		return sActivities;
+	}
+	
+	public static void removeOneAgent4fromDB() {
+		
+		for (Agent agent : sAgents){
+			
+			if (agent.getType() == sAG4){
+			
+				sAgents.remove(agent);
 				return;
 			}
 		}
