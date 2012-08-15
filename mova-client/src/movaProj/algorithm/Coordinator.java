@@ -35,9 +35,18 @@ public class Coordinator {
 	 * @param myID The ID of the Agent who asks to recalculate
 	 */
 	public void askRecalculate(String myID) {
+		
 		mMyID = myID;
+		
 		String activitiesAndAgents = mMovaClient.startRecalculate(myID);
+		
+		if (activitiesAndAgents.equals("")){
+			//TODO notify that other Agent performs recalculation;
+			return;
+		}
+		
 		initActivitiesAndAgents(activitiesAndAgents);
+		
 		recalculate();
 	}
 

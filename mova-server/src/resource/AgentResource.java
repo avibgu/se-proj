@@ -168,8 +168,7 @@ public class AgentResource {
 		Vector<String> agentsIds = new Vector<String>();
 		agentsIds.add(agentId);
 		
-		// TODO: approvement..
-		approvement = true;
+		// approvement = true;
 		
 		if (approvement) {
 			
