@@ -11,7 +11,6 @@ import actor.Item;
 
 import state.ItemState;
 import type.ItemType;
-import utilities.MovaJson;
 import client.MovaClient;
 import db.DBHandler;
 
@@ -19,23 +18,11 @@ public class ItemResourceTest {
 	
 	private MovaClient mc;
 	private DBHandler db;
-	private MovaJson mj;
 	
 	@Before
 	public void setUp() throws Exception {
 		mc = new MovaClient();
 		db = DBHandler.getInstance();
-		mj = new MovaJson();
-	}
-
-	@Test
-	public void testFindItem() {
-		fail("Not implementing at the moment");
-	}
-
-	@Test
-	public void testDistributeItemState() {
-		fail("Not yet implemented in the android client");
 	}
 
 	@Test
