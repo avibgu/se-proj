@@ -46,9 +46,6 @@ public class CBJTest {
 		DBGeneratorForAlgorithmTests.setOneItem4Unavailable();
 		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet21(), "Problem Solving Test 2 - 2");
 		//success - 2 activities - one after one..
-		
-		//TODO: the bove DIDN'T PASS!! - we don't check the item status..
-		
 		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet22(), "Problem Solving Test 2 - 3");
 		//success - 2 activities at the same time..
 		DBGeneratorForAlgorithmTests.removeOneAgent4fromDB();
