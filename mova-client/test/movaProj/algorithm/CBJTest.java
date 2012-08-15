@@ -64,7 +64,7 @@ public class CBJTest {
 		Activity activity = problemSolvingTestSet3.get(0);
 		
 		// set to two hours
-		activity.setEstimateTime(activity.getEstimateTime() + 1000 * 60 * 60 * 2);
+		activity.setEstimateTime(1000 * 60 * 60 * 2);
 		
 		runActivitiesTest(problemSolvingTestSet3, "Problem Solving Test 3 - 2");
 		//success - 2 activities at the same time, but one of them takes longer (double time)
