@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import client.MovaClient;
-
 import com.google.gson.internal.Pair;
 
 import state.ActivityState;
+import state.ItemState;
 import type.AgentType;
 import type.ItemType;
 
@@ -25,32 +24,47 @@ public class Domain implements Cloneable {
 	public static final long HOUR = 1000 * 60 * 60;
 	public static final long QUARTER_HOUR = HOUR / 4;
 
+	// the Activity which this Domain belongs to
 	protected Activity mActivity;
 
-	protected Map<String, Value> mValues;
-
+	// lists of all the Agents and Items in the System
+	protected Map<AgentType, List<Agent>> mAgentsMap;
+	protected Map<ItemType, List<Item>> mItemsMap;
+		
+	// lists of all the available Agents and Items that the Activity needs some of them.
+	// access them using the smart indexes
 	protected List<List<Agent>> mAgents;
 	protected List<List<Item>> mItems;
 
+	// data-structures which represent the smart-indexes
 	protected List<List<Integer>> mAgentsIndexes;
 	protected List<List<Integer>> mItemsIndexes;
-
+	
+	// data-structures which hold the number of Agents and Items of each Type
+	protected List<Integer> mAgentsSizes;
+	protected List<Integer> mItemsSizes;
+	
+	// all the possible time windows for the Activity
+	// of this Domain and the index for accessing this list 
 	protected List<Pair<Date, Date>> mTimes;
 	protected Integer mTimesIndex;
 
-	protected List<Integer> mAgentsSizes;
-	protected List<Integer> mItemsSizes;
-
+	// indicates that the Domain is empty
 	protected boolean mEmpty;
 
-	protected Map<AgentType, List<Agent>> mAgentsMap;
-	protected Map<ItemType, List<Item>> mItemsMap;
-
+	// data-structures which hold the time for every Item and Agent
+	// of starting being available for the Activity of this Domain
 	protected Map<String, Date> mAgentsAvailability;
 	protected Map<String, Date> mItemsAvailability;
 
-	protected MovaClient mMovaClient;
-
+	/**
+	 * Constructor - builds the Domain
+	 * 
+	 * @param pActivity The Activity which this Domain belongs to
+	 * @param pActivities All the Activities in the System
+	 * @param pAgents All the Agents in the System
+	 * @param pItems All the Items in the System
+	 */
 	public Domain(Activity pActivity, List<Activity> pActivities,
 			List<Agent> pAgents, List<Item> pItems) {
 
@@ -59,6 +73,14 @@ public class Domain implements Cloneable {
 		initValues();
 	}
 
+	/**
+	 * Initialized the data structures wthathich hold information about which Agents
+	 * and the Items we have in our System and when they will be available.
+	 * 
+	 * @param pActivities All the Activities in the System
+	 * @param pAgents All the Agents in the System
+	 * @param pItems All the Items in the System
+	 */
 	private void initItemsAndAgents(List<Activity> pActivities,
 			List<Agent> pAgents, List<Item> pItems) {
 
@@ -80,7 +102,10 @@ public class Domain implements Cloneable {
 		mItemsMap = new HashMap<ItemType, List<Item>>();
 
 		for (Item item : pItems) {
-
+			
+			if (item.getState() == ItemState.UNAVAILABLE)
+				continue;
+			
 			List<Item> tItems = mItemsMap.get(item.getType());
 
 			if (null == tItems) {
@@ -109,20 +134,12 @@ public class Domain implements Cloneable {
 		}
 	}
 
-	@Deprecated
-	public Domain(Activity pActivity, Map<String, Value> pValues,
-			List<List<Agent>> pAgents, List<List<Item>> pItems,
-			List<List<Integer>> pAgentsIndexes,
-			List<List<Integer>> pItemsIndexes, List<Pair<Date, Date>> pTimes,
-			Integer pTimesIndex, List<Integer> pAgentsSizes,
-			List<Integer> pItemsSizes, boolean pEmpty) {
-
-		// TODO Auto-generated constructor stub
-	}
-
+	/**
+	 * Initialized the data structures that represent the smart indexes
+	 * and the lists of all available Agents and Items of the Types
+	 * that the Activity requires.
+	 */
 	protected void initValues() {
-
-		mValues = new HashMap<String, Value>();
 
 		mAgents = new ArrayList<List<Agent>>();
 		mAgentsIndexes = new ArrayList<List<Integer>>();
@@ -184,15 +201,17 @@ public class Domain implements Cloneable {
 		mEmpty = false;
 	}
 
+	/**
+	 * This method is the heart of the Domain Object - it iterates over
+	 * all the Values that this Domain have.
+	 * It builds Values <b>on-demand</b>!
+	 * 
+	 * @return The next Value of the Domain
+	 * @throws Exception in case there is a problem to construct values - i.e. there is no solution
+	 */
 	public Value nextValue() throws Exception{
 
-		// String hashKey = getHashKeyOfCurrentIndexes();
-		//
-		// Value value = mValues.get(hashKey);
-
 		Value value = null;
-
-		// if (null == value) {
 
 		do {
 			value = constructValueFromIndexes();
@@ -202,62 +221,12 @@ public class Domain implements Cloneable {
 		
 		while (null == value);
 
-		// mValues.put(hashKey, value);
-		// }
-
 		return value;
 	}
-
-	private void incrementIndexes() {
-
-		boolean incremented = incrementAgentsOrItemsIndexes(mAgentsSizes,
-				mAgentsIndexes);
-
-		if (!incremented) {
-
-			incremented = incrementAgentsOrItemsIndexes(mItemsSizes,
-					mItemsIndexes);
-
-			if (!incremented) {
-
-				mTimesIndex++;
-
-				if (mTimes.size() == mTimesIndex)
-					mEmpty = true;
-			}
-		}
-	}
-
-	private boolean incrementAgentsOrItemsIndexes(List<Integer> pEntities,
-			List<List<Integer>> pEntitiesIndexes) {
-
-		boolean incremented = false;
-
-		for (int i = pEntitiesIndexes.size() - 1; i >= 0 && !incremented; i--) {
-
-			int lastIndex = pEntities.get(i) - 1;
-
-			int numOfIndexes = pEntitiesIndexes.get(i).size();
-
-			for (int j = numOfIndexes - 1; j >= 0 && !incremented; j--) {
-
-				if (pEntitiesIndexes.get(i).get(j) + (numOfIndexes - 1 - j) < lastIndex) {
-
-					int newIndexValue = pEntitiesIndexes.get(i).get(j) + 1;
-
-					pEntitiesIndexes.get(i).set(j, newIndexValue);
-
-					for (int k = j + 1; k < numOfIndexes; k++)
-						pEntitiesIndexes.get(i).set(k, newIndexValue + (k - j));
-
-					incremented = true;
-				}
-			}
-		}
-
-		return incremented;
-	}
-
+	
+	/*
+	 * helper method for the above
+	 */
 	private Value constructValueFromIndexes() throws Exception {
 		
 		Set<Agent> requiredAgents = new HashSet<Agent>();
@@ -290,26 +259,66 @@ public class Domain implements Cloneable {
 				mActivity.getRequiredActivityIds());
 	}
 
-	public String getHashKeyOfCurrentIndexes() {
+	/**
+	 * This method increments all the Indexes by 1 (can be refer as the global index)
+	 */
+	private void incrementIndexes() {
 
-		// StringBuilder sb = new StringBuilder();
-		//
-		// for (int i = 0; i < mAgentsIndexes.size(); i++)
-		// for (int j = 0; j < mAgentsIndexes.get(i).size(); j++)
-		// sb.append(mAgentsIndexes.get(i).get(j) + ":");
-		//
-		// for (int i = 0; i < mItemsIndexes.size(); i++)
-		// for (int j = 0; j < mItemsIndexes.get(i).size(); j++)
-		// sb.append(mItemsIndexes.get(i).get(j) + ":");
-		//
-		// sb.append(mTimesIndex);
-		//
-		// return sb.toString();
+		boolean incremented = incrementAgentsOrItemsIndexes(mAgentsSizes,
+				mAgentsIndexes);
 
-		// TODO
-		return null;
+		if (!incremented) {
+
+			incremented = incrementAgentsOrItemsIndexes(mItemsSizes,
+					mItemsIndexes);
+
+			if (!incremented) {
+
+				mTimesIndex++;
+
+				if (mTimes.size() == mTimesIndex)
+					mEmpty = true;
+			}
+		}
 	}
 
+	
+	/*
+	 * helper method for the above.  
+	 */
+	private boolean incrementAgentsOrItemsIndexes(List<Integer> pEntities,
+			List<List<Integer>> pEntitiesIndexes) {
+
+		boolean incremented = false;
+
+		for (int i = pEntitiesIndexes.size() - 1; i >= 0 && !incremented; i--) {
+
+			int lastIndex = pEntities.get(i) - 1;
+
+			int numOfIndexes = pEntitiesIndexes.get(i).size();
+
+			for (int j = numOfIndexes - 1; j >= 0 && !incremented; j--) {
+
+				if (pEntitiesIndexes.get(i).get(j) + (numOfIndexes - 1 - j) < lastIndex) {
+
+					int newIndexValue = pEntitiesIndexes.get(i).get(j) + 1;
+
+					pEntitiesIndexes.get(i).set(j, newIndexValue);
+
+					for (int k = j + 1; k < numOfIndexes; k++)
+						pEntitiesIndexes.get(i).set(k, newIndexValue + (k - j));
+
+					incremented = true;
+				}
+			}
+		}
+
+		return incremented;
+	}
+
+	/**
+	 * reset all the indexes to their initial posistion (global index == 0)
+	 */
 	public void resetIndexes() {
 
 		for (int i = 0; i < mAgentsIndexes.size(); i++)
@@ -325,35 +334,9 @@ public class Domain implements Cloneable {
 		mEmpty = false;
 	}
 
-	@Override
-	@Deprecated
-	protected Domain clone() {
-
-		// TODO
-		return null;
-
-		// Map<String, Value> values = new HashMap<String, Value>();
-		//
-		// for (String key : mValues.keySet())
-		// values.put(key, values.get(key).clone());
-		//
-		// List<List<Agent>> agents = ;
-		// List<List<Item>> items;
-		//
-		// List<List<Integer>> agentsIndexes;
-		// List<List<Integer>> itemsIndexes;
-		//
-		// List<Pair<Date, Date>> times;
-		// Integer timesIndex;
-		//
-		// List<Integer> agentsSizes;
-		// List<Integer> itemsSizes;
-		//
-		// return new Domain(mActivity, values, agents, items, agentsIndexes,
-		// itemsIndexes, times, timesIndex, agentsSizes, itemsSizes,
-		// mEmpty);
-	}
-
+	/**
+	 * @return <i>true</i> if the Domain is empty.
+	 */
 	public boolean isEmpty() {
 		return mEmpty;
 	}
