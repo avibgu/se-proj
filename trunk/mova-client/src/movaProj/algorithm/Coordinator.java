@@ -7,12 +7,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import movaProj.agent.ItemDataSource;
+import movaProj.agent.R;
 import state.ActivityState;
 import utilities.MovaJson;
 import actor.Activity;
 import actor.Agent;
 import actor.Item;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import client.MovaClient;
 
 public class Coordinator {
@@ -30,23 +35,25 @@ public class Coordinator {
 	}
 
 	/**
-	 * This method should be called when an Agent want to initiate
-	 * Activities recalculation (rescheduling). 
-	 * @param myID The ID of the Agent who asks to recalculate
+	 * This method should be called when an Agent want to initiate Activities
+	 * recalculation (rescheduling).
+	 * 
+	 * @param myID
+	 *            The ID of the Agent who asks to recalculate
 	 */
 	public void askRecalculate(String myID) {
-		
+
 		mMyID = myID;
-		
+
 		String activitiesAndAgents = mMovaClient.startRecalculate(myID);
-		
-		if (activitiesAndAgents.equals("")){
-			//TODO notify that other Agent performs recalculation;
+
+		if (activitiesAndAgents.equals("")) {
+			notifyAgent("Other Agent perform rescheduling right now, try again later if necessary");
 			return;
 		}
-		
+
 		initActivitiesAndAgents(activitiesAndAgents);
-		
+
 		recalculate();
 	}
 
@@ -55,20 +62,20 @@ public class Coordinator {
 	 * that we have in our System
 	 */
 	private void initActivitiesAndAgents(String pActivitiesAndAgents) {
-		
+
 		JsonParser jp = new JsonParser();
 		JsonObject j = (JsonObject) jp.parse(pActivitiesAndAgents);
 
 		MovaJson mj = new MovaJson();
-		
+
 		mActivities = mj.jsonToActivities(j.get("activities").getAsString());
 		mAgents = mj.jsonToAgents(j.get("agents").getAsString());
 	}
 
 	/*
-	 * private method to initiate the scheduling Algorithm.
-	 * it initializes all the required objects for the algorithm,
-	 * runs the algorithm itself and publish the result (if there is any).
+	 * private method to initiate the scheduling Algorithm. it initializes all
+	 * the required objects for the algorithm, runs the algorithm itself and
+	 * publish the result (if there is any).
 	 */
 	private void recalculate() {
 
@@ -78,15 +85,15 @@ public class Coordinator {
 			public void run() {
 
 				try {
-					
+
 					mItems = new ItemDataSource(mAndroidActivity).getItems();
 
 					Vector<Variable> variables = new Vector<Variable>();
 
 					for (Activity activity : mActivities)
 						if (activity.getState() == ActivityState.PENDING)
-							variables.add(new Variable(activity,
-								mActivities, mAgents, mItems));
+							variables.add(new Variable(activity, mActivities,
+									mAgents, mItems));
 
 					CSPAlgorithm mAlgorithm = new CBJ(variables);
 
@@ -100,11 +107,11 @@ public class Coordinator {
 					}
 
 					else
-						; // TODO: what to do when there is no solution??..
+						notifyAgent("There is no legal Scheduling to your Activities");
 				}
 
 				catch (Exception e) {
-					// TODO: what to do when the algorithm fails??..
+					notifyAgent("The Scheduling Algorithm has failed");
 					e.printStackTrace();
 				}
 			}
@@ -112,8 +119,8 @@ public class Coordinator {
 	}
 
 	/*
-	 * this method called when the recalculation ended successfully
-	 * and the Agent want to update the new schedule in the Server DB.
+	 * this method called when the recalculation ended successfully and the
+	 * Agent want to update the new schedule in the Server DB.
 	 */
 	private void updateDatabaseWithNewSchecdule(String myID,
 			Vector<Value> pAssignment) {
@@ -124,5 +131,29 @@ public class Coordinator {
 			schedule.add(value.getActivity());
 
 		mMovaClient.sendSchedule(schedule, myID);
+	}
+
+	/*
+	 * this method generates status-notification for the Agent's user
+	 */
+	private void notifyAgent(String pMessage) {
+
+		// Get a reference to the NotificationManager:
+		NotificationManager mNotificationManager = (NotificationManager) mAndroidActivity
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		// Instantiate the Notification:
+		Notification notification = new Notification(
+				android.R.drawable.stat_notify_chat, pMessage,
+				System.currentTimeMillis());
+
+		// Define the notification's message and PendingIntent:
+		notification.setLatestEventInfo(mAndroidActivity,
+				(String) mAndroidActivity.getText(R.string.app_name), pMessage,
+				PendingIntent.getActivity(mAndroidActivity, 0, new Intent(
+						mAndroidActivity, Coordinator.class), 0));
+
+		// Pass the Notification to the NotificationManager:
+		mNotificationManager.notify(1, notification);
 	}
 }
