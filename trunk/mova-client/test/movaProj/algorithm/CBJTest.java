@@ -41,10 +41,18 @@ public class CBJTest {
 	
 	@Test
 	public void problemSolvingTest2() throws Exception {
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet2(), "Problem Solving Test 2 - 1");
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet21(), "Problem Solving Test 2 - 1");
 		//success - 2 activities at the same time..
 		DBGeneratorForAlgorithmTests.setOneItem4Unavailable();
-		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet2(), "Problem Solving Test 2 - 2");
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet21(), "Problem Solving Test 2 - 2");
+		//success - 2 activities - one after one..
+		
+		//TODO: the bove DIDN'T PASS!! - we don't check the item status..
+		
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet22(), "Problem Solving Test 2 - 3");
+		//success - 2 activities at the same time..
+		DBGeneratorForAlgorithmTests.removeOneAgent4fromDB();
+		runActivitiesTest(DBGeneratorForAlgorithmTests.getProblemSolvingTestSet22(), "Problem Solving Test 2 - 4");
 		//success - 2 activities - one after one..
 	}
 	
