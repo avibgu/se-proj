@@ -29,6 +29,11 @@ public class Coordinator {
 		mMovaClient = new MovaClient();
 	}
 
+	/**
+	 * This method should be called when an Agent want to initiate
+	 * Activities recalculation (rescheduling). 
+	 * @param myID The ID of the Agent who asks to recalculate
+	 */
 	public void askRecalculate(String myID) {
 		mMyID = myID;
 		String activitiesAndAgents = mMovaClient.startRecalculate(myID);
@@ -36,6 +41,10 @@ public class Coordinator {
 		recalculate();
 	}
 
+	/*
+	 * initializing the data structures which hold all the Activities and Agents
+	 * that we have in our System
+	 */
 	private void initActivitiesAndAgents(String pActivitiesAndAgents) {
 		
 		JsonParser jp = new JsonParser();
@@ -47,6 +56,11 @@ public class Coordinator {
 		mAgents = mj.jsonToAgents(j.get("agents").getAsString());
 	}
 
+	/*
+	 * private method to initiate the scheduling Algorithm.
+	 * it initializes all the required objects for the algorithm,
+	 * runs the algorithm itself and publish the result (if there is any).
+	 */
 	private void recalculate() {
 
 		new Thread(new Runnable() {
@@ -88,6 +102,10 @@ public class Coordinator {
 		}).start();
 	}
 
+	/*
+	 * this method called when the recalculation ended successfully
+	 * and the Agent want to update the new schedule in the Server DB.
+	 */
 	private void updateDatabaseWithNewSchecdule(String myID,
 			Vector<Value> pAssignment) {
 

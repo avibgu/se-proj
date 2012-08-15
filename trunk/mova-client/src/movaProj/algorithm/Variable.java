@@ -6,6 +6,10 @@ import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
+/**
+ * This class represents an Activity for the scheduling Algorithm.
+ * It holds the Activity which it belongs to, and the Domain of the possible Values.
+ */
 public class Variable implements Comparable<Variable> {
 
 	protected Activity mActivity;

@@ -4,6 +4,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
+/**
+ * This Class represents the Scheduling Algorithm.
+ * It gets Variables (which represent Activities) and try to find
+ * them a legal Assignment of Values (which represent a schedule).
+ */
 public class CBJ implements CSPAlgorithm {
 
 	protected static final int UNINITIALIZED = -1;
@@ -54,12 +59,18 @@ public class CBJ implements CSPAlgorithm {
 			mConfSets.add(new TreeSet<Variable>());
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void solve(Vector<Variable> pVariables) throws Exception {
 		init(pVariables);
 		solve();
 	}
 
 	@Override
+	/**
+	 * @inheritDoc
+	 */
 	public void solve() throws Exception {
 
 		if (UNINITIALIZED == getStatus())
@@ -87,6 +98,12 @@ public class CBJ implements CSPAlgorithm {
 		}
 	}
 
+	/**
+	 * this method tries to assign Value to Variable i  
+	 * 
+	 * @param i the Variable that we tries to aggign a Value to
+	 * @return <i>i + 1</i> if the assignment has succeeded, or <i>i<i> otherwise
+	 */
 	public int label(int i) {
 
 		mConsistent = false;
@@ -114,6 +131,12 @@ public class CBJ implements CSPAlgorithm {
 		return (mConsistent) ? i + 1 : i;
 	}
 
+	/**
+	 * this method remove the assigned Value from Variable i  
+	 * 
+	 * @param i the Variable that we remove its Value
+	 * @return the index of the Variable that we want to assign him new Value
+	 */
 	public int unlabel(int i) {
 
 		int h = getHFromI(i);
@@ -156,11 +179,17 @@ public class CBJ implements CSPAlgorithm {
 	}
 
 	@Override
+	/**
+	 * @inheritDoc
+	 */
 	public boolean isSolved() {
 		return getStatus() == SOLUTION;
 	}
 
 	@Override
+	/**
+	 * @inheritDoc
+	 */
 	public Vector<Value> getAssignment() {
 		return mAssignment;
 	}
