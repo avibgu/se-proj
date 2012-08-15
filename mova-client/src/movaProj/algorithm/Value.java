@@ -9,6 +9,9 @@ import actor.Activity;
 import actor.Agent;
 import actor.Item;
 
+/**
+ * This class represents an instance of Activity.
+ */
 public class Value {
 
 	private Activity mActivity;
