@@ -47,7 +47,7 @@ public class Coordinator {
 
 		String activitiesAndAgents = mMovaClient.startRecalculate(myID);
 
-		if (activitiesAndAgents.equals("")) {
+		if (null == activitiesAndAgents || activitiesAndAgents.equals("")) {
 			notifyAgent("Other Agent perform rescheduling right now, try again later if necessary");
 			return;
 		}
@@ -103,7 +103,6 @@ public class Coordinator {
 
 						updateDatabaseWithNewSchecdule(mMyID,
 								mAlgorithm.getAssignment());
-						mMovaClient.finishRecalculate(mMyID);
 					}
 
 					else
@@ -113,6 +112,10 @@ public class Coordinator {
 				catch (Exception e) {
 					notifyAgent("The Scheduling Algorithm has failed");
 					e.printStackTrace();
+				}
+				
+				finally {
+					mMovaClient.finishRecalculate(mMyID);
 				}
 			}
 		}).start();
